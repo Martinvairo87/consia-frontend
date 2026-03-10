@@ -1,5 +1,109 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>CONSIA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+body{
+background:#0b0b0b;
+color:white;
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+padding:40px;
+}
+
+h1{
+font-size:34px;
+margin-bottom:10px;
+}
+
+p{
+opacity:.7;
+}
+
+.card{
+background:#111;
+border:1px solid #333;
+border-radius:14px;
+padding:24px;
+margin-bottom:20px;
+}
+
+button{
+background:#00ff9c;
+border:none;
+padding:10px 18px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+
+</head>
+
 <body>
-CONSIA FRONTEND OK
+
+<h1>CONSIA Marketplace</h1>
+<p>Ecosistema de servicios y herramientas CONSIA</p>
+
+<div id="products">
+Cargando productos...
+</div>
+
+<script>
+
+async function loadProducts(){
+
+try{
+
+const res = await fetch("https://api.consia.world/v1/marketplace/products");
+const data = await res.json();
+
+const container = document.getElementById("products");
+
+if(!data.ok || !data.items.length){
+container.innerHTML="No hay productos";
+return;
+}
+
+container.innerHTML = data.items.map(p=>`
+
+<div class="card">
+
+<h2>${p.name}</h2>
+
+<p>${p.description || ""}</p>
+
+<strong>USD ${p.price_usd}</strong>
+
+<br><br>
+
+<button onclick="buy('${p.id}')">
+Comprar
+</button>
+
+</div>
+
+`).join("");
+
+}catch(e){
+
+document.getElementById("products").innerHTML="Error cargando productos";
+
+}
+
+}
+
+function buy(id){
+alert("Compra iniciada: "+id);
+}
+
+loadProducts();
+
+</script>
+
 </body>
 </html>
