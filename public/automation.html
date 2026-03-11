@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Automation Engine</title>
+  <style>
+    :root{--bg:#05070c;--panel:#0e1730;--line:#22345f;--text:#f4f7ff;--muted:#aab6d3;--accent:#4d7cff;--shadow:0 24px 60px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} html,body{margin:0;padding:0;background:linear-gradient(180deg,#04070e,#050912 45%, #04070d 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    .wrap{max-width:1380px;margin:0 auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .brand h1{margin:0;font-size:34px;letter-spacing:.34em}.brand p{margin:8px 0 0;color:var(--muted)}
+    .lang{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+    .hero,.card{background:linear-gradient(180deg,rgba(11,18,40,.94),rgba(8,14,30,.9));border:1px solid rgba(126,231,255,.12);border-radius:30px;box-shadow:var(--shadow)}
+    .hero{padding:28px;margin-top:24px}.hero h2{margin:0 0 14px;font-size:54px}.hero p{margin:0;color:var(--muted);font-size:19px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:24px}.card{padding:24px}.card h3{margin:0 0 14px}.card p{margin:0;color:var(--muted)}
+    @media (max-width:1000px){.grid{grid-template-columns:1fr}.hero h2{font-size:40px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><h1>CONSIA</h1><p data-i18n="subtitle">Motor de automatización del ecosistema CONSIA.</p></div>
+    <select id="langSelector" class="lang"><option value="es">Español</option><option value="en">English</option><option value="pt">Português</option></select>
+  </div>
+  <section class="hero"><h2 data-i18n="title">Motor de automatización</h2><p data-i18n="text">Dispara flujos automáticos, tareas repetitivas y coordinación entre módulos y agentes.</p></section>
+  <section class="grid">
+    <div class="card"><h3 data-i18n="flowAutomation">Automatización de flujos</h3><p data-i18n="flowAutomationText">Secuencias operativas para ejecutar tareas sin intervención manual.</p></div>
+    <div class="card"><h3 data-i18n="eventTriggers">Disparadores por evento</h3><p data-i18n="eventTriggersText">Acciones automáticas según cambios de estado, ventas, mensajes o validaciones.</p></div>
+    <div class="card"><h3 data-i18n="ownerControl">Control owner</h3><p data-i18n="ownerControlText">Supervisión central con permisos, prioridades y reglas de seguridad.</p></div>
+    <div class="card"><h3 data-i18n="systemSync">Sincronización del sistema</h3><p data-i18n="systemSyncText">Conecta módulos, servicios y agentes para que operen como una sola capa.</p></div>
+  </section>
+</div>
+<script>
+const I18N={es:{subtitle:"Motor de automatización del ecosistema CONSIA.",title:"Motor de automatización",text:"Dispara flujos automáticos, tareas repetitivas y coordinación entre módulos y agentes.",flowAutomation:"Automatización de flujos",flowAutomationText:"Secuencias operativas para ejecutar tareas sin intervención manual.",eventTriggers:"Disparadores por evento",eventTriggersText:"Acciones automáticas según cambios de estado, ventas, mensajes o validaciones.",ownerControl:"Control owner",ownerControlText:"Supervisión central con permisos, prioridades y reglas de seguridad.",systemSync:"Sincronización del sistema",systemSyncText:"Conecta módulos, servicios y agentes para que operen como una sola capa."},
+en:{subtitle:"Automation engine for the CONSIA ecosystem.",title:"Automation Engine",text:"Triggers automatic flows, repetitive tasks and coordination between modules and agents.",flowAutomation:"Flow automation",flowAutomationText:"Operational sequences to execute tasks without manual intervention.",eventTriggers:"Event triggers",eventTriggersText:"Automatic actions based on status changes, sales, messages or validations.",ownerControl:"Owner control",ownerControlText:"Central supervision with permissions, priorities and security rules.",systemSync:"System sync",systemSyncText:"Connects modules, services and agents so they operate as one layer."},
+pt:{subtitle:"Motor de automação do ecossistema CONSIA.",title:"Motor de automação",text:"Dispara fluxos automáticos, tarefas repetitivas e coordenação entre módulos e agentes.",flowAutomation:"Automação de fluxos",flowAutomationText:"Sequências operacionais para executar tarefas sem intervenção manual.",eventTriggers:"Disparadores por evento",eventTriggersText:"Ações automáticas segundo mudanças de estado, vendas, mensagens ou validações.",ownerControl:"Controle owner",ownerControlText:"Supervisão central com permissões, prioridades e regras de segurança.",systemSync:"Sincronização do sistema",systemSyncText:"Conecta módulos, serviços e agentes para operar como uma única camada."}};
+const key="CONSIA_LANG"; let lang=localStorage.getItem(key)||"es"; const sel=document.getElementById("langSelector");
+function apply(){document.documentElement.lang=lang; sel.value=lang; document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I18N[lang][k]) el.textContent=I18N[lang][k];});}
+sel.addEventListener("change",e=>{lang=e.target.value; localStorage.setItem(key,lang); apply();}); apply();
+</script>
+</body>
+</html>
