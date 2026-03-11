@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Dashboard</title>
+  <style>
+    :root{
+      --bg:#05070c; --panel:#0e1730; --line:#22345f; --text:#f4f7ff; --muted:#aab6d3;
+      --accent:#4d7cff; --ok:#19c37d; --warn:#b27a00; --shadow:0 24px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box} html,body{margin:0;padding:0;background:
+      radial-gradient(circle at top right, rgba(79,124,255,.18), transparent 24%),
+      radial-gradient(circle at top left, rgba(126,231,255,.10), transparent 20%),
+      linear-gradient(180deg,#04070e,#050912 45%, #04070d 100%);
+      color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+    .wrap{max-width:1380px;margin:0 auto;padding:22px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .brand h1{margin:0;font-size:34px;letter-spacing:.34em}.brand p{margin:8px 0 0;color:var(--muted)}
+    .lang{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+    .panel{background:linear-gradient(180deg,rgba(11,18,40,.94),rgba(8,14,30,.9));border:1px solid rgba(126,231,255,.12);border-radius:30px;box-shadow:var(--shadow);padding:28px}
+    .hero{margin-top:24px}.hero h2{margin:0 0 14px;font-size:54px}.hero p{margin:0;color:var(--muted);font-size:19px}
+    table{width:100%;border-collapse:collapse;margin-top:18px}
+    th,td{text-align:left;padding:18px 14px;border-bottom:1px solid rgba(255,255,255,.06);font-size:18px}
+    th{color:#fff}
+    .badge{display:inline-flex;padding:10px 16px;border-radius:999px;font-size:14px}
+    .ok{background:rgba(25,195,125,.14);color:#b6ffd9}.warn{background:rgba(178,122,0,.22);color:#ffd887}
+    .btn{border:none;border-radius:18px;padding:14px 18px;cursor:pointer;font-size:17px;color:#fff;background:linear-gradient(135deg,var(--accent),#6b92ff)}
+    .quick{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;padding:22px 0 8px}
+    @media (max-width:900px){.hero h2{font-size:40px} th,td{font-size:16px;padding:14px 10px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <h1>CONSIA</h1>
+        <p data-i18n="subtitle">Panel general del ecosistema CONSIA.</p>
+      </div>
+      <select id="langSelector" class="lang">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+        <option value="pt">Português</option>
+      </select>
+    </div>
+
+    <section class="panel hero">
+      <h2 data-i18n="title">Módulos del sistema</h2>
+      <p data-i18n="text">Estado global, accesos directos y control visual del ecosistema operativo de CONSIA.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="module">Módulo</th>
+            <th data-i18n="status">Estado</th>
+            <th data-i18n="action">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-i18n="aiRouter">Router IA</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="travelEngine">Motor de viajes</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="travelAutopilot">Autopiloto de viajes</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="flightsEngine">Motor de vuelos</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="marketplace">Marketplace</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="appStore">Tienda de apps</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="agentNetwork">Red de agentes</td><td><span class="badge warn" data-i18n="warn">ALERTA</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="automationEngine">Motor de automatización</td><td><span class="badge warn" data-i18n="warn">ALERTA</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+          <tr><td data-i18n="ownerConsole">Consola Owner</td><td><span class="badge ok">ONLINE</span></td><td><button class="btn" data-i18n="open">Abrir</button></td></tr>
+        </tbody>
+      </table>
+
+      <div class="quick">
+        <a class="btn" href="/" data-i18n="aiHome">Inicio IA</a>
+        <a class="btn" href="/travel.html" data-i18n="travel">Viajes</a>
+        <a class="btn" href="/marketplace.html" data-i18n="marketplace">Marketplace</a>
+        <a class="btn" href="/apps.html" data-i18n="appStore">Tienda de apps</a>
+      </div>
+    </section>
+
+    <div class="footer-note">CONSIA Dashboard</div>
+  </div>
+
+  <script>
+    const I18N = {
+      es:{subtitle:"Panel general del ecosistema CONSIA.",title:"Módulos del sistema",text:"Estado global, accesos directos y control visual del ecosistema operativo de CONSIA.",module:"Módulo",status:"Estado",action:"Acción",aiRouter:"Router IA",travelEngine:"Motor de viajes",travelAutopilot:"Autopiloto de viajes",flightsEngine:"Motor de vuelos",marketplace:"Marketplace",appStore:"Tienda de apps",agentNetwork:"Red de agentes",automationEngine:"Motor de automatización",ownerConsole:"Consola Owner",open:"Abrir",warn:"ALERTA",aiHome:"Inicio IA",travel:"Viajes"},
+      en:{subtitle:"General panel for the CONSIA ecosystem.",title:"System modules",text:"Global status, quick access and visual control of the CONSIA operating ecosystem.",module:"Module",status:"Status",action:"Action",aiRouter:"AI Router",travelEngine:"Travel Engine",travelAutopilot:"Travel Autopilot",flightsEngine:"Flights Engine",marketplace:"Marketplace",appStore:"App Store",agentNetwork:"Agent Network",automationEngine:"Automation Engine",ownerConsole:"Owner Console",open:"Open",warn:"WARN",aiHome:"AI Home",travel:"Travel"},
+      pt:{subtitle:"Painel geral do ecossistema CONSIA.",title:"Módulos do sistema",text:"Status global, acessos rápidos e controle visual do ecossistema operacional do CONSIA.",module:"Módulo",status:"Estado",action:"Ação",aiRouter:"Roteador IA",travelEngine:"Motor de viagens",travelAutopilot:"Piloto automático de viagens",flightsEngine:"Motor de voos",marketplace:"Marketplace",appStore:"Loja de apps",agentNetwork:"Rede de agentes",automationEngine:"Motor de automação",ownerConsole:"Console Owner",open:"Abrir",warn:"ALERTA",aiHome:"Início IA",travel:"Viagens"}
+    };
+    const key="CONSIA_LANG"; let lang=localStorage.getItem(key)||"es"; const sel=document.getElementById("langSelector");
+    function apply(){ document.documentElement.lang=lang; sel.value=lang; document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I18N[lang][k]) el.textContent=I18N[lang][k];}); }
+    sel.addEventListener("change",e=>{lang=e.target.value; localStorage.setItem(key,lang); apply();}); apply();
+  </script>
+</body>
+</html>
