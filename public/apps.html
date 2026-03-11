@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Apps</title>
+  <style>
+    :root{--bg:#05070c;--panel:#0e1730;--line:#22345f;--text:#f4f7ff;--muted:#aab6d3;--accent:#4d7cff;--shadow:0 24px 60px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} html,body{margin:0;padding:0;background:linear-gradient(180deg,#04070e,#050912 45%, #04070d 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    .wrap{max-width:1380px;margin:0 auto;padding:22px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .brand h1{margin:0;font-size:34px;letter-spacing:.34em}.brand p{margin:8px 0 0;color:var(--muted)}
+    .lang{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+    .hero,.card{background:linear-gradient(180deg,rgba(11,18,40,.94),rgba(8,14,30,.9));border:1px solid rgba(126,231,255,.12);border-radius:30px;box-shadow:var(--shadow)}
+    .hero{padding:28px;margin-top:24px}.hero h2{margin:0 0 14px;font-size:54px}.hero p{margin:0;color:var(--muted);font-size:19px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:24px}
+    .card{padding:24px}.card h3{margin:0 0 14px;font-size:24px}.card p{margin:0 0 18px;color:var(--muted);line-height:1.6}
+    .btn{border:none;border-radius:18px;padding:14px 18px;cursor:pointer;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--accent),#6b92ff)}
+    @media (max-width:1000px){.grid{grid-template-columns:1fr}.hero h2{font-size:40px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand"><h1>CONSIA</h1><p data-i18n="subtitle">Tienda de aplicaciones y módulos del ecosistema CONSIA.</p></div>
+      <select id="langSelector" class="lang"><option value="es">Español</option><option value="en">English</option><option value="pt">Português</option></select>
+    </div>
+
+    <section class="hero">
+      <h2 data-i18n="title">Tienda de apps</h2>
+      <p data-i18n="text">Activá herramientas, motores y capas operativas desde un solo catálogo.</p>
+    </section>
+
+    <section class="grid">
+      <div class="card"><h3 data-i18n="aiRouter">Router IA</h3><p data-i18n="aiRouterText">Enrutamiento inteligente entre modelos y proveedores.</p><button class="btn" data-i18n="activate">Activar</button></div>
+      <div class="card"><h3 data-i18n="travel">Viajes</h3><p data-i18n="travelText">Módulo para planificación, búsquedas y automatización de viajes.</p><button class="btn" data-i18n="activate">Activar</button></div>
+      <div class="card"><h3 data-i18n="marketplace">Marketplace</h3><p data-i18n="marketplaceText">Capa comercial para publicar, vender y operar productos y servicios.</p><button class="btn" data-i18n="activate">Activar</button></div>
+    </section>
+  </div>
+  <script>
+    const I18N={
+      es:{subtitle:"Tienda de aplicaciones y módulos del ecosistema CONSIA.",title:"Tienda de apps",text:"Activá herramientas, motores y capas operativas desde un solo catálogo.",aiRouter:"Router IA",aiRouterText:"Enrutamiento inteligente entre modelos y proveedores.",travel:"Viajes",travelText:"Módulo para planificación, búsquedas y automatización de viajes.",marketplace:"Marketplace",marketplaceText:"Capa comercial para publicar, vender y operar productos y servicios.",activate:"Activar"},
+      en:{subtitle:"Application and module store for the CONSIA ecosystem.",title:"App Store",text:"Activate tools, engines and operational layers from one catalog.",aiRouter:"AI Router",aiRouterText:"Intelligent routing between models and providers.",travel:"Travel",travelText:"Module for planning, searches and travel automation.",marketplace:"Marketplace",marketplaceText:"Commerce layer to publish, sell and operate products and services.",activate:"Activate"},
+      pt:{subtitle:"Loja de aplicativos e módulos do ecossistema CONSIA.",title:"Loja de apps",text:"Ative ferramentas, motores e camadas operacionais em um único catálogo.",aiRouter:"Roteador IA",aiRouterText:"Roteamento inteligente entre modelos e provedores.",travel:"Viagens",travelText:"Módulo para planejamento, buscas e automação de viagens.",marketplace:"Marketplace",marketplaceText:"Camada comercial para publicar, vender e operar produtos e serviços.",activate:"Ativar"}
+    };
+    const key="CONSIA_LANG"; let lang=localStorage.getItem(key)||"es"; const sel=document.getElementById("langSelector");
+    function apply(){document.documentElement.lang=lang;sel.value=lang;document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(I18N[lang][k]) el.textContent=I18N[lang][k];});}
+    sel.addEventListener("change",e=>{lang=e.target.value;localStorage.setItem(key,lang);apply();}); apply();
+  </script>
+</body>
+</html>
