@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Command Center</title>
+  <style>
+    :root{
+      --bg:#05070c;
+      --panel:#0e1730;
+      --line:#22345f;
+      --text:#f4f7ff;
+      --muted:#aab6d3;
+      --accent:#4d7cff;
+      --ok:#19c37d;
+      --shadow:0 24px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;
+      background:
+        radial-gradient(circle at top right, rgba(79,124,255,.18), transparent 24%),
+        radial-gradient(circle at top left, rgba(126,231,255,.10), transparent 20%),
+        linear-gradient(180deg,#04070e,#050912 45%, #04070d 100%);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+    .wrap{max-width:1380px;margin:0 auto;padding:22px}
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+      padding:8px 0 24px;border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .brand h1{margin:0;font-size:34px;letter-spacing:.34em}
+    .brand p{margin:8px 0 0;color:var(--muted)}
+    .lang{
+      background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line);
+      border-radius:14px;padding:12px 14px;
+    }
+    .hero,.panel{
+      background:linear-gradient(180deg,rgba(11,18,40,.94),rgba(8,14,30,.9));
+      border:1px solid rgba(126,231,255,.12);
+      border-radius:30px;box-shadow:var(--shadow);
+    }
+    .hero{padding:28px;margin-top:24px}
+    .hero h2{margin:0 0 14px;font-size:56px;line-height:1.04}
+    .hero p{margin:0;color:var(--muted);font-size:19px;line-height:1.6}
+    .command-bar{
+      display:grid;grid-template-columns:1fr 220px 180px;gap:14px;margin-top:22px;
+    }
+    .input,.select,.textarea{
+      width:100%;padding:16px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.06);
+      background:#091127;color:var(--text);font-size:16px;outline:none;
+    }
+    .textarea{min-height:180px;resize:vertical}
+    .btn{
+      border:none;border-radius:18px;padding:16px 20px;cursor:pointer;font-size:17px;
+      color:#fff;background:linear-gradient(135deg,var(--accent),#6b92ff);
+    }
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;margin-top:24px}
+    .panel{padding:24px}
+    .panel h3{margin:0 0 16px;font-size:22px}
+    .quick{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+    }
+    .quick button{
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:18px;
+      padding:16px 18px;
+      text-align:left;
+      cursor:pointer;
+      font-size:16px;
+    }
+    .status{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px;
+    }
+    .mini{
+      padding:18px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+    }
+    .mini strong{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}
+    .mini span{font-size:38px;color:#a9c4ff}
+    .log{
+      min-height:320px;border:1px solid rgba(255,255,255,.06);border-radius:18px;background:#091127;padding:18px;
+      white-space:pre-wrap;font-size:15px;line-height:1.6;color:#dfe7ff;
+    }
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;padding:22px 0 8px}
+    @media (max-width:1100px){
+      .command-bar,.grid,.quick,.status{grid-template-columns:1fr}
+      .hero h2{font-size:42px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>CONSIA</h1>
+        <p data-i18n="commandSubtitle">Centro de control para ejecutar acciones, comandos y automatizaciones globales.</p>
+      </div>
+      <select id="langSelector" class="lang" aria-label="Idioma">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+        <option value="pt">Português</option>
+      </select>
+    </div>
+
+    <section class="hero">
+      <h2 data-i18n="commandCenter">Command Center</h2>
+      <p data-i18n="commandText">Ejecutá comandos, activá flujos, dispará módulos y monitoreá el estado central de CONSIA desde una sola consola.</p>
+
+      <div class="command-bar">
+        <input id="commandInput" class="input" type="text" placeholder="Escribí un comando..." />
+        <select id="moduleSelect" class="select">
+          <option value="core">CONSIA CORE</option>
+          <option value="market">Marketplace</option>
+          <option value="owner">Owner</option>
+          <option value="apps">Apps</option>
+        </select>
+        <button class="btn" id="runBtn" data-i18n="runCommand">Ejecutar</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h3 data-i18n="quickCommands">Comandos rápidos</h3>
+        <div class="quick">
+          <button data-command="crear negocio" data-i18n="createBusiness">Crear negocio</button>
+          <button data-command="crear sitio" data-i18n="createSite">Crear sitio</button>
+          <button data-command="crear campaña" data-i18n="createCampaign">Crear campaña</button>
+          <button data-command="publicar producto" data-i18n="publishProduct">Publicar producto</button>
+          <button data-command="buscar oportunidad" data-i18n="findOpportunity">Buscar oportunidad</button>
+          <button data-command="analizar mercado" data-i18n="analyzeMarket">Analizar mercado</button>
+        </div>
+
+        <div class="status">
+          <div class="mini">
+            <strong data-i18n="apiHealth">Salud API</strong>
+            <span data-i18n="online">ONLINE</span>
+          </div>
+          <div class="mini">
+            <strong data-i18n="routingMode">Routing Mode</strong>
+            <span>AUTO</span>
+          </div>
+          <div class="mini">
+            <strong data-i18n="activeJobs">Jobs activos</strong>
+            <span>14</span>
+          </div>
+          <div class="mini">
+            <strong data-i18n="pendingApprovals">Aprobaciones pendientes</strong>
+            <span>0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 data-i18n="executionConsole">Consola de ejecución</h3>
+        <textarea id="resultBox" class="textarea">CONSIA listo para ejecutar.</textarea>
+        <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn" id="pingBtn" data-i18n="pingApi">Ping API</button>
+          <button class="btn" id="clearBtn" data-i18n="clear">Limpiar</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:22px">
+      <h3 data-i18n="auditLog">Audit Log</h3>
+      <div id="auditLog" class="log">[CONSIA] Command Center online.
+[CONSIA] Esperando comandos...
+</div>
+    </section>
+
+    <div class="footer-note">CONSIA Command Center · Global Execution Layer</div>
+  </div>
+
+  <script>
+    const I18N = {
+      es: {
+        commandSubtitle: "Centro de control para ejecutar acciones, comandos y automatizaciones globales.",
+        commandCenter: "Command Center",
+        commandText: "Ejecutá comandos, activá flujos, dispará módulos y monitoreá el estado central de CONSIA desde una sola consola.",
+        runCommand: "Ejecutar",
+        quickCommands: "Comandos rápidos",
+        createBusiness: "Crear negocio",
+        createSite: "Crear sitio",
+        createCampaign: "Crear campaña",
+        publishProduct: "Publicar producto",
+        findOpportunity: "Buscar oportunidad",
+        analyzeMarket: "Analizar mercado",
+        apiHealth: "Salud API",
+        online: "ONLINE",
+        routingMode: "Routing Mode",
+        activeJobs: "Jobs activos",
+        pendingApprovals: "Aprobaciones pendientes",
+        executionConsole: "Consola de ejecución",
+        pingApi: "Ping API",
+        clear: "Limpiar",
+        auditLog: "Audit Log"
+      },
+      en: {
+        commandSubtitle: "Control center to execute actions, commands and global automations.",
+        commandCenter: "Command Center",
+        commandText: "Run commands, trigger flows, activate modules and monitor the central CONSIA state from one console.",
+        runCommand: "Run",
+        quickCommands: "Quick commands",
+        createBusiness: "Create business",
+        createSite: "Create site",
+        createCampaign: "Create campaign",
+        publishProduct: "Publish product",
+        findOpportunity: "Find opportunity",
+        analyzeMarket: "Analyze market",
+        apiHealth: "API Health",
+        online: "ONLINE",
+        routingMode: "Routing Mode",
+        activeJobs: "Active jobs",
+        pendingApprovals: "Pending approvals",
+        executionConsole: "Execution console",
+        pingApi: "Ping API",
+        clear: "Clear",
+        auditLog: "Audit Log"
+      },
+      pt: {
+        commandSubtitle: "Centro de controle para executar ações, comandos e automações globais.",
+        commandCenter: "Command Center",
+        commandText: "Execute comandos, ative fluxos, dispare módulos e monitore o estado central do CONSIA em uma única console.",
+        runCommand: "Executar",
+        quickCommands: "Comandos rápidos",
+        createBusiness: "Criar negócio",
+        createSite: "Criar site",
+        createCampaign: "Criar campanha",
+        publishProduct: "Publicar produto",
+        findOpportunity: "Buscar oportunidade",
+        analyzeMarket: "Analisar mercado",
+        apiHealth: "Saúde API",
+        online: "ONLINE",
+        routingMode: "Routing Mode",
+        activeJobs: "Jobs ativos",
+        pendingApprovals: "Aprovações pendentes",
+        executionConsole: "Console de execução",
+        pingApi: "Ping API",
+        clear: "Limpar",
+        auditLog: "Audit Log"
+      }
+    };
+
+    const LANG_KEY = "CONSIA_LANG";
+    let currentLang = localStorage.getItem(LANG_KEY) || "es";
+
+    const selector = document.getElementById("langSelector");
+    const commandInput = document.getElementById("commandInput");
+    const resultBox = document.getElementById("resultBox");
+    const auditLog = document.getElementById("auditLog");
+    const runBtn = document.getElementById("runBtn");
+    const pingBtn = document.getElementById("pingBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    function placeholderFor(lang){
+      const map = {
+        es: "Escribí un comando...",
+        en: "Type a command...",
+        pt: "Digite um comando..."
+      };
+      return map[lang] || map.es;
+    }
+
+    function readyText(lang){
+      const map = {
+        es: "CONSIA listo para ejecutar.",
+        en: "CONSIA ready to execute.",
+        pt: "CONSIA pronto para executar."
+      };
+      return map[lang] || map.es;
+    }
+
+    function waitingLog(lang){
+      const map = {
+        es: "[CONSIA] Command Center online.\n[CONSIA] Esperando comandos...\n",
+        en: "[CONSIA] Command Center online.\n[CONSIA] Waiting for commands...\n",
+        pt: "[CONSIA] Command Center online.\n[CONSIA] Aguardando comandos...\n"
+      };
+      return map[lang] || map.es;
+    }
+
+    function applyTranslations(){
+      document.documentElement.lang = currentLang;
+      selector.value = currentLang;
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (I18N[currentLang] && I18N[currentLang][key]) el.textContent = I18N[currentLang][key];
+      });
+      commandInput.placeholder = placeholderFor(currentLang);
+      if (!resultBox.dataset.locked) resultBox.value = readyText(currentLang);
+      if (!auditLog.dataset.locked) auditLog.textContent = waitingLog(currentLang);
+    }
+
+    function setLang(lang){
+      currentLang = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      applyTranslations();
+    }
+
+    function now(){
+      return new Date().toLocaleTimeString();
+    }
+
+    function appendLog(text){
+      auditLog.dataset.locked = "1";
+      auditLog.textContent += `[${now()}] ${text}\n`;
+    }
+
+    document.querySelectorAll("[data-command]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        commandInput.value = btn.dataset.command;
+      });
+    });
+
+    runBtn.addEventListener("click", () => {
+      const cmd = (commandInput.value || "").trim();
+      if (!cmd) return;
+      resultBox.dataset.locked = "1";
+      resultBox.value = `RUN:\n${cmd}\n\nSTATUS:\nqueued`;
+      appendLog(`Comando enviado: ${cmd}`);
+    });
+
+    pingBtn.addEventListener("click", () => {
+      resultBox.dataset.locked = "1";
+      resultBox.value = "PING API\n\nSTATUS:\nONLINE";
+      appendLog("Ping API ejecutado.");
+    });
+
+    clearBtn.addEventListener("click", () => {
+      commandInput.value = "";
+      delete resultBox.dataset.locked;
+      delete auditLog.dataset.locked;
+      applyTranslations();
+    });
+
+    selector.addEventListener("change", e => setLang(e.target.value));
+    applyTranslations();
+  </script>
+</body>
+</html>
