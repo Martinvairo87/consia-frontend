@@ -1,109 +1,1350 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-<meta charset="UTF-8">
-<title>CONSIA</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Owner Panel</title>
+  <style>
+    :root{
+      --bg:#07080c;
+      --bg2:#0d1017;
+      --card:#111522;
+      --card2:#151a29;
+      --line:#23293b;
+      --text:#f5f7fb;
+      --muted:#9ca6bf;
+      --accent:#7ee7ff;
+      --accent2:#8b5cf6;
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
 
-<style>
-body{
-background:#0b0b0b;
-color:white;
-font-family:Arial,Helvetica,sans-serif;
-margin:0;
-padding:40px;
-}
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:
+        radial-gradient(circle at top left, rgba(126,231,255,.10), transparent 22%),
+        radial-gradient(circle at top right, rgba(139,92,246,.10), transparent 20%),
+        linear-gradient(180deg,var(--bg),#090b11 40%, #08090d 100%);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      min-height:100%;
+    }
 
-h1{
-font-size:34px;
-margin-bottom:10px;
-}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
 
-p{
-opacity:.7;
-}
+    .app{
+      max-width:1500px;
+      margin:0 auto;
+      padding:20px;
+    }
 
-.card{
-background:#111;
-border:1px solid #333;
-border-radius:14px;
-padding:24px;
-margin-bottom:20px;
-}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+    }
 
-button{
-background:#00ff9c;
-border:none;
-padding:10px 18px;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-}
-</style>
+    .brand-wrap{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
 
+    .orb{
+      width:52px;
+      height:52px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%, #ffffff 0%, #bff7ff 12%, #7ee7ff 24%, #324cff 52%, #0d1020 78%);
+      box-shadow:
+        0 0 30px rgba(126,231,255,.25),
+        0 0 80px rgba(139,92,246,.15),
+        inset 0 0 20px rgba(255,255,255,.15);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .orb::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:24px;
+      line-height:1;
+      letter-spacing:.04em;
+    }
+
+    .brand p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      background:linear-gradient(135deg,var(--card2),var(--card));
+      color:var(--text);
+      padding:12px 16px;
+      border-radius:14px;
+      cursor:pointer;
+      border:1px solid var(--line);
+      transition:.18s ease;
+      box-shadow:var(--shadow);
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{
+      background:linear-gradient(135deg,var(--accent),#5fb8ff 55%, var(--accent2));
+      color:#071018;
+      font-weight:700;
+      border:none;
+    }
+    .btn.success{
+      background:linear-gradient(135deg,#10b981,#38d39f);
+      color:#04110d;
+      font-weight:700;
+      border:none;
+    }
+    .btn.danger{
+      background:linear-gradient(135deg,#ef4444,#ff7a7a);
+      color:#180505;
+      font-weight:700;
+      border:none;
+    }
+    .btn.ghost{
+      background:rgba(255,255,255,.03);
+    }
+    .btn.small{
+      padding:9px 12px;
+      border-radius:12px;
+      font-size:13px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:20px;
+    }
+
+    .sidebar{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      height:fit-content;
+      position:sticky;
+      top:20px;
+    }
+
+    .side-title{
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:11px;
+      margin:0 0 12px;
+    }
+
+    .nav{
+      display:grid;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .nav-btn{
+      width:100%;
+      text-align:left;
+      padding:14px 14px;
+      border-radius:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      color:var(--text);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .nav-btn:hover,.nav-btn.active{
+      border-color:rgba(126,231,255,.45);
+      background:linear-gradient(180deg,rgba(126,231,255,.12),rgba(139,92,246,.08));
+      box-shadow:0 0 0 1px rgba(126,231,255,.08) inset;
+    }
+
+    .side-block{
+      background:rgba(255,255,255,.025);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+      margin-top:12px;
+    }
+
+    .side-block h4{
+      margin:0 0 8px;
+      font-size:14px;
+    }
+
+    .mini-list{
+      display:grid;
+      gap:8px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .content{
+      display:grid;
+      gap:20px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.35fr .85fr;
+      gap:20px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top right, rgba(126,231,255,.08), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(139,92,246,.08), transparent 24%);
+      pointer-events:none;
+    }
+
+    .panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:18px;
+    }
+
+    .panel-sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .stat{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.025);
+      border:1px solid var(--line);
+      min-height:106px;
+    }
+
+    .stat .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .stat .value{
+      font-size:28px;
+      font-weight:800;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:700;
+      width:fit-content;
+    }
+
+    .badge.ok{background:rgba(16,185,129,.14);color:#9ef0c9}
+    .badge.warn{background:rgba(245,158,11,.14);color:#ffd38a}
+    .badge.info{background:rgba(126,231,255,.12);color:#baf4ff}
+
+    .avatar-card{
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .avatar-stage{
+      position:relative;
+      min-height:340px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(126,231,255,.12), transparent 28%),
+        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      overflow:hidden;
+    }
+
+    .avatar-stage::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,.95) 0%, rgba(126,231,255,.9) 10%, rgba(126,231,255,.45) 26%, rgba(79,70,229,.35) 50%, rgba(0,0,0,0) 70%);
+      filter:blur(4px);
+      opacity:.9;
+    }
+
+    .avatar-body{
+      position:relative;
+      z-index:2;
+      width:200px;
+      height:260px;
+      border-radius:120px 120px 40px 40px;
+      background:
+        linear-gradient(180deg,rgba(190,250,255,.18),rgba(126,231,255,.06) 35%, rgba(139,92,246,.08) 100%);
+      border:1px solid rgba(126,231,255,.25);
+      box-shadow:
+        0 0 40px rgba(126,231,255,.15),
+        inset 0 0 30px rgba(255,255,255,.07);
+    }
+
+    .avatar-head{
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%);
+      width:106px;
+      height:126px;
+      border-radius:56px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.75), rgba(126,231,255,.22) 45%, rgba(11,15,27,.55) 92%);
+      border:1px solid rgba(126,231,255,.3);
+      box-shadow:0 0 35px rgba(126,231,255,.18);
+    }
+
+    .eye{
+      position:absolute;
+      top:46px;
+      width:18px;
+      height:8px;
+      border-radius:20px;
+      background:linear-gradient(90deg,#8b5cf6,#7ee7ff,#8b5cf6);
+      box-shadow:0 0 14px rgba(126,231,255,.45);
+    }
+
+    .eye.left{left:22px}
+    .eye.right{right:22px}
+
+    .mouth{
+      position:absolute;
+      bottom:32px;
+      left:50%;
+      transform:translateX(-50%);
+      width:28px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(126,231,255,.6);
+      box-shadow:0 0 12px rgba(126,231,255,.28);
+    }
+
+    .pulse{
+      position:absolute;
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      border:1px solid rgba(126,231,255,.14);
+      animation:pulse 3.2s infinite ease-out;
+    }
+
+    .pulse.p2{animation-delay:1.1s}
+    .pulse.p3{animation-delay:2.2s}
+
+    @keyframes pulse{
+      0%{transform:scale(.62);opacity:.7}
+      100%{transform:scale(1.2);opacity:0}
+    }
+
+    .floating-tag{
+      position:absolute;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(126,231,255,.22);
+      background:rgba(5,10,20,.62);
+      backdrop-filter:blur(12px);
+      color:#cfefff;
+      font-size:12px;
+      box-shadow:var(--shadow);
+      z-index:2;
+    }
+
+    .t1{top:24px;left:22px}
+    .t2{top:58px;right:26px}
+    .t3{bottom:70px;left:24px}
+    .t4{bottom:28px;right:22px}
+
+    .hero-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .quick-card{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(126,231,255,.35);
+    }
+
+    .quick-card h4{
+      margin:0 0 8px;
+      font-size:15px;
+    }
+
+    .quick-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .terminal{
+      width:100%;
+      min-height:130px;
+      background:#090c14;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      color:#eaf7ff;
+      outline:none;
+      resize:vertical;
+    }
+
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .field{
+      width:100%;
+    }
+
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 8px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .input, .select{
+      width:100%;
+      border:1px solid var(--line);
+      background:#090c14;
+      color:var(--text);
+      border-radius:16px;
+      padding:14px 14px;
+      outline:none;
+    }
+
+    .output{
+      background:#080b12;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      white-space:pre-wrap;
+      color:#d8e7ff;
+      min-height:180px;
+      max-height:460px;
+      overflow:auto;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#090c14;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:740px;
+    }
+
+    th,td{
+      padding:14px 14px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      font-size:13px;
+      vertical-align:top;
+    }
+
+    th{
+      color:#cfe7ff;
+      background:#0d1220;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+
+    td{
+      color:#dce5fa;
+    }
+
+    .muted{color:var(--muted)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .hidden{display:none !important}
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .tab{
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    .tab.active{
+      background:linear-gradient(135deg,rgba(126,231,255,.13),rgba(139,92,246,.12));
+      border-color:rgba(126,231,255,.35);
+    }
+
+    .footer-note{
+      color:var(--muted);
+      text-align:center;
+      font-size:12px;
+      padding:8px 0 24px;
+    }
+
+    @media (max-width:1180px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .hero{grid-template-columns:1fr}
+      .status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .card-grid{grid-template-columns:1fr 1fr}
+      .grid-2{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .status-grid{grid-template-columns:1fr}
+      .card-grid{grid-template-columns:1fr}
+      .topbar{flex-direction:column;align-items:flex-start}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand-wrap">
+        <div class="orb"></div>
+        <div class="brand">
+          <h1>CONSIA OWNER</h1>
+          <p>Tablero maestro · Owner Only · Control total del ecosistema</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btnRefreshTop">Actualizar</button>
+        <button class="btn primary" id="btnOpenCommandCenter">Ejecutar comando</button>
+        <button class="btn success" id="btnGoPreview">Vista previa</button>
+      </div>
+    </div>
 
-<h1>CONSIA Marketplace</h1>
-<p>Ecosistema de servicios y herramientas CONSIA</p>
+    <div class="layout">
+      <aside class="sidebar">
+        <p class="side-title">Navegación</p>
+        <div class="nav">
+          <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+          <button class="nav-btn" data-view="command">Command Center</button>
+          <button class="nav-btn" data-view="approvals">Aprobaciones</button>
+          <button class="nav-btn" data-view="history">Historial</button>
+          <button class="nav-btn" data-view="preview">Vista previa</button>
+          <button class="nav-btn" data-view="ecosystem">Ecosistema</button>
+          <button class="nav-btn" data-view="settings">Owner Settings</button>
+        </div>
 
-<div id="products">
-Cargando productos...
-</div>
+        <div class="side-block">
+          <h4>Empresas conectadas</h4>
+          <div class="mini-list">
+            <div>CONSIA</div>
+            <div>Manglar</div>
+            <div>Real Work</div>
+            <div>Bambino</div>
+            <div>VIP Work</div>
+            <div>Vairo & Asociados</div>
+          </div>
+        </div>
 
-<script>
+        <div class="side-block">
+          <h4>Motor activo</h4>
+          <div class="mini-list">
+            <div id="sideMode">Modo: pilot</div>
+            <div id="sideRuns">Runs: --</div>
+            <div id="sidePending">Pendientes: --</div>
+          </div>
+        </div>
 
-async function loadProducts(){
+        <div class="side-block">
+          <h4>Acceso API</h4>
+          <div class="mini-list">
+            <div class="mono" id="apiBaseLabel">API: https://api.consia.world</div>
+            <div class="mono">Owner Only</div>
+          </div>
+        </div>
+      </aside>
 
-try{
+      <main class="content">
+        <!-- DASHBOARD -->
+        <section class="view" id="view-dashboard">
+          <div class="hero">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">Centro de control de CONSIA</h2>
+                  <p class="panel-sub">Estado global del núcleo operativo. Ejecutá, aprobá, revisá y escalá desde un solo lugar.</p>
+                </div>
+                <div class="badge info" id="globalModeBadge">Modo pilot</div>
+              </div>
 
-const res = await fetch("https://api.consia.world/v1/marketplace/products");
-const data = await res.json();
+              <div class="status-grid">
+                <div class="stat">
+                  <div class="label">Estado API</div>
+                  <div class="value" id="statApi">--</div>
+                  <div class="badge ok" id="statApiBadge">Esperando</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Command runs</div>
+                  <div class="value" id="statRuns">0</div>
+                  <div class="muted">Ejecuciones registradas</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Pendientes</div>
+                  <div class="value" id="statPending">0</div>
+                  <div class="muted">Aprobaciones por revisar</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Base</div>
+                  <div class="value" id="statDB">--</div>
+                  <div class="muted">Conectividad operativa</div>
+                </div>
+              </div>
 
-const container = document.getElementById("products");
+              <div class="hero-actions">
+                <button class="btn primary" onclick="switchView('command')">Abrir Command Center</button>
+                <button class="btn ghost" onclick="switchView('approvals')">Ver aprobaciones</button>
+                <button class="btn ghost" onclick="switchView('history')">Ver historial</button>
+              </div>
+            </div>
 
-if(!data.ok || !data.items.length){
-container.innerHTML="No hay productos";
-return;
-}
+            <div class="panel avatar-card">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">CONSIA Presence</h2>
+                  <p class="panel-sub">Interfaz central Owner Only. Preparada para evolucionar al avatar real.</p>
+                </div>
+              </div>
 
-container.innerHTML = data.items.map(p=>`
+              <div class="avatar-stage">
+                <div class="pulse"></div>
+                <div class="pulse p2"></div>
+                <div class="pulse p3"></div>
 
-<div class="card">
+                <div class="floating-tag t1">Owner Control</div>
+                <div class="floating-tag t2">Command Loop</div>
+                <div class="floating-tag t3">Business Engine</div>
+                <div class="floating-tag t4">Preview Mode</div>
 
-<h2>${p.name}</h2>
+                <div class="avatar-body">
+                  <div class="avatar-head">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth"></div>
+                  </div>
+                </div>
+              </div>
 
-<p>${p.description || ""}</p>
+              <div class="hero-actions">
+                <button class="btn small primary" onclick="prefillCommand('crear negocio','marketplace global de trueque CSC')">Crear negocio</button>
+                <button class="btn small ghost" onclick="prefillCommand('crear sitio','marketplace global de trueque CSC')">Crear sitio</button>
+                <button class="btn small ghost" onclick="prefillCommand('crear campaña','lanzamiento global CSC Exchange')">Crear campaña</button>
+              </div>
+            </div>
+          </div>
 
-<strong>USD ${p.price_usd}</strong>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Accesos rápidos</h2>
+                <p class="panel-sub">Atajos directos a tus motores de ejecución.</p>
+              </div>
+            </div>
 
-<br><br>
+            <div class="card-grid">
+              <div class="quick-card" onclick="prefillCommand('analizar mercado','desarrollos inmobiliarios premium en Posadas')">
+                <h4>Manglar Developments</h4>
+                <p>Analizar terrenos, desarrollos, presupuestos y estrategia ejecutiva.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear campaña','campaña premium de Manglar Construcciones')">
+                <h4>Manglar Comunicación</h4>
+                <p>Campañas, posicionamiento y activos de lanzamiento inmobiliario.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','plataforma global de trueque CSC')">
+                <h4>CSC Exchange</h4>
+                <p>Motor para marketplace, negocio y estructura comercial del intercambio.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear campaña','campaña de ventas para Bambino Jugueterías')">
+                <h4>Bambino AI Retail</h4>
+                <p>Campañas, productos, bundles y crecimiento de ventas para juguetería.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','servicio premium de RRHH y outsourcing VIP Work')">
+                <h4>VIP Work Engine</h4>
+                <p>Selección, eventos, promociones y outsourcing con estructura inteligente.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','ecosistema contable y financiero Vairo y Asociados')">
+                <h4>Vairo & Asociados</h4>
+                <p>Estrategia, automatización y expansión para el estudio contable.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-<button onclick="buy('${p.id}')">
-Comprar
-</button>
+        <!-- COMMAND -->
+        <section class="view hidden" id="view-command">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">CONSIA Command Center</h2>
+                <p class="panel-sub">Ejecutá comandos del núcleo desde el tablero maestro.</p>
+              </div>
+            </div>
 
-</div>
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>Comando</label>
+                  <select class="select" id="commandSelect">
+                    <option value="analizar mercado">analizar mercado</option>
+                    <option value="crear negocio">crear negocio</option>
+                    <option value="crear marca">crear marca</option>
+                    <option value="crear sitio">crear sitio</option>
+                    <option value="crear campaña">crear campaña</option>
+                    <option value="publicar producto">publicar producto</option>
+                    <option value="buscar oportunidad">buscar oportunidad</option>
+                  </select>
+                </div>
 
-`).join("");
+                <div class="field" style="margin-top:14px;">
+                  <label>Input</label>
+                  <textarea class="terminal" id="commandInput" placeholder="Escribí la idea, proyecto o tarea..."></textarea>
+                </div>
 
-}catch(e){
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn primary" id="btnRunCommand">Ejecutar</button>
+                  <button class="btn ghost" id="btnRunPreview">Ejecutar preview</button>
+                  <button class="btn ghost" id="btnClearCommand">Limpiar</button>
+                </div>
 
-document.getElementById("products").innerHTML="Error cargando productos";
+                <div class="hero-actions" style="margin-top:14px;">
+                  <button class="btn small ghost" onclick="prefillCommand('analizar mercado','negocios globales de trueque')">Mercado trueque</button>
+                  <button class="btn small ghost" onclick="prefillCommand('crear negocio','marketplace global de trueque con moneda CSC')">Negocio CSC</button>
+                  <button class="btn small ghost" onclick="prefillCommand('crear sitio','marketplace global de trueque CSC')">Sitio CSC</button>
+                  <button class="btn small ghost" onclick="prefillCommand('crear campaña','lanzamiento global CSC Exchange')">Campaña CSC</button>
+                </div>
+              </div>
 
-}
+              <div>
+                <div class="field">
+                  <label>Respuesta</label>
+                  <div class="output" id="commandOutput">Esperando ejecución...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-}
+        <!-- APPROVALS -->
+        <section class="view hidden" id="view-approvals">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Aprobaciones pendientes</h2>
+                <p class="panel-sub">Aprobá o rechazá acciones del sistema Owner Only.</p>
+              </div>
+              <div class="row">
+                <button class="btn ghost small" id="btnRefreshApprovals">Actualizar</button>
+              </div>
+            </div>
 
-function buy(id){
-alert("Compra iniciada: "+id);
-}
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Action</th>
+                    <th>Status</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="approvalsTable">
+                  <tr><td colspan="5" class="muted">Cargando...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
-loadProducts();
+        <!-- HISTORY -->
+        <section class="view hidden" id="view-history">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Historial de runs</h2>
+                <p class="panel-sub">Registro completo de ejecuciones del núcleo CONSIA.</p>
+              </div>
+              <button class="btn ghost small" id="btnRefreshHistory">Actualizar</button>
+            </div>
 
-</script>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Comando</th>
+                    <th>Input</th>
+                    <th>Status</th>
+                    <th>Creado</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTable">
+                  <tr><td colspan="5" class="muted">Cargando...</td></tr>
+                </tbody>
+              </table>
+            </div>
 
+            <div style="margin-top:14px;">
+              <div class="field">
+                <label>Detalle run seleccionado</label>
+                <div class="output" id="historyDetail">Seleccioná un run del historial.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PREVIEW -->
+        <section class="view hidden" id="view-preview">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Vista previa</h2>
+                <p class="panel-sub">Generación previa de sitios y outputs antes de publicar o escalar.</p>
+              </div>
+              <button class="btn primary small" id="btnGeneratePreviewSite">Generar sitio</button>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>Input preview</label>
+                  <textarea class="terminal" id="previewInput">marketplace global de trueque CSC</textarea>
+                </div>
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn ghost" id="btnRunPreviewCommand">Preview command</button>
+                  <button class="btn ghost" id="btnLoadSiteHtml">Generar HTML</button>
+                </div>
+              </div>
+
+              <div>
+                <div class="field">
+                  <label>Output preview</label>
+                  <div class="output" id="previewOutput">Esperando preview...</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:18px;">
+              <div class="field">
+                <label>Render HTML</label>
+                <iframe id="siteFrame" style="width:100%;height:560px;border:1px solid var(--line);border-radius:18px;background:#fff;"></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ECOSYSTEM -->
+        <section class="view hidden" id="view-ecosystem">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Ecosistema empresarial</h2>
+                <p class="panel-sub">Vista rápida de los motores que CONSIA debe potenciar al máximo.</p>
+              </div>
+            </div>
+
+            <div class="card-grid">
+              <div class="quick-card">
+                <h4>Manglar Construcciones</h4>
+                <p>Desarrollos, proyectos ejecutivos, costos, presupuestos, control de obra y comercialización.</p>
+              </div>
+              <div class="quick-card">
+                <h4>Manglar Inmobiliaria</h4>
+                <p>Operaciones, captación, comercialización, tasaciones y desarrollos.</p>
+              </div>
+              <div class="quick-card">
+                <h4>Real Work</h4>
+                <p>Marketplace profesional inmobiliario, agentes, CRM, automatización y expansión global.</p>
+              </div>
+              <div class="quick-card">
+                <h4>Bambino Jugueterías</h4>
+                <p>Retail inteligente, bundles, campañas, recomendaciones y crecimiento de ventas.</p>
+              </div>
+              <div class="quick-card">
+                <h4>VIP Work</h4>
+                <p>Selección, outsourcing, servicios eventuales, promociones, eventos y RRHH inteligente.</p>
+              </div>
+              <div class="quick-card">
+                <h4>Vairo & Asociados</h4>
+                <p>Automatización contable, financiera, fiscal y servicios integrados con RRHH.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="view hidden" id="view-settings">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Owner Settings</h2>
+                <p class="panel-sub">Configuración local del panel. El token queda guardado en este navegador.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>API Base URL</label>
+                  <input class="input" id="apiBaseInput" value="https://api.consia.world" />
+                </div>
+
+                <div class="field" style="margin-top:14px;">
+                  <label>Owner Token</label>
+                  <input class="input" id="ownerTokenInput" placeholder="Pegá tu bearer token owner" />
+                </div>
+
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn success" id="btnSaveSettings">Guardar settings</button>
+                  <button class="btn ghost" id="btnReloadAll">Recargar panel</button>
+                </div>
+              </div>
+
+              <div>
+                <div class="field">
+                  <label>Estado</label>
+                  <div class="output" id="settingsOutput">Configuración local del panel lista.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer-note">
+          CONSIA OWNER PANEL · Owner Only · Pilot Core estable
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      apiBase: localStorage.getItem("CONSIA_API_BASE") || "https://api.consia.world",
+      token: localStorage.getItem("CONSIA_OWNER_TOKEN") || "",
+      ownerData: null,
+      ownerStatus: null,
+      currentView: "dashboard"
+    };
+
+    const els = {
+      apiBaseLabel: document.getElementById("apiBaseLabel"),
+      sideMode: document.getElementById("sideMode"),
+      sideRuns: document.getElementById("sideRuns"),
+      sidePending: document.getElementById("sidePending"),
+      globalModeBadge: document.getElementById("globalModeBadge"),
+      statApi: document.getElementById("statApi"),
+      statApiBadge: document.getElementById("statApiBadge"),
+      statRuns: document.getElementById("statRuns"),
+      statPending: document.getElementById("statPending"),
+      statDB: document.getElementById("statDB"),
+      commandSelect: document.getElementById("commandSelect"),
+      commandInput: document.getElementById("commandInput"),
+      commandOutput: document.getElementById("commandOutput"),
+      approvalsTable: document.getElementById("approvalsTable"),
+      historyTable: document.getElementById("historyTable"),
+      historyDetail: document.getElementById("historyDetail"),
+      previewInput: document.getElementById("previewInput"),
+      previewOutput: document.getElementById("previewOutput"),
+      siteFrame: document.getElementById("siteFrame"),
+      apiBaseInput: document.getElementById("apiBaseInput"),
+      ownerTokenInput: document.getElementById("ownerTokenInput"),
+      settingsOutput: document.getElementById("settingsOutput"),
+    };
+
+    function authHeaders(json = true){
+      const h = {};
+      if(json) h["Content-Type"] = "application/json";
+      if(state.token) h["Authorization"] = `Bearer ${state.token}`;
+      return h;
+    }
+
+    async function apiGet(path, withAuth = true){
+      const res = await fetch(state.apiBase + path, {
+        method: "GET",
+        headers: withAuth ? authHeaders(false) : {}
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || data.details || "request_failed");
+      return data;
+    }
+
+    async function apiPost(path, body, withAuth = true){
+      const res = await fetch(state.apiBase + path, {
+        method: "POST",
+        headers: withAuth ? authHeaders(true) : { "Content-Type":"application/json" },
+        body: JSON.stringify(body || {})
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || data.details || "request_failed");
+      return data;
+    }
+
+    function switchView(view){
+      state.currentView = view;
+      document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+      document.getElementById("view-" + view).classList.remove("hidden");
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.view === view);
+      });
+    }
+
+    function prefillCommand(command, input){
+      switchView("command");
+      els.commandSelect.value = command;
+      els.commandInput.value = input || "";
+      els.commandOutput.textContent = "Input cargado. Ejecutá cuando quieras.";
+    }
+
+    function formatDate(ts){
+      if(!ts) return "--";
+      try{
+        return new Date(Number(ts)).toLocaleString();
+      }catch{
+        return String(ts);
+      }
+    }
+
+    function pretty(obj){
+      try{return JSON.stringify(obj,null,2)}catch{return String(obj)}
+    }
+
+    function updateHeaderBits(){
+      els.apiBaseLabel.textContent = "API: " + state.apiBase;
+      els.apiBaseInput.value = state.apiBase;
+      els.ownerTokenInput.value = state.token;
+    }
+
+    async function loadHealth(){
+      try{
+        const res = await fetch(state.apiBase + "/health");
+        const data = await res.json();
+        els.statApi.textContent = data.ok ? "ONLINE" : "ERROR";
+        els.statApiBadge.textContent = data.ok ? "Operativo" : "Error";
+        els.statApiBadge.className = "badge " + (data.ok ? "ok" : "warn");
+      }catch(e){
+        els.statApi.textContent = "DOWN";
+        els.statApiBadge.textContent = "Sin respuesta";
+        els.statApiBadge.className = "badge warn";
+      }
+    }
+
+    async function loadOwner(){
+      const data = await apiGet("/v1/owner");
+      state.ownerData = data;
+
+      els.sideMode.textContent = "Modo: " + (data.mode || "pilot");
+      els.globalModeBadge.textContent = "Modo " + (data.mode || "pilot");
+      els.sideRuns.textContent = "Runs: " + (data.runs?.length || 0);
+      els.sidePending.textContent = "Pendientes: " + (data.approvals?.length || 0);
+
+      renderApprovals(data.approvals || []);
+      renderHistory(data.runs || []);
+    }
+
+    async function loadOwnerStatus(){
+      const data = await apiGet("/v1/owner/status");
+      state.ownerStatus = data;
+
+      els.statRuns.textContent = data.stats?.runs ?? 0;
+      els.statPending.textContent = data.stats?.pending_approvals ?? 0;
+      els.statDB.textContent = data.health?.db ? "OK" : "FAIL";
+    }
+
+    function renderApprovals(items){
+      if(!items.length){
+        els.approvalsTable.innerHTML = `<tr><td colspan="5" class="muted">No hay aprobaciones pendientes.</td></tr>`;
+        return;
+      }
+
+      els.approvalsTable.innerHTML = items.map(item => `
+        <tr>
+          <td class="mono">${item.run_id}</td>
+          <td>${item.action_name}</td>
+          <td>${item.status}</td>
+          <td>${formatDate(item.created_at)}</td>
+          <td>
+            <div class="row">
+              <button class="btn small success" onclick="approveRun('${item.run_id}')">Aprobar</button>
+              <button class="btn small danger" onclick="rejectRun('${item.run_id}')">Rechazar</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderHistory(items){
+      if(!items.length){
+        els.historyTable.innerHTML = `<tr><td colspan="5" class="muted">No hay historial todavía.</td></tr>`;
+        return;
+      }
+
+      els.historyTable.innerHTML = items.map(item => `
+        <tr onclick='showHistoryDetail(${JSON.stringify(JSON.stringify(item))})' style="cursor:pointer">
+          <td class="mono">${item.id}</td>
+          <td>${item.command}</td>
+          <td>${item.input_text || ""}</td>
+          <td>${item.status}</td>
+          <td>${formatDate(item.created_at)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function showHistoryDetail(serialized){
+      const item = JSON.parse(serialized);
+      const parsed = {...item};
+      try{ parsed.result_json = JSON.parse(item.result_json); }catch{}
+      els.historyDetail.textContent = pretty(parsed);
+    }
+
+    async function approveRun(runId){
+      try{
+        const res = await apiPost("/v1/command/approve", { run_id: runId });
+        alert("Aprobado: " + res.run_id);
+        await reloadAll();
+        switchView("approvals");
+      }catch(e){
+        alert("Error al aprobar: " + e.message);
+      }
+    }
+
+    async function rejectRun(runId){
+      const reason = prompt("Motivo de rechazo:", "rejected_by_owner");
+      if(reason === null) return;
+      try{
+        const res = await apiPost("/v1/command/reject", { run_id: runId, reason });
+        alert("Rechazado: " + res.run_id);
+        await reloadAll();
+        switchView("approvals");
+      }catch(e){
+        alert("Error al rechazar: " + e.message);
+      }
+    }
+
+    async function runCommand(preview = false){
+      const command = els.commandSelect.value;
+      const input = els.commandInput.value.trim();
+
+      if(!input){
+        alert("Escribí un input.");
+        return;
+      }
+
+      els.commandOutput.textContent = "Ejecutando...";
+      try{
+        const res = await apiPost("/v1/command/run", {
+          command,
+          input,
+          preview
+        }, false);
+
+        els.commandOutput.textContent = pretty(res);
+        await reloadAll();
+      }catch(e){
+        els.commandOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    async function runPreviewCommand(){
+      const command = els.commandSelect.value;
+      const input = els.previewInput.value.trim();
+      if(!input) return;
+
+      els.previewOutput.textContent = "Generando preview...";
+      try{
+        const res = await apiPost("/v1/command/run", {
+          command,
+          input,
+          preview: true
+        }, false);
+        els.previewOutput.textContent = pretty(res);
+        await reloadAll();
+      }catch(e){
+        els.previewOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    async function generateSiteHtml(){
+      const input = els.previewInput.value.trim();
+      if(!input) return;
+
+      els.previewOutput.textContent = "Generando sitio...";
+      try{
+        const res = await apiPost("/v1/site/generate", { input }, false);
+        els.previewOutput.textContent = pretty(res);
+        els.siteFrame.srcdoc = res.html || "<h1>Sin HTML</h1>";
+      }catch(e){
+        els.previewOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    async function reloadAll(){
+      updateHeaderBits();
+      await Promise.all([
+        loadHealth(),
+        loadOwner(),
+        loadOwnerStatus()
+      ]);
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>switchView(btn.dataset.view));
+    });
+
+    document.getElementById("btnRunCommand").addEventListener("click",()=>runCommand(false));
+    document.getElementById("btnRunPreview").addEventListener("click",()=>runCommand(true));
+    document.getElementById("btnClearCommand").addEventListener("click",()=>{
+      els.commandInput.value = "";
+      els.commandOutput.textContent = "Esperando ejecución...";
+    });
+
+    document.getElementById("btnRefreshTop").addEventListener("click",reloadAll);
+    document.getElementById("btnOpenCommandCenter").addEventListener("click",()=>switchView("command"));
+    document.getElementById("btnGoPreview").addEventListener("click",()=>switchView("preview"));
+    document.getElementById("btnRefreshApprovals").addEventListener("click",loadOwner);
+    document.getElementById("btnRefreshHistory").addEventListener("click",loadOwner);
+    document.getElementById("btnRunPreviewCommand").addEventListener("click",runPreviewCommand);
+    document.getElementById("btnGeneratePreviewSite").addEventListener("click",generateSiteHtml);
+    document.getElementById("btnLoadSiteHtml").addEventListener("click",generateSiteHtml);
+
+    document.getElementById("btnSaveSettings").addEventListener("click",()=>{
+      state.apiBase = els.apiBaseInput.value.trim() || "https://api.consia.world";
+      state.token = els.ownerTokenInput.value.trim();
+      localStorage.setItem("CONSIA_API_BASE", state.apiBase);
+      localStorage.setItem("CONSIA_OWNER_TOKEN", state.token);
+      els.settingsOutput.textContent = "Settings guardados localmente.";
+      updateHeaderBits();
+    });
+
+    document.getElementById("btnReloadAll").addEventListener("click", reloadAll);
+
+    window.switchView = switchView;
+    window.prefillCommand = prefillCommand;
+    window.approveRun = approveRun;
+    window.rejectRun = rejectRun;
+    window.showHistoryDetail = showHistoryDetail;
+
+    updateHeaderBits();
+    reloadAll().catch(err=>{
+      els.settingsOutput.textContent = "Error inicial: " + err.message;
+      els.commandOutput.textContent = "Error inicial: " + err.message;
+    });
+  </script>
 </body>
 </html>
