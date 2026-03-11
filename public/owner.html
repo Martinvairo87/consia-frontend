@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Owner Panel V2</title>
+  <style>
+    :root{
+      --bg:#06070b;
+      --bg2:#0b0f18;
+      --panel:#111624;
+      --panel2:#151b2b;
+      --line:#232c42;
+      --text:#f5f7fb;
+      --muted:#96a2bf;
+      --accent:#7ee7ff;
+      --accent2:#8b5cf6;
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --radius:20px;
+      --shadow:0 14px 40px rgba(0,0,0,.34);
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top left, rgba(126,231,255,.08), transparent 18%),
+        radial-gradient(circle at top right, rgba(139,92,246,.08), transparent 18%),
+        linear-gradient(180deg,var(--bg),#080b12 45%, #07080c 100%);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,textarea,select{font:inherit}
+
+    .app{
+      max-width:1550px;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .brandbox{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .orb{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%, #ffffff 0%, #cff8ff 12%, #7ee7ff 23%, #3150ff 51%, #0c1020 82%);
+      box-shadow:
+        0 0 30px rgba(126,231,255,.22),
+        0 0 70px rgba(139,92,246,.16),
+        inset 0 0 22px rgba(255,255,255,.12);
+      position:relative;
+      overflow:hidden;
+      flex:none;
+    }
+
+    .orb:after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:50%;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:26px;
+      line-height:1;
+      letter-spacing:.06em;
+    }
+
+    .brand p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--panel2),var(--panel));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      transition:.18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{
+      background:linear-gradient(135deg,var(--accent),#66c3ff 55%, var(--accent2));
+      color:#071019;
+      border:none;
+      font-weight:800;
+    }
+    .btn.success{
+      background:linear-gradient(135deg,#10b981,#39d6a1);
+      color:#04120e;
+      border:none;
+      font-weight:800;
+    }
+    .btn.danger{
+      background:linear-gradient(135deg,#ef4444,#ff7a7a);
+      color:#190505;
+      border:none;
+      font-weight:800;
+    }
+    .btn.ghost{
+      background:rgba(255,255,255,.03);
+    }
+    .btn.small{
+      font-size:13px;
+      padding:9px 12px;
+      border-radius:12px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:310px 1fr;
+      gap:18px;
+    }
+
+    .sidebar{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      height:fit-content;
+      position:sticky;
+      top:18px;
+    }
+
+    .side-title{
+      margin:0 0 12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:11px;
+    }
+
+    .nav{
+      display:grid;
+      gap:10px;
+    }
+
+    .nav-btn{
+      width:100%;
+      text-align:left;
+      padding:14px;
+      border-radius:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      color:var(--text);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .nav-btn:hover,.nav-btn.active{
+      border-color:rgba(126,231,255,.35);
+      background:linear-gradient(180deg,rgba(126,231,255,.10),rgba(139,92,246,.08));
+    }
+
+    .side-block{
+      margin-top:14px;
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .side-block h4{
+      margin:0 0 8px;
+      font-size:14px;
+    }
+
+    .mini-list{
+      display:grid;
+      gap:8px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .content{
+      display:grid;
+      gap:18px;
+    }
+
+    .view.hidden{display:none}
+
+    .panel{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top right, rgba(126,231,255,.08), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(139,92,246,.08), transparent 25%);
+      pointer-events:none;
+    }
+
+    .panel-head{
+      position:relative;
+      z-index:1;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .panel-title{
+      margin:0;
+      font-size:18px;
+    }
+
+    .panel-sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:18px;
+    }
+
+    .status-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .stat{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      min-height:104px;
+    }
+
+    .stat .label{
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:12px;
+      margin-bottom:8px;
+    }
+
+    .stat .value{
+      font-size:28px;
+      font-weight:800;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      width:fit-content;
+    }
+
+    .badge.ok{background:rgba(16,185,129,.14);color:#a5f3cf}
+    .badge.warn{background:rgba(245,158,11,.14);color:#ffd48c}
+    .badge.info{background:rgba(126,231,255,.12);color:#cff8ff}
+
+    .hero-actions{
+      position:relative;
+      z-index:1;
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .avatar-stage{
+      min-height:360px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(126,231,255,.10), transparent 28%),
+        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+    }
+
+    .pulse{
+      position:absolute;
+      width:360px;
+      height:360px;
+      border:1px solid rgba(126,231,255,.14);
+      border-radius:50%;
+      animation:pulse 3.4s infinite ease-out;
+    }
+    .pulse.p2{animation-delay:1.1s}
+    .pulse.p3{animation-delay:2.2s}
+
+    @keyframes pulse{
+      0%{transform:scale(.62);opacity:.7}
+      100%{transform:scale(1.2);opacity:0}
+    }
+
+    .avatar-body{
+      position:relative;
+      z-index:2;
+      width:210px;
+      height:270px;
+      border-radius:120px 120px 38px 38px;
+      border:1px solid rgba(126,231,255,.24);
+      background:
+        linear-gradient(180deg,rgba(200,246,255,.18),rgba(126,231,255,.05) 35%, rgba(139,92,246,.08) 100%);
+      box-shadow:0 0 35px rgba(126,231,255,.16);
+    }
+
+    .avatar-head{
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%);
+      width:110px;
+      height:128px;
+      border-radius:56px;
+      border:1px solid rgba(126,231,255,.28);
+      background:
+        radial-gradient(circle at 50% 22%, rgba(255,255,255,.74), rgba(126,231,255,.20) 44%, rgba(9,13,24,.55) 90%);
+      box-shadow:0 0 30px rgba(126,231,255,.18);
+    }
+
+    .eye{
+      position:absolute;
+      top:48px;
+      width:18px;
+      height:8px;
+      border-radius:999px;
+      background:linear-gradient(90deg,#8b5cf6,#7ee7ff,#8b5cf6);
+      box-shadow:0 0 12px rgba(126,231,255,.4);
+    }
+    .eye.left{left:23px}
+    .eye.right{right:23px}
+
+    .mouth{
+      position:absolute;
+      bottom:31px;
+      left:50%;
+      transform:translateX(-50%);
+      width:28px;
+      height:9px;
+      border-radius:999px;
+      background:rgba(126,231,255,.55);
+    }
+
+    .floating-tag{
+      position:absolute;
+      z-index:2;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(126,231,255,.2);
+      background:rgba(5,10,20,.64);
+      backdrop-filter:blur(10px);
+      color:#d9f8ff;
+      font-size:12px;
+    }
+    .t1{top:24px;left:22px}
+    .t2{top:58px;right:22px}
+    .t3{bottom:72px;left:22px}
+    .t4{bottom:28px;right:22px}
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .quick-card{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(126,231,255,.34);
+    }
+
+    .quick-card h4{
+      margin:0 0 8px;
+      font-size:15px;
+    }
+
+    .quick-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .field{width:100%}
+    .field label{
+      display:block;
+      margin:0 0 8px;
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .input,.select,.textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#090d16;
+      color:var(--text);
+      padding:14px;
+      outline:none;
+    }
+
+    .textarea{
+      min-height:140px;
+      resize:vertical;
+    }
+
+    .output{
+      background:#080b13;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      white-space:pre-wrap;
+      min-height:180px;
+      max-height:520px;
+      overflow:auto;
+      color:#d8e7ff;
+      font-size:12px;
+      line-height:1.5;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#090d16;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+
+    th,td{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+      font-size:13px;
+    }
+
+    th{
+      background:#0d1220;
+      color:#cde7ff;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+
+    td{color:#dbe6fb}
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .tab{
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    .tab.active{
+      background:linear-gradient(135deg,rgba(126,231,255,.13),rgba(139,92,246,.12));
+      border-color:rgba(126,231,255,.35);
+    }
+
+    .muted{color:var(--muted)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+    iframe{
+      width:100%;
+      height:560px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      padding:4px 0 18px;
+    }
+
+    @media (max-width:1200px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .hero{grid-template-columns:1fr}
+      .grid-2{grid-template-columns:1fr}
+      .status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .card-grid{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:760px){
+      .status-grid{grid-template-columns:1fr}
+      .card-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brandbox">
+        <div class="orb"></div>
+        <div class="brand">
+          <h1>CONSIA OWNER V2</h1>
+          <p>Owner Only · Panel maestro · Command + Preview + Voz + Ecosistema</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btnRefresh">Actualizar</button>
+        <button class="btn primary" id="btnOpenCommand">Command Center</button>
+        <button class="btn success" id="btnSpeak">Hablar</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <p class="side-title">Módulos</p>
+        <div class="nav">
+          <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+          <button class="nav-btn" data-view="command">Command Center</button>
+          <button class="nav-btn" data-view="approvals">Aprobaciones</button>
+          <button class="nav-btn" data-view="history">Historial</button>
+          <button class="nav-btn" data-view="preview">Vista previa</button>
+          <button class="nav-btn" data-view="voice">Voz</button>
+          <button class="nav-btn" data-view="ecosystem">Ecosistema</button>
+          <button class="nav-btn" data-view="settings">Settings</button>
+        </div>
+
+        <div class="side-block">
+          <h4>Empresas</h4>
+          <div class="mini-list">
+            <div>CONSIA</div>
+            <div>Manglar Construcciones</div>
+            <div>Manglar Inmobiliaria</div>
+            <div>Real Work</div>
+            <div>Bambino Jugueterías</div>
+            <div>VIP Work</div>
+            <div>Vairo & Asociados</div>
+          </div>
+        </div>
+
+        <div class="side-block">
+          <h4>Estado actual</h4>
+          <div class="mini-list">
+            <div id="sideMode">Modo: --</div>
+            <div id="sideRuns">Runs: --</div>
+            <div id="sidePending">Pendientes: --</div>
+          </div>
+        </div>
+
+        <div class="side-block">
+          <h4>API</h4>
+          <div class="mini-list">
+            <div class="mono" id="apiBaseLabel">https://api.consia.world</div>
+            <div class="mono">Owner Only</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <!-- DASHBOARD -->
+        <section class="view" id="view-dashboard">
+          <div class="hero">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">Centro de control global</h2>
+                  <p class="panel-sub">Estado operativo del core de CONSIA, con acceso directo a ejecución, revisión y expansión.</p>
+                </div>
+                <div class="badge info" id="modeBadge">Modo --</div>
+              </div>
+
+              <div class="status-grid">
+                <div class="stat">
+                  <div class="label">API</div>
+                  <div class="value" id="statApi">--</div>
+                  <div class="badge ok" id="apiBadge">Esperando</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Runs</div>
+                  <div class="value" id="statRuns">0</div>
+                  <div class="muted">Historial operativo</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Pendientes</div>
+                  <div class="value" id="statPending">0</div>
+                  <div class="muted">Aprobaciones activas</div>
+                </div>
+                <div class="stat">
+                  <div class="label">DB</div>
+                  <div class="value" id="statDB">--</div>
+                  <div class="muted">Conectividad del núcleo</div>
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn primary" onclick="switchView('command')">Ejecutar comando</button>
+                <button class="btn ghost" onclick="switchView('approvals')">Ver aprobaciones</button>
+                <button class="btn ghost" onclick="switchView('preview')">Abrir preview</button>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2 class="panel-title">CONSIA Presence</h2>
+                  <p class="panel-sub">Interfaz central visual del Owner. Lista para evolucionar al avatar real.</p>
+                </div>
+              </div>
+
+              <div class="avatar-stage">
+                <div class="pulse"></div>
+                <div class="pulse p2"></div>
+                <div class="pulse p3"></div>
+
+                <div class="floating-tag t1">Owner Only</div>
+                <div class="floating-tag t2">Voice Ready</div>
+                <div class="floating-tag t3">Preview Engine</div>
+                <div class="floating-tag t4">Business Loop</div>
+
+                <div class="avatar-body">
+                  <div class="avatar-head">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn small primary" onclick="prefillCommand('crear negocio','marketplace global de trueque con moneda CSC')">Crear negocio</button>
+                <button class="btn small ghost" onclick="prefillCommand('crear sitio','marketplace global de trueque CSC')">Crear sitio</button>
+                <button class="btn small ghost" onclick="prefillCommand('crear campaña','lanzamiento global CSC Exchange')">Crear campaña</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Motores rápidos</h2>
+                <p class="panel-sub">Accesos directos para tus empresas y proyectos estratégicos.</p>
+              </div>
+            </div>
+
+            <div class="card-grid">
+              <div class="quick-card" onclick="prefillCommand('analizar mercado','desarrollos inmobiliarios premium en Posadas')">
+                <h4>Manglar Developments</h4>
+                <p>Terrenos, proyectos ejecutivos, costos, presupuestos y estrategia de desarrollo.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear campaña','campaña premium de Manglar Construcciones')">
+                <h4>Manglar Comunicación</h4>
+                <p>Activos, posicionamiento, lanzamientos y contenidos de obra y desarrollos.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','marketplace global de trueque con moneda CSC')">
+                <h4>CSC Exchange</h4>
+                <p>Negocio, marketplace, monetización y estructura comercial del ecosistema CSC.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear campaña','campaña de ventas para Bambino Jugueterías')">
+                <h4>Bambino Retail AI</h4>
+                <p>Bundles, campañas, ventas, estacionalidad y crecimiento automatizado.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','servicio premium de RRHH y outsourcing VIP Work')">
+                <h4>VIP Work Engine</h4>
+                <p>Selección, outsourcing, promociones, servicios eventuales y eventos.</p>
+              </div>
+              <div class="quick-card" onclick="prefillCommand('crear negocio','ecosistema contable y financiero Vairo y Asociados')">
+                <h4>Vairo & Asociados</h4>
+                <p>Automatización contable, fiscal, financiera y servicios integrados.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- COMMAND -->
+        <section class="view hidden" id="view-command">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Command Center</h2>
+                <p class="panel-sub">Consola central para ejecutar comandos del núcleo CONSIA.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>Comando</label>
+                  <select id="commandSelect" class="select">
+                    <option value="analizar mercado">analizar mercado</option>
+                    <option value="crear negocio">crear negocio</option>
+                    <option value="crear marca">crear marca</option>
+                    <option value="crear sitio">crear sitio</option>
+                    <option value="crear campaña">crear campaña</option>
+                    <option value="publicar producto">publicar producto</option>
+                    <option value="buscar oportunidad">buscar oportunidad</option>
+                  </select>
+                </div>
+
+                <div class="field" style="margin-top:14px;">
+                  <label>Input</label>
+                  <textarea id="commandInput" class="textarea" placeholder="Escribí la tarea, proyecto o idea..."></textarea>
+                </div>
+
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn primary" id="btnRun">Ejecutar</button>
+                  <button class="btn ghost" id="btnPreviewRun">Preview</button>
+                  <button class="btn ghost" id="btnClear">Limpiar</button>
+                </div>
+
+                <div class="hero-actions">
+                  <button class="btn small ghost" onclick="prefillCommand('analizar mercado','negocios globales de trueque')">Mercado trueque</button>
+                  <button class="btn small ghost" onclick="prefillCommand('crear sitio','marketplace global de trueque CSC')">Sitio CSC</button>
+                  <button class="btn small ghost" onclick="prefillCommand('crear campaña','lanzamiento global CSC Exchange')">Campaña CSC</button>
+                </div>
+              </div>
+
+              <div>
+                <div class="field">
+                  <label>Output</label>
+                  <div id="commandOutput" class="output">Esperando ejecución...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- APPROVALS -->
+        <section class="view hidden" id="view-approvals">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Aprobaciones</h2>
+                <p class="panel-sub">Acciones pendientes Owner Only.</p>
+              </div>
+              <button class="btn ghost small" id="btnRefreshApprovals">Actualizar</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Acción</th>
+                    <th>Status</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="approvalsTable">
+                  <tr><td colspan="5" class="muted">Cargando...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="view hidden" id="view-history">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Historial</h2>
+                <p class="panel-sub">Runs ejecutados por CONSIA CORE.</p>
+              </div>
+              <button class="btn ghost small" id="btnRefreshHistory">Actualizar</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Comando</th>
+                    <th>Input</th>
+                    <th>Status</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTable">
+                  <tr><td colspan="5" class="muted">Cargando...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:14px;">
+              <div class="field">
+                <label>Detalle del run</label>
+                <div class="output" id="historyDetail">Seleccioná un run del historial.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PREVIEW -->
+        <section class="view hidden" id="view-preview">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Preview Engine</h2>
+                <p class="panel-sub">Generación previa de comandos y render de sitio.</p>
+              </div>
+              <div class="row">
+                <button class="btn ghost small" id="btnGeneratePreview">Preview command</button>
+                <button class="btn primary small" id="btnGenerateSite">Generar sitio</button>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>Input preview</label>
+                  <textarea id="previewInput" class="textarea">marketplace global de trueque CSC</textarea>
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label>Output preview</label>
+                  <div id="previewOutput" class="output">Esperando preview...</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:18px;">
+              <div class="field">
+                <label>Render HTML</label>
+                <iframe id="siteFrame"></iframe>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VOICE -->
+        <section class="view hidden" id="view-voice">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Voice Control</h2>
+                <p class="panel-sub">Modo de prueba por voz desde el navegador.</p>
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab active">Speech to Command</button>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>Transcripción</label>
+                  <div id="voiceTranscript" class="output">Todavía no hay transcripción.</div>
+                </div>
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn success" id="btnStartVoice">Iniciar voz</button>
+                  <button class="btn danger" id="btnStopVoice">Detener</button>
+                  <button class="btn ghost" id="btnUseVoiceAsCommand">Usar como comando</button>
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label>Resultado</label>
+                  <div id="voiceOutput" class="output">Esperando voz...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ECOSYSTEM -->
+        <section class="view hidden" id="view-ecosystem">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Ecosistema empresarial</h2>
+                <p class="panel-sub">Vista consolidada de los motores que CONSIA debe potenciar.</p>
+              </div>
+            </div>
+
+            <div class="card-grid">
+              <div class="quick-card"><h4>Manglar Construcciones</h4><p>Proyectos ejecutivos, costos, presupuestos, control y desarrollos.</p></div>
+              <div class="quick-card"><h4>Manglar Inmobiliaria</h4><p>Ventas, alquileres, tasaciones, desarrollos y captación.</p></div>
+              <div class="quick-card"><h4>Real Work</h4><p>Marketplace inmobiliario, CRM, agentes, IA y expansión global.</p></div>
+              <div class="quick-card"><h4>Bambino Jugueterías</h4><p>Retail inteligente, campañas, bundles y crecimiento automatizado.</p></div>
+              <div class="quick-card"><h4>VIP Work</h4><p>RRHH, eventos, promociones, outsourcing y servicios eventuales.</p></div>
+              <div class="quick-card"><h4>Vairo & Asociados</h4><p>Servicios contables, fiscales, financieros y automatización interna.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="view hidden" id="view-settings">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">Settings</h2>
+                <p class="panel-sub">Configuración local del panel. El token queda guardado en este navegador.</p>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="field">
+                  <label>API Base</label>
+                  <input id="apiBaseInput" class="input" />
+                </div>
+                <div class="field" style="margin-top:14px;">
+                  <label>Owner Token</label>
+                  <input id="tokenInput" class="input" placeholder="Pegá tu bearer token" />
+                </div>
+                <div class="row" style="margin-top:14px;">
+                  <button class="btn success" id="btnSaveSettings">Guardar</button>
+                  <button class="btn ghost" id="btnReloadAll">Recargar panel</button>
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label>Estado</label>
+                  <div id="settingsOutput" class="output">Listo.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer-note">
+          CONSIA OWNER PANEL V2 · Owner Only · Pilot Core estable
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      apiBase: localStorage.getItem("CONSIA_API_BASE") || "https://api.consia.world",
+      token: localStorage.getItem("CONSIA_OWNER_TOKEN") || "",
+      owner: null,
+      status: null,
+      recognition: null
+    };
+
+    const els = {
+      apiBaseLabel: document.getElementById("apiBaseLabel"),
+      sideMode: document.getElementById("sideMode"),
+      sideRuns: document.getElementById("sideRuns"),
+      sidePending: document.getElementById("sidePending"),
+      modeBadge: document.getElementById("modeBadge"),
+      statApi: document.getElementById("statApi"),
+      apiBadge: document.getElementById("apiBadge"),
+      statRuns: document.getElementById("statRuns"),
+      statPending: document.getElementById("statPending"),
+      statDB: document.getElementById("statDB"),
+      commandSelect: document.getElementById("commandSelect"),
+      commandInput: document.getElementById("commandInput"),
+      commandOutput: document.getElementById("commandOutput"),
+      approvalsTable: document.getElementById("approvalsTable"),
+      historyTable: document.getElementById("historyTable"),
+      historyDetail: document.getElementById("historyDetail"),
+      previewInput: document.getElementById("previewInput"),
+      previewOutput: document.getElementById("previewOutput"),
+      siteFrame: document.getElementById("siteFrame"),
+      voiceTranscript: document.getElementById("voiceTranscript"),
+      voiceOutput: document.getElementById("voiceOutput"),
+      apiBaseInput: document.getElementById("apiBaseInput"),
+      tokenInput: document.getElementById("tokenInput"),
+      settingsOutput: document.getElementById("settingsOutput")
+    };
+
+    function authHeaders(json = true){
+      const h = {};
+      if(json) h["Content-Type"] = "application/json";
+      if(state.token) h["Authorization"] = `Bearer ${state.token}`;
+      return h;
+    }
+
+    async function apiGet(path, auth = true){
+      const res = await fetch(state.apiBase + path, {
+        method: "GET",
+        headers: auth ? authHeaders(false) : {}
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || data.details || "request_failed");
+      return data;
+    }
+
+    async function apiPost(path, body, auth = true){
+      const res = await fetch(state.apiBase + path, {
+        method: "POST",
+        headers: auth ? authHeaders(true) : { "Content-Type":"application/json" },
+        body: JSON.stringify(body || {})
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || data.details || "request_failed");
+      return data;
+    }
+
+    function pretty(obj){
+      try{return JSON.stringify(obj,null,2)}catch{return String(obj)}
+    }
+
+    function formatDate(ts){
+      if(!ts) return "--";
+      return new Date(Number(ts)).toLocaleString();
+    }
+
+    function switchView(view){
+      document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+      document.getElementById("view-" + view).classList.remove("hidden");
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.view === view);
+      });
+    }
+
+    function prefillCommand(command, input){
+      switchView("command");
+      els.commandSelect.value = command;
+      els.commandInput.value = input || "";
+      els.commandOutput.textContent = "Input cargado. Ejecutá cuando quieras.";
+    }
+
+    function updateSettingsUI(){
+      els.apiBaseLabel.textContent = state.apiBase;
+      els.apiBaseInput.value = state.apiBase;
+      els.tokenInput.value = state.token;
+    }
+
+    async function loadHealth(){
+      try{
+        const res = await fetch(state.apiBase + "/health");
+        const data = await res.json();
+        els.statApi.textContent = data.ok ? "ONLINE" : "ERROR";
+        els.apiBadge.textContent = data.ok ? "Operativo" : "Error";
+        els.apiBadge.className = "badge " + (data.ok ? "ok" : "warn");
+      }catch(e){
+        els.statApi.textContent = "DOWN";
+        els.apiBadge.textContent = "Sin respuesta";
+        els.apiBadge.className = "badge warn";
+      }
+    }
+
+    async function loadOwner(){
+      const data = await apiGet("/v1/owner");
+      state.owner = data;
+
+      els.sideMode.textContent = "Modo: " + (data.mode || "--");
+      els.sideRuns.textContent = "Runs: " + (data.runs?.length || 0);
+      els.sidePending.textContent = "Pendientes: " + (data.approvals?.length || 0);
+      els.modeBadge.textContent = "Modo " + (data.mode || "--");
+
+      renderApprovals(data.approvals || []);
+      renderHistory(data.runs || []);
+    }
+
+    async function loadStatus(){
+      const data = await apiGet("/v1/owner/status");
+      state.status = data;
+
+      els.statRuns.textContent = data.stats?.runs ?? 0;
+      els.statPending.textContent = data.stats?.pending_approvals ?? 0;
+      els.statDB.textContent = data.health?.db ? "OK" : "FAIL";
+    }
+
+    function renderApprovals(items){
+      if(!items.length){
+        els.approvalsTable.innerHTML = `<tr><td colspan="5" class="muted">No hay aprobaciones pendientes.</td></tr>`;
+        return;
+      }
+
+      els.approvalsTable.innerHTML = items.map(item => `
+        <tr>
+          <td class="mono">${item.run_id}</td>
+          <td>${item.action_name}</td>
+          <td>${item.status}</td>
+          <td>${formatDate(item.created_at)}</td>
+          <td>
+            <div class="row">
+              <button class="btn small success" onclick="approveRun('${item.run_id}')">Aprobar</button>
+              <button class="btn small danger" onclick="rejectRun('${item.run_id}')">Rechazar</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderHistory(items){
+      if(!items.length){
+        els.historyTable.innerHTML = `<tr><td colspan="5" class="muted">No hay historial todavía.</td></tr>`;
+        return;
+      }
+
+      els.historyTable.innerHTML = items.map(item => `
+        <tr style="cursor:pointer" onclick='showHistoryDetail(${JSON.stringify(JSON.stringify(item))})'>
+          <td class="mono">${item.id}</td>
+          <td>${item.command}</td>
+          <td>${item.input_text || ""}</td>
+          <td>${item.status}</td>
+          <td>${formatDate(item.created_at)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function showHistoryDetail(serialized){
+      const item = JSON.parse(serialized);
+      const parsed = {...item};
+      try{ parsed.result_json = JSON.parse(item.result_json); }catch{}
+      els.historyDetail.textContent = pretty(parsed);
+    }
+
+    async function approveRun(runId){
+      try{
+        const res = await apiPost("/v1/command/approve", { run_id: runId });
+        alert("Aprobado: " + res.run_id);
+        await reloadAll();
+        switchView("approvals");
+      }catch(e){
+        alert("Error: " + e.message);
+      }
+    }
+
+    async function rejectRun(runId){
+      const reason = prompt("Motivo de rechazo:", "rejected_by_owner");
+      if(reason === null) return;
+      try{
+        const res = await apiPost("/v1/command/reject", { run_id: runId, reason });
+        alert("Rechazado: " + res.run_id);
+        await reloadAll();
+        switchView("approvals");
+      }catch(e){
+        alert("Error: " + e.message);
+      }
+    }
+
+    async function runCommand(preview = false){
+      const command = els.commandSelect.value;
+      const input = els.commandInput.value.trim();
+      if(!input){
+        alert("Escribí un input.");
+        return;
+      }
+
+      els.commandOutput.textContent = "Ejecutando...";
+      try{
+        const res = await apiPost("/v1/command/run", {
+          command,
+          input,
+          preview
+        }, false);
+        els.commandOutput.textContent = pretty(res);
+        await reloadAll();
+      }catch(e){
+        els.commandOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    async function generatePreviewCommand(){
+      const input = els.previewInput.value.trim();
+      if(!input) return;
+
+      els.previewOutput.textContent = "Generando preview...";
+      try{
+        const res = await apiPost("/v1/command/run", {
+          command: "crear sitio",
+          input,
+          preview: true
+        }, false);
+        els.previewOutput.textContent = pretty(res);
+        await reloadAll();
+      }catch(e){
+        els.previewOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    async function generateSite(){
+      const input = els.previewInput.value.trim();
+      if(!input) return;
+
+      els.previewOutput.textContent = "Generando sitio...";
+      try{
+        const res = await apiPost("/v1/site/generate", { input }, false);
+        els.previewOutput.textContent = pretty(res);
+        els.siteFrame.srcdoc = res.html || "<h1>Sin HTML</h1>";
+      }catch(e){
+        els.previewOutput.textContent = "Error: " + e.message;
+      }
+    }
+
+    function initVoice(){
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SpeechRecognition){
+        els.voiceOutput.textContent = "Este navegador no soporta reconocimiento de voz.";
+        return;
+      }
+
+      state.recognition = new SpeechRecognition();
+      state.recognition.lang = "es-AR";
+      state.recognition.interimResults = true;
+      state.recognition.continuous = true;
+
+      let transcript = "";
+
+      state.recognition.onresult = (event) => {
+        transcript = "";
+        for(let i = 0; i < event.results.length; i++){
+          transcript += event.results[i][0].transcript + " ";
+        }
+        els.voiceTranscript.textContent = transcript.trim() || "Sin transcripción.";
+      };
+
+      state.recognition.onstart = () => {
+        els.voiceOutput.textContent = "Escuchando...";
+      };
+
+      state.recognition.onerror = (e) => {
+        els.voiceOutput.textContent = "Error de voz: " + e.error;
+      };
+
+      state.recognition.onend = () => {
+        els.voiceOutput.textContent = "Reconocimiento detenido.";
+      };
+    }
+
+    function startVoice(){
+      if(!state.recognition) initVoice();
+      if(state.recognition){
+        try{ state.recognition.start(); }catch{}
+      }
+    }
+
+    function stopVoice(){
+      if(state.recognition){
+        try{ state.recognition.stop(); }catch{}
+      }
+    }
+
+    function useVoiceAsCommand(){
+      const text = els.voiceTranscript.textContent.trim();
+      if(!text || text === "Todavía no hay transcripción." || text === "Sin transcripción."){
+        alert("No hay transcripción disponible.");
+        return;
+      }
+      switchView("command");
+      els.commandInput.value = text;
+      els.commandOutput.textContent = "Transcripción cargada como input.";
+    }
+
+    async function reloadAll(){
+      updateSettingsUI();
+      await Promise.all([
+        loadHealth(),
+        loadOwner(),
+        loadStatus()
+      ]);
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>switchView(btn.dataset.view));
+    });
+
+    document.getElementById("btnRefresh").addEventListener("click", reloadAll);
+    document.getElementById("btnOpenCommand").addEventListener("click", ()=>switchView("command"));
+
+    document.getElementById("btnRun").addEventListener("click", ()=>runCommand(false));
+    document.getElementById("btnPreviewRun").addEventListener("click", ()=>runCommand(true));
+    document.getElementById("btnClear").addEventListener("click", ()=>{
+      els.commandInput.value = "";
+      els.commandOutput.textContent = "Esperando ejecución...";
+    });
+
+    document.getElementById("btnRefreshApprovals").addEventListener("click", loadOwner);
+    document.getElementById("btnRefreshHistory").addEventListener("click", loadOwner);
+
+    document.getElementById("btnGeneratePreview").addEventListener("click", generatePreviewCommand);
+    document.getElementById("btnGenerateSite").addEventListener("click", generateSite);
+
+    document.getElementById("btnStartVoice").addEventListener("click", startVoice);
+    document.getElementById("btnStopVoice").addEventListener("click", stopVoice);
+    document.getElementById("btnUseVoiceAsCommand").addEventListener("click", useVoiceAsCommand);
+    document.getElementById("btnSpeak").addEventListener("click", ()=>switchView("voice"));
+
+    document.getElementById("btnSaveSettings").addEventListener("click", ()=>{
+      state.apiBase = els.apiBaseInput.value.trim() || "https://api.consia.world";
+      state.token = els.tokenInput.value.trim();
+      localStorage.setItem("CONSIA_API_BASE", state.apiBase);
+      localStorage.setItem("CONSIA_OWNER_TOKEN", state.token);
+      els.settingsOutput.textContent = "Settings guardados localmente.";
+      updateSettingsUI();
+    });
+
+    document.getElementById("btnReloadAll").addEventListener("click", reloadAll);
+
+    window.switchView = switchView;
+    window.prefillCommand = prefillCommand;
+    window.approveRun = approveRun;
+    window.rejectRun = rejectRun;
+    window.showHistoryDetail = showHistoryDetail;
+
+    updateSettingsUI();
+    initVoice();
+
+    reloadAll().catch(err=>{
+      els.settingsOutput.textContent = "Error inicial: " + err.message;
+      els.commandOutput.textContent = "Error inicial: " + err.message;
+    });
+  </script>
+</body>
+</html>
