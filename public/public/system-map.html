@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<title>CONSIA SYSTEM MAP</title>
+
+<style>
+
+body{
+margin:0;
+background:#020a18;
+font-family:Arial;
+overflow:hidden;
+color:white;
+}
+
+#title{
+position:absolute;
+top:20px;
+left:30px;
+font-size:20px;
+letter-spacing:1px;
+}
+
+#canvas{
+width:100vw;
+height:100vh;
+display:block;
+}
+
+.node{
+position:absolute;
+padding:8px 12px;
+background:#0b2b5a;
+border-radius:6px;
+font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="title">CONSIA HOLOGRAPHIC SYSTEM MAP</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas = document.getElementById("canvas")
+const ctx = canvas.getContext("2d")
+
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+
+const nodes = [
+{ id:"core", x:canvas.width/2, y:canvas.height/2, label:"CONSIA CORE" },
+
+{ id:"brain", x:canvas.width/2+200, y:canvas.height/2-150, label:"GLOBAL BRAIN" },
+
+{ id:"strategic", x:canvas.width/2-220, y:canvas.height/2-160, label:"STRATEGIC ENGINE" },
+
+{ id:"learning", x:canvas.width/2+240, y:canvas.height/2+150, label:"SELF LEARNING" },
+
+{ id:"agents", x:canvas.width/2-260, y:canvas.height/2+140, label:"AGENT SWARM" },
+
+{ id:"memory", x:canvas.width/2+80, y:canvas.height/2+260, label:"GLOBAL MEMORY" },
+
+{ id:"projects", x:canvas.width/2-100, y:canvas.height/2-280, label:"PROJECT BRAIN" }
+]
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+nodes.forEach(n => {
+
+ctx.beginPath()
+ctx.arc(n.x,n.y,5,0,Math.PI*2)
+ctx.fillStyle="#49ffb3"
+ctx.fill()
+
+ctx.fillStyle="#fff"
+ctx.fillText(n.label,n.x+10,n.y+4)
+
+})
+
+drawLines()
+
+requestAnimationFrame(draw)
+
+}
+
+function drawLines(){
+
+connect("core","brain")
+connect("core","strategic")
+connect("core","agents")
+connect("core","learning")
+connect("core","memory")
+connect("core","projects")
+
+}
+
+function connect(a,b){
+
+const A = nodes.find(n=>n.id===a)
+const B = nodes.find(n=>n.id===b)
+
+ctx.beginPath()
+ctx.moveTo(A.x,A.y)
+ctx.lineTo(B.x,B.y)
+ctx.strokeStyle="rgba(0,200,255,0.3)"
+ctx.stroke()
+
+}
+
+draw()
+
+</script>
+
+</body>
+</html>
