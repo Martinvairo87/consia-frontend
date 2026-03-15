@@ -1,844 +1,291 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>CONSIA GLOBAL COMMAND CENTER</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07111f" />
-  <style>
-    :root{--bg:#050c16;--bg2:#081423;--panel:rgba(10,24,44,.88);--line:rgba(105,178,255,.14);--line2:rgba(105,178,255,.26);--text:#eaf5ff;--muted:#88a8c8;--cyan:#48d8ff;--blue:#4b7cff;--green:#2ee0a8;--yellow:#ffc95c;--red:#ff6d8b;--ok:#29e3a9;--warn:#ffcb63;--err:#ff7b98;--shadow:0 20px 60px rgba(0,0,0,.45)}
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 700px at 10% -10%, rgba(72,216,255,.16), transparent 40%),radial-gradient(1000px 600px at 100% 0%, rgba(75,124,255,.16), transparent 40%),linear-gradient(180deg, #050b15, #07111d 28%, #07111b 100%);overflow:hidden}
-    .shell{height:100vh;display:grid;grid-template-columns:260px 1fr 360px;grid-template-rows:74px 1fr;gap:14px;padding:14px}
-    .glass{background:linear-gradient(180deg, rgba(15,31,56,.88), rgba(8,19,35,.92));border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter: blur(16px)}
-    .topbar{grid-column:1 / 4;display:flex;align-items:center;justify-content:space-between;gap:16px;border-radius:22px;padding:12px 16px}
-    .brand{display:flex;align-items:center;gap:14px}.mark{width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(255,255,255,.08) 16%, transparent 17%),radial-gradient(circle at 55% 50%, rgba(72,216,255,.92), rgba(72,216,255,.14) 42%, transparent 43%),linear-gradient(135deg, rgba(72,216,255,.12), rgba(75,124,255,.18))}
-    .brand-title{font-size:15px;font-weight:800;letter-spacing:.08em}.brand-sub{margin-top:2px;color:var(--muted);font-size:12px}
-    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .pill{display:flex;align-items:center;gap:8px;min-height:38px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:12px}
-    .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 18px currentColor;background:var(--muted);color:var(--muted)} .dot.ok{background:var(--ok);color:var(--ok)} .dot.warn{background:var(--warn);color:var(--warn)} .dot.err{background:var(--err);color:var(--err)}
-    .btn{appearance:none;border:none;outline:none;cursor:pointer;color:var(--text);border-radius:12px;padding:11px 14px;font-weight:800;background:linear-gradient(180deg, #17365f, #0f2948);border:1px solid rgba(97,157,255,.28);box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.28)}
-    .btn.secondary{background:linear-gradient(180deg, #14253d, #0e1b2f);border:1px solid var(--line)} .btn.ghost{background:rgba(255,255,255,.03);border:1px solid var(--line);box-shadow:none}
-    .btn.green{background:linear-gradient(180deg, #0f544e, #0a3c3a);border:1px solid rgba(46,224,168,.22)} .btn.red{background:linear-gradient(180deg, #632536, #431725);border:1px solid rgba(255,109,139,.24)}
-    .sidebar{border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}
-    .nav-head{color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px 0}
-    .nav{display:flex;flex-direction:column;gap:8px}
-    .nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid transparent;color:var(--text);font-weight:800;cursor:pointer;text-align:left}
-    .nav-btn.active{background:linear-gradient(180deg, rgba(72,216,255,.14), rgba(75,124,255,.10));border-color:rgba(72,216,255,.24)} .nav-icon{width:22px;height:22px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.055);color:var(--cyan);font-size:13px}
-    .mini-card{padding:12px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line)} .mini-title{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px} .mini-value{font-size:18px;font-weight:800;line-height:1.2;word-break:break-word}
-    .center{display:grid;grid-template-rows:auto 1fr auto;gap:14px;min-width:0;overflow:hidden}
-    .status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .card{border-radius:20px;overflow:hidden;min-width:0}.status-card{position:relative;padding:14px}.status-card::after{content:"";position:absolute;inset:auto -20% -50% auto;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle, rgba(72,216,255,.10), transparent 65%);pointer-events:none}
-    .status-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.status-label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)} .status-value{font-size:24px;font-weight:800;line-height:1;margin-top:4px;margin-bottom:6px;word-break:break-word}
-    .meter{width:100%;height:8px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04)} .meter>span{display:block;width:0%;height:100%;border-radius:999px;background:linear-gradient(90deg, var(--cyan), var(--blue));box-shadow:0 0 18px rgba(72,216,255,.28);transition:width .3s ease}
-    .status-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;color:var(--muted);font-size:12px}
-    .tag{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:6px 10px;border-radius:999px;border:1px solid transparent;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
-    .tag.ok{background:rgba(41,227,169,.08);border-color:rgba(41,227,169,.18);color:var(--ok)} .tag.warn{background:rgba(255,201,92,.08);border-color:rgba(255,201,92,.18);color:var(--warn)} .tag.err{background:rgba(255,109,139,.08);border-color:rgba(255,109,139,.18);color:var(--err)} .tag.info{background:rgba(72,216,255,.08);border-color:rgba(72,216,255,.18);color:var(--cyan)}
-    .workspace{border-radius:22px;min-height:0;overflow:hidden;display:grid}.panel{display:none;padding:14px;overflow:auto;min-height:0}.panel.active{display:block}
-    .panel-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:14px;min-height:100%}.section{display:flex;flex-direction:column;gap:14px;min-width:0}
-    .block{border-radius:18px;background:linear-gradient(180deg, rgba(14,31,57,.88), rgba(8,20,38,.88));border:1px solid var(--line);overflow:hidden;min-width:0}.block-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 0 14px;flex-wrap:wrap}
-    .block-title{font-weight:800}.block-sub{margin-top:3px;color:var(--muted);font-size:12px}.block-body{padding:14px;min-width:0}
-    .quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick{width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text);font-weight:800;text-align:left;cursor:pointer}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .kpi{padding:14px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line)} .kpi-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.10em;margin-bottom:6px}.kpi-value{font-size:28px;font-weight:800;line-height:1}.kpi-foot{margin-top:8px;font-size:12px;color:var(--muted)}
-    .list{display:grid;gap:10px}
-    .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line)} .row-left{display:flex;align-items:center;gap:12px;min-width:0}
-    .avatar-mini{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(72,216,255,.18), rgba(75,124,255,.18));border:1px solid rgba(72,216,255,.16);color:var(--cyan);font-weight:800;flex:0 0 auto}
-    .row-title{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-sub{margin-top:2px;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
-    .timeline{display:grid;gap:10px}.time-item{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.07)} .time-item:last-child{border-bottom:none}
-    .time-time{color:var(--muted);font-size:12px;padding-top:2px}.time-box{padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);word-break:break-word;white-space:pre-wrap}
-    .chat-shell{display:grid;grid-template-rows:auto 1fr auto;min-height:0;height:100%}.chat-log{min-height:280px;max-height:calc(100vh - 380px);overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(900px 340px at 0% 0%, rgba(72,216,255,.06), transparent 50%),radial-gradient(900px 340px at 100% 0%, rgba(75,124,255,.05), transparent 50%)}
-    .msg{max-width:86%;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.06);line-height:1.45;white-space:pre-wrap;word-break:break-word}
-    .msg.user{align-self:flex-end;background:linear-gradient(180deg, rgba(75,124,255,.22), rgba(75,124,255,.12));border-color:rgba(75,124,255,.24)} .msg.bot{align-self:flex-start;background:linear-gradient(180deg, rgba(72,216,255,.10), rgba(255,255,255,.02));border-color:rgba(72,216,255,.16)} .msg.system{align-self:center;background:rgba(255,255,255,.035);color:var(--muted);font-size:12px;border-style:dashed}
-    .msg-meta{margin-top:8px;font-size:11px;color:var(--muted)}
-    .composer{padding:12px 14px 14px;border-top:1px solid var(--line);display:grid;gap:10px;background:rgba(0,0,0,.12)} .composer-row{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center}
-    textarea.input,input.text{width:100%;min-height:56px;resize:vertical;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;font:inherit} input.text{min-height:48px}
-    .tiny{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
-    .chart{height:150px;border-radius:14px;border:1px solid var(--line);position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),repeating-linear-gradient(180deg, rgba(255,255,255,.06) 0 1px, transparent 1px 28px),repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 44px)}
-    .chart svg{position:absolute;inset:0;width:100%;height:100%}.footer-bar{border-radius:18px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;flex-wrap:wrap}
-    .dock{display:flex;flex-direction:column;gap:14px;overflow:auto}.orb-card{position:relative;min-height:250px;padding:16px;border-radius:22px}.orb-wrap{display:grid;place-items:center;height:208px}
-    .orb{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.06) 18%, transparent 19%),radial-gradient(circle at 50% 45%, rgba(72,216,255,.95), rgba(72,216,255,.2) 42%, rgba(75,124,255,.14) 60%, transparent 70%),radial-gradient(circle at 50% 50%, rgba(75,124,255,.28), transparent 62%);box-shadow:0 0 60px rgba(72,216,255,.32),0 0 120px rgba(75,124,255,.18),inset 0 0 40px rgba(255,255,255,.08);animation:pulse 2.8s ease-in-out infinite;overflow:hidden}
-    .orb::before,.orb::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:1px solid rgba(72,216,255,.18);animation:spin 11s linear infinite}.orb::after{inset:-22%;border-color:rgba(75,124,255,.16);animation-duration:18s;animation-direction:reverse}
-    .orb.listening{animation:listen 1.15s ease-in-out infinite}.orb.speaking{animation:speak .6s ease-in-out infinite}.orb.busy{animation:pulse 1.2s ease-in-out infinite}
-    .orb-label{text-align:center;font-weight:800;letter-spacing:.12em;margin-top:14px}.dock-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-all}.small-note{color:var(--muted);font-size:12px;line-height:1.45;white-space:pre-wrap}.scroll{max-height:280px;overflow:auto}
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}} @keyframes speak{0%,100%{transform:scale(1)}50%{transform:scale(1.11)}} @keyframes listen{0%,100%{transform:scale(1)}25%{transform:scale(1.08)}50%{transform:scale(1.02)}75%{transform:scale(1.10)}} @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-    @media (max-width:1400px){.shell{grid-template-columns:240px 1fr 330px}.status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:1fr}}
-    @media (max-width:1100px){body{overflow:auto}.shell{height:auto;min-height:100vh;grid-template-columns:1fr;grid-template-rows:auto auto auto auto}.topbar{grid-column:auto}.panel-grid{grid-template-columns:1fr}.chat-log{max-height:420px}}
-    @media (max-width:720px){.status-grid,.grid-2,.quick-grid,.dock-actions,.composer-row{grid-template-columns:1fr}.top-actions{width:100%}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CONSIA GLOBAL COMMAND CENTER</title>
+
+<style>
+
+body{
+margin:0;
+font-family:system-ui;
+background:#020617;
+color:white;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 20px;
+background:#0f172a;
+border-bottom:1px solid #1e293b;
+}
+
+.logo{
+font-size:20px;
+font-weight:700;
+letter-spacing:2px;
+}
+
+.status{
+display:flex;
+gap:12px;
+align-items:center;
+}
+
+.badge{
+padding:6px 10px;
+border-radius:8px;
+font-size:12px;
+background:#0ea5e9;
+}
+
+.layout{
+display:grid;
+grid-template-columns:220px 1fr 280px;
+height:calc(100vh - 60px);
+}
+
+.sidebar{
+background:#020617;
+border-right:1px solid #1e293b;
+padding:20px;
+}
+
+.sidebar button{
+width:100%;
+background:#0f172a;
+border:none;
+color:white;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.main{
+padding:20px;
+overflow:auto;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:14px;
+}
+
+.metric{
+background:#020617;
+padding:16px;
+border-radius:10px;
+text-align:center;
+}
+
+.metric h3{
+margin:0;
+font-size:28px;
+}
+
+.console{
+width:100%;
+padding:14px;
+border-radius:8px;
+border:none;
+background:#020617;
+color:white;
+margin-top:10px;
+}
+
+.right{
+border-left:1px solid #1e293b;
+padding:20px;
+}
+
+.avatar{
+background:#020617;
+border-radius:50%;
+height:120px;
+width:120px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+}
+
+.button{
+width:100%;
+padding:10px;
+border:none;
+border-radius:8px;
+margin-top:8px;
+background:#0ea5e9;
+color:white;
+cursor:pointer;
+}
+
+.agent{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #1e293b;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="shell">
-    <header class="topbar glass">
-      <div class="brand">
-        <div class="mark"></div>
-        <div>
-          <div class="brand-title">CONSIA GLOBAL COMMAND CENTER</div>
-          <div class="brand-sub">Estado + Chat + Agents + Projects + Memory + Autopilot + Economy + Avatar/Voz</div>
-        </div>
-      </div>
-      <div class="top-actions">
-        <div class="pill"><span class="dot warn" id="globalDot"></span><span id="globalStatusText">BOOTING</span></div>
-        <div class="pill">OWNER <strong id="ownerMode">ACTIVE</strong></div>
-        <div class="pill">TIME <strong id="clock">--:--:--</strong></div>
-        <button class="btn secondary" id="refreshBtn">Refresh</button>
-        <button class="btn" id="backHomeBtn">Home</button>
-      </div>
-    </header>
-
-    <aside class="sidebar glass">
-      <div class="nav-head">Navigation</div>
-      <div class="nav">
-        <button class="nav-btn active" data-panel="dashboardPanel"><span class="nav-icon">⌁</span><span>Dashboard</span></button>
-        <button class="nav-btn" data-panel="chatPanel"><span class="nav-icon">✦</span><span>Command Chat</span></button>
-        <button class="nav-btn" data-panel="agentsPanel"><span class="nav-icon">⚙</span><span>Agent Swarm</span></button>
-        <button class="nav-btn" data-panel="projectsPanel"><span class="nav-icon">▣</span><span>Projects</span></button>
-        <button class="nav-btn" data-panel="memoryPanel"><span class="nav-icon">◎</span><span>Memory</span></button>
-        <button class="nav-btn" data-panel="autopilotPanel"><span class="nav-icon">➤</span><span>Autopilot</span></button>
-        <button class="nav-btn" data-panel="economyPanel"><span class="nav-icon">$</span><span>Economy</span></button>
-      </div>
-
-      <div class="nav-head">Quick actions</div>
-      <div class="nav">
-        <button class="nav-btn" id="quickStatusBtn"><span class="nav-icon">●</span><span>System Scan</span></button>
-        <button class="nav-btn" id="quickAgentsBtn"><span class="nav-icon">⛭</span><span>Reload Agents</span></button>
-        <button class="nav-btn" id="quickVoiceBtn"><span class="nav-icon">🎙</span><span>Start Voice</span></button>
-        <button class="nav-btn" id="quickAutopilotBtn"><span class="nav-icon">▶</span><span>Run Autopilot</span></button>
-      </div>
-
-      <div class="mini-card"><div class="mini-title">API Base</div><div class="mini-value mono" id="apiBaseLabel">https://api.consia.world</div></div>
-      <div class="mini-card"><div class="mini-title">Owner Token</div><div class="mini-value mono" id="ownerTokenLabel">—</div></div>
-      <div class="mini-card"><div class="mini-title">Voice Mode</div><div class="mini-value" id="voiceState">OFF</div></div>
-    </aside>
-
-    <main class="center">
-      <section class="status-grid">
-        <article class="card glass status-card"><div class="status-top"><div><div class="status-label">Core</div><div class="status-value" id="coreValue">Checking</div></div><span class="tag info" id="coreTag">SCAN</span></div><div class="meter"><span id="coreBar"></span></div><div class="status-meta"><span id="coreMeta">Waiting status</span><span id="corePct">0%</span></div></article>
-        <article class="card glass status-card"><div class="status-top"><div><div class="status-label">API</div><div class="status-value" id="apiValue">Checking</div></div><span class="tag info" id="apiTag">SCAN</span></div><div class="meter"><span id="apiBar"></span></div><div class="status-meta"><span id="apiMeta">Waiting status</span><span id="apiPct">0%</span></div></article>
-        <article class="card glass status-card"><div class="status-top"><div><div class="status-label">Agents</div><div class="status-value" id="agentsValue">Checking</div></div><span class="tag info" id="agentsTag">SCAN</span></div><div class="meter"><span id="agentsBar"></span></div><div class="status-meta"><span id="agentsMeta">Waiting status</span><span id="agentsPct">0%</span></div></article>
-        <article class="card glass status-card"><div class="status-top"><div><div class="status-label">Autopilot</div><div class="status-value" id="autopilotValue">Standby</div></div><span class="tag warn" id="autopilotTag">STANDBY</span></div><div class="meter"><span id="autopilotBar" style="width:60%"></span></div><div class="status-meta"><span id="autopilotMeta">Local module armed</span><span id="autopilotPct">60%</span></div></article>
-      </section>
-
-      <section class="workspace glass">
-        <div class="panel active" id="dashboardPanel">
-          <div class="panel-grid">
-            <div class="section">
-              <div class="block">
-                <div class="block-head"><div><div class="block-title">Mission control</div><div class="block-sub">Centro principal de CONSIA</div></div></div>
-                <div class="block-body">
-                  <div class="quick-grid">
-                    <button class="quick" data-prompt="Hacé un diagnóstico del sistema CONSIA y resumilo en pasos concretos.">Diagnóstico</button>
-                    <button class="quick" data-prompt="Mostrame el estado actual de los agentes y qué falta para llevarlos a 100%.">Estado de agentes</button>
-                    <button class="quick" data-prompt="Armá un roadmap directo para terminar CONSIA al máximo nivel.">Roadmap</button>
-                    <button class="quick" data-prompt="Proponé las 5 acciones más importantes para potenciar CONSIA hoy.">Potenciar hoy</button>
-                    <button class="quick" data-prompt="Generá un plan de negocio para CONSIA con monetización global.">Negocio global</button>
-                    <button class="quick" data-prompt="Mostrame una estrategia de integración multiempresa para Manglar, Real Work, VIP Work y Bambino.">Multiempresa</button>
-                  </div>
-                </div>
-              </div>
-              <div class="grid-3">
-                <div class="kpi"><div class="kpi-label">Comandos</div><div class="kpi-value" id="kpiCommands">0</div><div class="kpi-foot">Persistencia local</div></div>
-                <div class="kpi"><div class="kpi-label">Mensajes</div><div class="kpi-value" id="kpiMessages">0</div><div class="kpi-foot">Chat del panel</div></div>
-                <div class="kpi"><div class="kpi-label">Agentes</div><div class="kpi-value" id="kpiAgents">0</div><div class="kpi-foot">Swarm detectado</div></div>
-              </div>
-              <div class="block">
-                <div class="block-head"><div><div class="block-title">Actividad del sistema</div><div class="block-sub">Eventos recientes</div></div><button class="btn ghost" id="clearTimelineBtn">Clear</button></div>
-                <div class="block-body"><div class="timeline" id="timeline"></div></div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="block">
-                <div class="block-head"><div><div class="block-title">Health monitor</div><div class="block-sub">Resumen operativo</div></div><button class="btn ghost" id="healthBtn">Scan</button></div>
-                <div class="block-body grid-2">
-                  <div class="row"><div class="row-left"><div class="avatar-mini">C</div><div><div class="row-title">Core</div><div class="row-sub" id="coreHealthSub">Esperando scan</div></div></div><span class="tag info" id="coreHealthTag">SCAN</span></div>
-                  <div class="row"><div class="row-left"><div class="avatar-mini">A</div><div><div class="row-title">API</div><div class="row-sub" id="apiHealthSub">Esperando scan</div></div></div><span class="tag info" id="apiHealthTag">SCAN</span></div>
-                  <div class="row"><div class="row-left"><div class="avatar-mini">G</div><div><div class="row-title">Agents</div><div class="row-sub" id="agentsHealthSub">Esperando scan</div></div></div><span class="tag info" id="agentsHealthTag">SCAN</span></div>
-                  <div class="row"><div class="row-left"><div class="avatar-mini">V</div><div><div class="row-title">Voice</div><div class="row-sub" id="voiceHealthSub">Local browser mode</div></div></div><span class="tag warn" id="voiceHealthTag">LOCAL</span></div>
-                </div>
-              </div>
-              <div class="block"><div class="block-head"><div><div class="block-title">System pulse</div><div class="block-sub">Visual operativo</div></div></div><div class="block-body"><div class="chart"><svg viewBox="0 0 600 150" preserveAspectRatio="none"><defs><linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#48d8ff"></stop><stop offset="100%" stop-color="#4b7cff"></stop></linearGradient></defs><path id="chartFill" d="" fill="rgba(72,216,255,.08)"></path><path id="chartLine" d="" fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round"></path></svg></div></div></div>
-              <div class="block"><div class="block-head"><div><div class="block-title">Quick output</div><div class="block-sub">Última salida breve</div></div></div><div class="block-body"><div class="small-note" id="quickOutput">Todavía no hay respuesta.</div></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" id="chatPanel">
-          <div class="panel-grid">
-            <div class="section">
-              <div class="block" style="height:100%">
-                <div class="block-head"><div><div class="block-title">CONSIA command chat</div><div class="block-sub">Conectado a /v1/chat</div></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="clearChatBtn">Clear</button><button class="btn secondary" id="voiceBtn">Voice</button><button class="btn ghost" id="stopVoiceBtn">Stop</button></div></div>
-                <div class="chat-shell">
-                  <div class="chat-log" id="chatLog"></div>
-                  <div class="composer">
-                    <div class="composer-row">
-                      <textarea class="input" id="chatInput" placeholder="Escribí una orden para CONSIA..."></textarea>
-                      <button class="btn secondary" id="composerVoiceBtn">Voice</button>
-                      <button class="btn ghost" id="composerStopBtn">Stop</button>
-                      <button class="btn" id="sendBtn">Send</button>
-                    </div>
-                    <div class="tiny"><span>Enter envía · Shift+Enter salto de línea · Ctrl/Cmd+K enfoca chat</span><span id="composerInfo">Voice: off</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="block"><div class="block-head"><div><div class="block-title">Connection/settings</div><div class="block-sub">Persisten en el navegador</div></div></div><div class="block-body"><div class="list"><div class="row" style="display:block"><div class="row-title" style="margin-bottom:8px">API Base</div><input class="text mono" id="apiBaseInput" value="https://api.consia.world" /></div><div class="row" style="display:block"><div class="row-title" style="margin-bottom:8px">Owner Token opcional</div><input class="text mono" id="ownerTokenInput" placeholder="X-Owner-Token opcional" /></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="saveSettingsBtn">Save</button><button class="btn ghost" id="exportJsonBtn">Export chat</button></div></div></div></div>
-              <div class="block"><div class="block-head"><div><div class="block-title">Connection log</div><div class="block-sub">Diagnóstico rápido</div></div></div><div class="block-body scroll"><div class="list" id="connectionLog"></div></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" id="agentsPanel"><div class="panel-grid"><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Agent swarm</div><div class="block-sub">/v1/agents + fallback</div></div><button class="btn ghost" id="reloadAgentsBtn">Reload</button></div><div class="block-body"><div class="list" id="agentsList"></div></div></div></div><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Agent metrics</div><div class="block-sub">Vista táctica</div></div></div><div class="block-body grid-2"><div class="kpi"><div class="kpi-label">Activos</div><div class="kpi-value" id="agentActiveCount">0</div><div class="kpi-foot">Agentes listados</div></div><div class="kpi"><div class="kpi-label">Cobertura</div><div class="kpi-value" id="agentCoverage">0%</div><div class="kpi-foot">Meta local</div></div></div></div></div></div></div>
-
-        <div class="panel" id="projectsPanel"><div class="panel-grid"><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Project brain</div><div class="block-sub">/v1/projects/list</div></div></div><div class="block-body"><div class="list" id="projectsList"></div></div></div></div><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Execution view</div><div class="block-sub">Prioridad operativa</div></div></div><div class="block-body"><div class="timeline" id="projectTimeline"></div></div></div></div></div></div>
-
-        <div class="panel" id="memoryPanel"><div class="panel-grid"><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Memory hub</div><div class="block-sub">/v1/memory/list</div></div><button class="btn ghost" id="reloadMemoryBtn">Reload</button></div><div class="block-body"><div class="list" id="memoryList"></div></div></div></div><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Memory notes</div><div class="block-sub">Persistencia local del panel</div></div></div><div class="block-body"><textarea class="input" id="memoryNotes" style="min-height:240px" placeholder="Notas locales..."></textarea><div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap"><button class="btn" id="saveNotesBtn">Save</button><button class="btn ghost" id="clearNotesBtn">Clear</button></div></div></div></div></div></div>
-
-        <div class="panel" id="autopilotPanel"><div class="panel-grid"><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Autopilot engine</div><div class="block-sub">Planificador operativo</div></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn green" id="runAutopilotBtn">Run</button><button class="btn ghost" id="clearAutopilotBtn">Clear</button></div></div><div class="block-body"><div class="list" id="autopilotList"></div></div></div></div><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Autopilot prompt</div><div class="block-sub">Directo al chat</div></div></div><div class="block-body"><button class="quick" id="autopilotToChatBtn">Mandar plan completo al chat</button></div></div></div></div></div>
-
-        <div class="panel" id="economyPanel"><div class="panel-grid"><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Economy dashboard</div><div class="block-sub">/v1/economy/overview + marketplace</div></div><button class="btn ghost" id="reloadEconomyBtn">Reload</button></div><div class="block-body grid-3"><div class="kpi"><div class="kpi-label">Subscriptions</div><div class="kpi-value" id="ecoSubs">--</div><div class="kpi-foot">Starter / Pro / Business / Owner</div></div><div class="kpi"><div class="kpi-label">Top-ups</div><div class="kpi-value" id="ecoTopups">--</div><div class="kpi-foot">10 / 25 / 50 / 100</div></div><div class="kpi"><div class="kpi-label">Active products</div><div class="kpi-value" id="ecoProducts">--</div><div class="kpi-foot">Marketplace activo</div></div></div></div><div class="block"><div class="block-head"><div><div class="block-title">Marketplace</div><div class="block-sub">Productos activos</div></div></div><div class="block-body"><div class="list" id="marketplaceList"></div></div></div></div><div class="section"><div class="block"><div class="block-head"><div><div class="block-title">Economy note</div><div class="block-sub">Resumen</div></div></div><div class="block-body"><div class="small-note" id="economyNote">Cargando economy...</div></div></div></div></div></div>
-      </section>
-
-      <footer class="footer-bar glass"><span>CONSIA Command Center · archivo único HTML + módulos JS locales</span><span class="mono" id="lastRouteLabel">api.consia.world</span></footer>
-    </main>
-
-    <aside class="dock">
-      <div class="glass orb-card">
-        <div class="block-head" style="padding:0"><div><div class="block-title">Avatar dock</div><div class="block-sub">Orb visual + voice + speech</div></div><span class="tag info" id="avatarTag">IDLE</span></div>
-        <div class="orb-wrap"><div><div class="orb" id="orb"></div><div class="orb-label">CONSIA</div></div></div>
-        <div class="dock-actions"><button class="btn secondary" id="dockListenBtn">Listen</button><button class="btn" id="dockSpeakBtn">Speak last</button><button class="btn ghost" id="dockStopBtn">Stop voice</button><button class="btn red" id="dockMuteBtn">Mute</button></div>
-      </div>
-      <div class="glass card"><div class="block-head"><div><div class="block-title">Live alerts</div><div class="block-sub">Eventos del panel</div></div></div><div class="block-body scroll"><div class="list" id="alertsList"></div></div></div>
-    </aside>
-  </div>
-
-  <script src="./agents-autopilot-final.js"></script>
-  <script src="./avatar-voice-final.js"></script>
-  <script>
-    (() => {
-      const SETTINGS_KEY = "consia_command_center_settings_v1";
-      const NOTES_KEY = "consia_command_center_notes_v1";
-      const state = {
-        apiBase: "https://api.consia.world",
-        ownerToken: "",
-        commands: 0,
-        chat: [],
-        timeline: [],
-        alerts: [],
-        agents: [],
-        lastReply: "",
-        muted: false,
-        chartData: [22,35,28,44,31,52,39,58,46,61,48,66,55,70,61,78]
-      };
-
-      const els = {
-        globalDot: document.getElementById("globalDot"),
-        globalStatusText: document.getElementById("globalStatusText"),
-        ownerMode: document.getElementById("ownerMode"),
-        clock: document.getElementById("clock"),
-        backHomeBtn: document.getElementById("backHomeBtn"),
-        apiBaseLabel: document.getElementById("apiBaseLabel"),
-        ownerTokenLabel: document.getElementById("ownerTokenLabel"),
-        voiceState: document.getElementById("voiceState"),
-
-        coreValue: document.getElementById("coreValue"),
-        coreTag: document.getElementById("coreTag"),
-        coreBar: document.getElementById("coreBar"),
-        coreMeta: document.getElementById("coreMeta"),
-        corePct: document.getElementById("corePct"),
-
-        apiValue: document.getElementById("apiValue"),
-        apiTag: document.getElementById("apiTag"),
-        apiBar: document.getElementById("apiBar"),
-        apiMeta: document.getElementById("apiMeta"),
-        apiPct: document.getElementById("apiPct"),
-
-        agentsValue: document.getElementById("agentsValue"),
-        agentsTag: document.getElementById("agentsTag"),
-        agentsBar: document.getElementById("agentsBar"),
-        agentsMeta: document.getElementById("agentsMeta"),
-        agentsPct: document.getElementById("agentsPct"),
-
-        autopilotValue: document.getElementById("autopilotValue"),
-        autopilotTag: document.getElementById("autopilotTag"),
-        autopilotBar: document.getElementById("autopilotBar"),
-        autopilotMeta: document.getElementById("autopilotMeta"),
-        autopilotPct: document.getElementById("autopilotPct"),
-
-        coreHealthSub: document.getElementById("coreHealthSub"),
-        coreHealthTag: document.getElementById("coreHealthTag"),
-        apiHealthSub: document.getElementById("apiHealthSub"),
-        apiHealthTag: document.getElementById("apiHealthTag"),
-        agentsHealthSub: document.getElementById("agentsHealthSub"),
-        agentsHealthTag: document.getElementById("agentsHealthTag"),
-        voiceHealthSub: document.getElementById("voiceHealthSub"),
-        voiceHealthTag: document.getElementById("voiceHealthTag"),
-
-        kpiCommands: document.getElementById("kpiCommands"),
-        kpiMessages: document.getElementById("kpiMessages"),
-        kpiAgents: document.getElementById("kpiAgents"),
-
-        timeline: document.getElementById("timeline"),
-        quickOutput: document.getElementById("quickOutput"),
-        chartLine: document.getElementById("chartLine"),
-        chartFill: document.getElementById("chartFill"),
-
-        chatLog: document.getElementById("chatLog"),
-        chatInput: document.getElementById("chatInput"),
-        composerInfo: document.getElementById("composerInfo"),
-        connectionLog: document.getElementById("connectionLog"),
-        apiBaseInput: document.getElementById("apiBaseInput"),
-        ownerTokenInput: document.getElementById("ownerTokenInput"),
-
-        agentsList: document.getElementById("agentsList"),
-        agentActiveCount: document.getElementById("agentActiveCount"),
-        agentCoverage: document.getElementById("agentCoverage"),
-        projectsList: document.getElementById("projectsList"),
-        projectTimeline: document.getElementById("projectTimeline"),
-        memoryList: document.getElementById("memoryList"),
-        memoryNotes: document.getElementById("memoryNotes"),
-        autopilotList: document.getElementById("autopilotList"),
-        ecoSubs: document.getElementById("ecoSubs"),
-        ecoTopups: document.getElementById("ecoTopups"),
-        ecoProducts: document.getElementById("ecoProducts"),
-        marketplaceList: document.getElementById("marketplaceList"),
-        economyNote: document.getElementById("economyNote"),
-
-        alertsList: document.getElementById("alertsList"),
-        avatarTag: document.getElementById("avatarTag"),
-        orb: document.getElementById("orb"),
-        lastRouteLabel: document.getElementById("lastRouteLabel"),
-
-        refreshBtn: document.getElementById("refreshBtn"),
-        quickStatusBtn: document.getElementById("quickStatusBtn"),
-        quickAgentsBtn: document.getElementById("quickAgentsBtn"),
-        quickVoiceBtn: document.getElementById("quickVoiceBtn"),
-        quickAutopilotBtn: document.getElementById("quickAutopilotBtn"),
-        clearTimelineBtn: document.getElementById("clearTimelineBtn"),
-        healthBtn: document.getElementById("healthBtn"),
-
-        clearChatBtn: document.getElementById("clearChatBtn"),
-        voiceBtn: document.getElementById("voiceBtn"),
-        stopVoiceBtn: document.getElementById("stopVoiceBtn"),
-        composerVoiceBtn: document.getElementById("composerVoiceBtn"),
-        composerStopBtn: document.getElementById("composerStopBtn"),
-        sendBtn: document.getElementById("sendBtn"),
-        saveSettingsBtn: document.getElementById("saveSettingsBtn"),
-        exportJsonBtn: document.getElementById("exportJsonBtn"),
-
-        reloadAgentsBtn: document.getElementById("reloadAgentsBtn"),
-        reloadMemoryBtn: document.getElementById("reloadMemoryBtn"),
-        saveNotesBtn: document.getElementById("saveNotesBtn"),
-        clearNotesBtn: document.getElementById("clearNotesBtn"),
-        runAutopilotBtn: document.getElementById("runAutopilotBtn"),
-        clearAutopilotBtn: document.getElementById("clearAutopilotBtn"),
-        autopilotToChatBtn: document.getElementById("autopilotToChatBtn"),
-        reloadEconomyBtn: document.getElementById("reloadEconomyBtn"),
-
-        dockListenBtn: document.getElementById("dockListenBtn"),
-        dockSpeakBtn: document.getElementById("dockSpeakBtn"),
-        dockStopBtn: document.getElementById("dockStopBtn"),
-        dockMuteBtn: document.getElementById("dockMuteBtn")
-      };
-
-      const voice = window.CONSIAVoiceAvatar.create({
-        lang: "es-AR",
-        muted: state.muted,
-        onTranscript: (text) => {
-          els.chatInput.value = text;
-          sendChat(text);
-        },
-        onStateChange: (mode) => {
-          window.CONSIAVoiceAvatar.updateOrb(els.orb, mode);
-          els.avatarTag.textContent = mode.toUpperCase();
-          els.voiceState.textContent = mode.toUpperCase();
-          els.composerInfo.textContent = `Voice: ${mode}`;
-        }
-      });
-
-      function escapeHtml(str) {
-        return String(str)
-          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-      }
-
-      function nowTime() {
-        return new Date().toLocaleTimeString("es-AR", { hour12: false });
-      }
-
-      function saveSettings() {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-          apiBase: state.apiBase,
-          ownerToken: state.ownerToken,
-          commands: state.commands,
-          muted: state.muted,
-          chat: state.chat,
-          timeline: state.timeline,
-          alerts: state.alerts,
-          lastReply: state.lastReply
-        }));
-      }
-
-      function loadSettings() {
-        try {
-          const raw = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-          state.apiBase = raw.apiBase || state.apiBase;
-          state.ownerToken = raw.ownerToken || "";
-          state.commands = Number(raw.commands || 0);
-          state.muted = !!raw.muted;
-          state.chat = Array.isArray(raw.chat) ? raw.chat : [];
-          state.timeline = Array.isArray(raw.timeline) ? raw.timeline : [];
-          state.alerts = Array.isArray(raw.alerts) ? raw.alerts : [];
-          state.lastReply = raw.lastReply || "";
-        } catch {}
-      }
-
-      function syncSettingsUI() {
-        els.apiBaseLabel.textContent = state.apiBase;
-        els.ownerTokenLabel.textContent = state.ownerToken ? "SET" : "—";
-        els.apiBaseInput.value = state.apiBase;
-        els.ownerTokenInput.value = state.ownerToken;
-        els.dockMuteBtn.textContent = state.muted ? "Unmute" : "Mute";
-        voice.setMuted(state.muted);
-      }
-
-      function setGlobal(kind, text) {
-        els.globalDot.className = `dot ${kind}`;
-        els.globalStatusText.textContent = text;
-      }
-
-      function setMetric(prefix, value, pct, tagText, tagClass, meta) {
-        document.getElementById(`${prefix}Value`).textContent = value;
-        document.getElementById(`${prefix}Pct`).textContent = `${pct}%`;
-        document.getElementById(`${prefix}Meta`).textContent = meta;
-        document.getElementById(`${prefix}Bar`).style.width = `${pct}%`;
-        const tag = document.getElementById(`${prefix}Tag`);
-        tag.className = `tag ${tagClass}`;
-        tag.textContent = tagText;
-      }
-
-      function setHealth(prefix, sub, level) {
-        document.getElementById(`${prefix}HealthSub`).textContent = sub;
-        const tag = document.getElementById(`${prefix}HealthTag`);
-        tag.className = `tag ${level}`;
-        tag.textContent = level.toUpperCase();
-      }
-
-      async function api(path, options = {}) {
-        const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
-        if (state.ownerToken) headers["X-Owner-Token"] = state.ownerToken;
-        const url = `${state.apiBase}${path}`;
-        els.lastRouteLabel.textContent = url;
-        const res = await fetch(url, { ...options, headers });
-        const text = await res.text();
-        let data = text;
-        try { data = JSON.parse(text); } catch {}
-        addConnectionLog(`${options.method || "GET"} ${url} → ${res.status}`, res.ok ? "ok" : "warn");
-        return { ok: res.ok, status: res.status, data };
-      }
-
-      function addConnectionLog(text, level = "info") {
-        const div = document.createElement("div");
-        div.className = "row";
-        div.innerHTML = `<div class="row-left"><div class="avatar-mini">·</div><div><div class="row-title">${escapeHtml(text)}</div><div class="row-sub">${nowTime()}</div></div></div><span class="tag ${level}">${level.toUpperCase()}</span>`;
-        els.connectionLog.prepend(div);
-        while (els.connectionLog.children.length > 16) els.connectionLog.lastChild.remove();
-      }
-
-      function addTimeline(text) {
-        state.timeline.unshift({ time: nowTime(), text });
-        state.timeline = state.timeline.slice(0, 20);
-        renderTimeline();
-        saveSettings();
-      }
-
-      function addAlert(text, level = "info") {
-        state.alerts.unshift({ time: nowTime(), text, level });
-        state.alerts = state.alerts.slice(0, 20);
-        renderAlerts();
-        saveSettings();
-      }
-
-      function renderTimeline() {
-        els.timeline.innerHTML = state.timeline.length ? state.timeline.map(item => `
-          <div class="time-item"><div class="time-time">${escapeHtml(item.time)}</div><div class="time-box">${escapeHtml(item.text)}</div></div>
-        `).join("") : `<div class="small-note">Sin actividad todavía.</div>`;
-      }
-
-      function renderAlerts() {
-        els.alertsList.innerHTML = state.alerts.length ? state.alerts.map(item => `
-          <div class="row">
-            <div class="row-left"><div class="avatar-mini">${item.level === "ok" ? "✓" : item.level === "warn" ? "!" : item.level === "err" ? "×" : "i"}</div><div><div class="row-title">${escapeHtml(item.text)}</div><div class="row-sub">${escapeHtml(item.time)}</div></div></div>
-            <span class="tag ${item.level}">${item.level.toUpperCase()}</span>
-          </div>
-        `).join("") : `<div class="small-note">Sin alertas.</div>`;
-      }
-
-      function addMessage(role, text) {
-        state.chat.push({ role, text, time: nowTime() });
-        state.chat = state.chat.slice(-150);
-        renderChat();
-        updateKpis();
-        saveSettings();
-      }
-
-      function renderChat() {
-        els.chatLog.innerHTML = "";
-        if (!state.chat.length) {
-          addMessage("system", "CONSIA listo. Escribí una orden o usá Voice.");
-          return;
-        }
-        state.chat.forEach(item => {
-          const div = document.createElement("div");
-          div.className = `msg ${item.role}`;
-          div.innerHTML = `${escapeHtml(item.text)}<div class="msg-meta">${escapeHtml(item.time)}</div>`;
-          els.chatLog.appendChild(div);
-        });
-        els.chatLog.scrollTop = els.chatLog.scrollHeight;
-      }
-
-      function updateKpis() {
-        els.kpiCommands.textContent = String(state.commands);
-        els.kpiMessages.textContent = String(state.chat.filter(x => x.role === "user" || x.role === "bot").length);
-        els.kpiAgents.textContent = String(state.agents.length);
-      }
-
-      function renderChart() {
-        const data = state.chartData;
-        const w = 600, h = 150, pad = 12;
-        const max = Math.max(...data, 100);
-        const min = Math.min(...data, 0);
-        const stepX = (w - pad * 2) / (data.length - 1);
-        const pts = data.map((v, i) => {
-          const x = pad + i * stepX;
-          const y = h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
-          return [x, y];
-        });
-        const line = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(" ");
-        const fill = `${line} L ${w-pad},${h-pad} L ${pad},${h-pad} Z`;
-        els.chartLine.setAttribute("d", line);
-        els.chartFill.setAttribute("d", fill);
-      }
-
-      function randomizeChart() {
-        const next = state.chartData.slice(1);
-        const last = next[next.length - 1] || 50;
-        next.push(Math.max(18, Math.min(92, Math.round(last + (Math.random() * 24 - 12)))));
-        state.chartData = next;
-        renderChart();
-      }
-
-      async function scanSystem() {
-        setGlobal("warn", "SCANNING");
-        addTimeline("System scan iniciado.");
-        setMetric("core", "Checking", 15, "SCAN", "info", "Consultando endpoint");
-        setMetric("api", "Checking", 15, "SCAN", "info", "Consultando endpoint");
-        setMetric("agents", "Checking", 15, "SCAN", "info", "Consultando endpoint");
-
-        const health = await api("/health");
-        if (health.ok) {
-          setMetric("core", "ACTIVE", 100, "ONLINE", "ok", "CONSIA CORE operativo");
-          setMetric("api", "CONNECTED", 95, "ONLINE", "ok", "API alcanzable");
-          setHealth("core", "Core operativo", "ok");
-          setHealth("api", "API responde", "ok");
-          setGlobal("ok", "ONLINE");
-        } else {
-          setMetric("core", "LIMITED", 45, "LIMITED", "warn", "No se confirmó health");
-          setMetric("api", "LIMITED", 55, "LIMITED", "warn", "API no confirmó estado");
-          setHealth("core", "Health no confirmado", "warn");
-          setHealth("api", "API no confirmada", "warn");
-          setGlobal("err", "ERROR");
-        }
-
-        await loadAgents();
-        await loadProjects();
-        await loadMemory();
-        await loadEconomy();
-
-        addTimeline("System scan completado.");
-        addAlert("Sistema operativo y panel listo.", "ok");
-      }
-
-      async function loadAgents() {
-        const res = await api("/v1/agents");
-        state.agents = window.CONSIAAgentsAutopilot.normalizeAgents(res.data);
-        window.CONSIAAgentsAutopilot.renderAgents(els.agentsList, state.agents);
-        const summary = window.CONSIAAgentsAutopilot.statusSummary(state.agents);
-        els.agentActiveCount.textContent = String(summary.count);
-        els.agentCoverage.textContent = `${summary.coverage}%`;
-        setMetric("agents", `${summary.count} READY`, Math.max(60, summary.coverage), summary.coverage >= 90 ? "FULL" : "PARTIAL", summary.coverage >= 90 ? "ok" : "warn", `${summary.count} agentes detectados`);
-        setHealth("agents", `${summary.count} agentes listados`, summary.coverage >= 90 ? "ok" : "warn");
-        updateKpis();
-      }
-
-      async function loadProjects() {
-        const res = await api("/v1/projects/list");
-        const items = res.data?.items || [];
-        els.projectsList.innerHTML = items.map(p => `
-          <div class="row">
-            <div class="row-left"><div class="avatar-mini">${escapeHtml((p.name || "P")[0])}</div><div><div class="row-title">${escapeHtml(p.name || "Project")}</div><div class="row-sub">${escapeHtml(p.summary || "")}</div></div></div>
-            <span class="tag ${p.status === "active" ? "ok" : p.status === "strategy" ? "warn" : "info"}">${escapeHtml((p.status || "info").toUpperCase())}</span>
-          </div>
-        `).join("");
-        els.projectTimeline.innerHTML = items.slice(0, 5).map((p, i) => `
-          <div class="time-item"><div class="time-time">P${i+1}</div><div class="time-box">${escapeHtml(p.name)} — ${escapeHtml(p.summary || "")}</div></div>
-        `).join("");
-      }
-
-      async function loadMemory() {
-        const res = await api("/v1/memory/list");
-        const items = res.data?.items || [];
-        els.memoryList.innerHTML = items.map(m => `
-          <div class="row">
-            <div class="row-left"><div class="avatar-mini">${escapeHtml((m.title || "M")[0])}</div><div><div class="row-title">${escapeHtml(m.title || "Memory")}</div><div class="row-sub">${escapeHtml(m.content || "")}</div></div></div>
-            <span class="tag ${m.type === "owner" ? "warn" : "ok"}">${escapeHtml((m.type || "item").toUpperCase())}</span>
-          </div>
-        `).join("");
-      }
-
-      async function loadEconomy() {
-        const [overview, products] = await Promise.all([
-          api("/v1/economy/overview"),
-          api("/v1/marketplace/products")
-        ]);
-
-        const ov = overview.data?.overview || {};
-        els.ecoSubs.textContent = String(ov.subscription_count ?? "--");
-        els.ecoTopups.textContent = String(ov.topup_count ?? "--");
-        els.ecoProducts.textContent = String(ov.active_products ?? "--");
-
-        const items = products.data?.items || [];
-        els.marketplaceList.innerHTML = items.slice(0, 8).map(item => `
-          <div class="row">
-            <div class="row-left"><div class="avatar-mini">$</div><div><div class="row-title">${escapeHtml(item.name || "Product")}</div><div class="row-sub">${escapeHtml(item.description || "")}</div></div></div>
-            <span class="tag ${item.active ? "ok" : "warn"}">${escapeHtml(String(item.price_usd ?? ""))}${item.price_usd != null ? " USD" : ""}</span>
-          </div>
-        `).join("");
-        els.economyNote.textContent = `Subscriptions: ${ov.subscription_count ?? 0} · Topups: ${ov.topup_count ?? 0} · Active products: ${ov.active_products ?? 0}`;
-      }
-
-      async function sendChat(forced) {
-        const prompt = String(forced || els.chatInput.value || "").trim();
-        if (!prompt) return;
-        state.commands += 1;
-        addMessage("user", prompt);
-        els.chatInput.value = "";
-        window.CONSIAVoiceAvatar.updateOrb(els.orb, "busy");
-        els.avatarTag.textContent = "PROCESSING";
-        els.quickOutput.textContent = "Procesando...";
-        addTimeline(`Comando enviado: ${prompt.slice(0, 80)}${prompt.length > 80 ? "..." : ""}`);
-
-        const res = await api("/v1/chat", {
-          method: "POST",
-          body: JSON.stringify({ message: prompt })
-        });
-
-        window.CONSIAVoiceAvatar.updateOrb(els.orb, "idle");
-        els.avatarTag.textContent = "IDLE";
-
-        const reply = res.data?.reply || (typeof res.data === "string" ? res.data : JSON.stringify(res.data, null, 2));
-        state.lastReply = reply;
-        addMessage("bot", reply);
-        els.quickOutput.textContent = reply;
-        addAlert("CONSIA respondió.", "ok");
-      }
-
-      function exportChatJson() {
-        const blob = new Blob([JSON.stringify(state.chat, null, 2)], { type: "application/json;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "consia-command-center-chat.json";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-
-      function bindNav() {
-        document.querySelectorAll(".nav-btn[data-panel]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            document.querySelectorAll(".nav-btn[data-panel]").forEach(x => x.classList.remove("active"));
-            document.querySelectorAll(".panel").forEach(x => x.classList.remove("active"));
-            btn.classList.add("active");
-            document.getElementById(btn.dataset.panel).classList.add("active");
-          });
-        });
-      }
-
-      function bindQuickPrompts() {
-        document.querySelectorAll("[data-prompt]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            els.chatInput.value = btn.dataset.prompt || "";
-            document.querySelector('.nav-btn[data-panel="chatPanel"]').click();
-            els.chatInput.focus();
-          });
-        });
-      }
-
-      function bindEvents() {
-        bindNav();
-        bindQuickPrompts();
-
-        els.backHomeBtn.addEventListener("click", () => location.href = "./index.html");
-        els.refreshBtn.addEventListener("click", scanSystem);
-        els.quickStatusBtn.addEventListener("click", scanSystem);
-        els.quickAgentsBtn.addEventListener("click", loadAgents);
-        els.quickVoiceBtn.addEventListener("click", () => voice.startListening());
-        els.quickAutopilotBtn.addEventListener("click", runAutopilot);
-        els.clearTimelineBtn.addEventListener("click", () => {
-          state.timeline = [];
-          renderTimeline();
-          saveSettings();
-        });
-        els.healthBtn.addEventListener("click", scanSystem);
-
-        els.clearChatBtn.addEventListener("click", () => {
-          state.chat = [];
-          renderChat();
-          saveSettings();
-        });
-        els.voiceBtn.addEventListener("click", () => voice.startListening());
-        els.stopVoiceBtn.addEventListener("click", () => { voice.stopListening(); voice.stopSpeaking(); });
-        els.composerVoiceBtn.addEventListener("click", () => voice.startListening());
-        els.composerStopBtn.addEventListener("click", () => { voice.stopListening(); voice.stopSpeaking(); });
-        els.sendBtn.addEventListener("click", () => sendChat());
-        els.chatInput.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            sendChat();
-          }
-        });
-
-        els.saveSettingsBtn.addEventListener("click", () => {
-          state.apiBase = (els.apiBaseInput.value || state.apiBase).replace(/\/+$/, "");
-          state.ownerToken = els.ownerTokenInput.value || "";
-          syncSettingsUI();
-          saveSettings();
-          scanSystem();
-        });
-        els.exportJsonBtn.addEventListener("click", exportChatJson);
-
-        els.reloadAgentsBtn.addEventListener("click", loadAgents);
-        els.reloadMemoryBtn.addEventListener("click", loadMemory);
-        els.saveNotesBtn.addEventListener("click", () => {
-          localStorage.setItem(NOTES_KEY, els.memoryNotes.value || "");
-          addAlert("Notas guardadas.", "ok");
-        });
-        els.clearNotesBtn.addEventListener("click", () => {
-          els.memoryNotes.value = "";
-          localStorage.removeItem(NOTES_KEY);
-          addAlert("Notas borradas.", "info");
-        });
-
-        els.runAutopilotBtn.addEventListener("click", runAutopilot);
-        els.clearAutopilotBtn.addEventListener("click", () => {
-          window.CONSIAAgentsAutopilot.renderAutopilot(els.autopilotList, []);
-        });
-        els.autopilotToChatBtn.addEventListener("click", () => {
-          document.querySelector('.nav-btn[data-panel="chatPanel"]').click();
-          els.chatInput.value = "Armá el plan completo y directo para terminar CONSIA al 100% con Command Center, Agent Swarm, Avatar y Autopilot.";
-          els.chatInput.focus();
-        });
-
-        els.reloadEconomyBtn.addEventListener("click", loadEconomy);
-
-        els.dockListenBtn.addEventListener("click", () => voice.startListening());
-        els.dockSpeakBtn.addEventListener("click", () => state.lastReply && voice.speak(state.lastReply));
-        els.dockStopBtn.addEventListener("click", () => { voice.stopListening(); voice.stopSpeaking(); });
-        els.dockMuteBtn.addEventListener("click", () => {
-          state.muted = !state.muted;
-          syncSettingsUI();
-          saveSettings();
-        });
-
-        document.addEventListener("keydown", (e) => {
-          const key = e.key.toLowerCase();
-          if ((e.ctrlKey || e.metaKey) && key === "k") {
-            e.preventDefault();
-            document.querySelector('.nav-btn[data-panel="chatPanel"]').click();
-            els.chatInput.focus();
-          }
-        });
-      }
-
-      function runAutopilot() {
-        const plan = window.CONSIAAgentsAutopilot.buildAutopilotPlan("Cerrar CONSIA al 100%", state.agents);
-        window.CONSIAAgentsAutopilot.renderAutopilot(els.autopilotList, plan);
-        setMetric("autopilot", "READY", 75, "READY", "ok", "Plan operativo generado");
-        addTimeline("Autopilot generó plan de ejecución.");
-        addAlert("Autopilot listo con plan sugerido.", "ok");
-      }
-
-      function renderTimeline() {
-        els.timeline.innerHTML = state.timeline.length ? state.timeline.map(item => `
-          <div class="time-item"><div class="time-time">${escapeHtml(item.time)}</div><div class="time-box">${escapeHtml(item.text)}</div></div>
-        `).join("") : `<div class="small-note">Sin actividad todavía.</div>`;
-      }
-
-      function renderAlerts() {
-        els.alertsList.innerHTML = state.alerts.length ? state.alerts.map(item => `
-          <div class="row"><div class="row-left"><div class="avatar-mini">${item.level === "ok" ? "✓" : item.level === "warn" ? "!" : item.level === "err" ? "×" : "i"}</div><div><div class="row-title">${escapeHtml(item.text)}</div><div class="row-sub">${escapeHtml(item.time)}</div></div></div><span class="tag ${item.level}">${item.level.toUpperCase()}</span></div>
-        `).join("") : `<div class="small-note">Sin alertas.</div>`;
-      }
-
-      function renderChat() {
-        els.chatLog.innerHTML = "";
-        if (!state.chat.length) {
-          addMessage("system", "CONSIA listo. Escribí una orden o usá Voice.");
-          return;
-        }
-        state.chat.forEach(item => {
-          const div = document.createElement("div");
-          div.className = `msg ${item.role}`;
-          div.innerHTML = `${escapeHtml(item.text)}<div class="msg-meta">${escapeHtml(item.time)}</div>`;
-          els.chatLog.appendChild(div);
-        });
-        els.chatLog.scrollTop = els.chatLog.scrollHeight;
-        updateKpis();
-      }
-
-      function bootClock() {
-        const tick = () => els.clock.textContent = new Date().toLocaleTimeString("es-AR", { hour12: false });
-        tick();
-        setInterval(tick, 1000);
-      }
-
-      function renderChart() {
-        const data = state.chartData;
-        const w = 600, h = 150, pad = 12;
-        const max = Math.max(...data, 100);
-        const min = Math.min(...data, 0);
-        const stepX = (w - pad * 2) / (data.length - 1);
-        const points = data.map((v, i) => {
-          const x = pad + i * stepX;
-          const y = h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
-          return [x, y];
-        });
-        const path = points.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(" ");
-        const fill = `${path} L ${w-pad},${h-pad} L ${pad},${h-pad} Z`;
-        els.chartLine.setAttribute("d", path);
-        els.chartFill.setAttribute("d", fill);
-      }
-
-      function init() {
-        loadSettings();
-        syncSettingsUI();
-        els.memoryNotes.value = localStorage.getItem(NOTES_KEY) || "";
-        bindEvents();
-        bootClock();
-        renderTimeline();
-        renderAlerts();
-        renderChat();
-        renderChart();
-        scanSystem();
-        runAutopilot();
-        setInterval(randomizeChart, 3500);
-      }
-
-      init();
-    })();
-  </script>
+
+<header>
+<div class="logo">CONSIA</div>
+
+<div class="status">
+<div class="badge">CORE ONLINE</div>
+<div class="badge">AGENTS ACTIVE</div>
+<div class="badge" id="clock"></div>
+</div>
+
+</header>
+
+<div class="layout">
+
+<div class="sidebar">
+
+<button onclick="section('system')">System</button>
+<button onclick="section('agents')">Agent Swarm</button>
+<button onclick="section('projects')">Projects</button>
+<button onclick="section('memory')">Memory</button>
+<button onclick="section('autopilot')">Autopilot</button>
+<button onclick="section('economy')">Economy</button>
+<button onclick="section('owner')">Owner</button>
+
+</div>
+
+<div class="main" id="main">
+
+<div class="card">
+<h2>SYSTEM STATUS</h2>
+
+<div class="grid">
+
+<div class="metric"><p>Agents</p><h3 id="agents">10</h3></div>
+<div class="metric"><p>Memory</p><h3 id="memory">3</h3></div>
+<div class="metric"><p>Projects</p><h3 id="projects">5</h3></div>
+<div class="metric"><p>Marketplace</p><h3 id="market">8</h3></div>
+
+</div>
+</div>
+
+<div class="card">
+
+<h2>COMMAND CONSOLE</h2>
+
+<input class="console" id="cmd" placeholder="Ej: crear proyecto inmobiliario en Posadas">
+
+<button class="button" onclick="runCommand()">Ejecutar</button>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="card">
+
+<div class="avatar">CONSIA</div>
+
+<button class="button" onclick="listen()">Escuchar</button>
+<button class="button" onclick="speak()">Hablar</button>
+<button class="button" onclick="stopVoice()">Detener</button>
+
+</div>
+
+<div class="card">
+
+<h3>AGENT SWARM</h3>
+
+<div class="agent"><span>research</span><span>ready</span></div>
+<div class="agent"><span>analysis</span><span>ready</span></div>
+<div class="agent"><span>execution</span><span>ready</span></div>
+<div class="agent"><span>strategy</span><span>ready</span></div>
+<div class="agent"><span>business</span><span>ready</span></div>
+<div class="agent"><span>marketing</span><span>ready</span></div>
+<div class="agent"><span>automation</span><span>ready</span></div>
+<div class="agent"><span>finance</span><span>ready</span></div>
+<div class="agent"><span>legal</span><span>ready</span></div>
+<div class="agent"><span>memory</span><span>ready</span></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function section(name){
+alert("Opening "+name)
+}
+
+function runCommand(){
+
+const cmd=document.getElementById("cmd").value
+
+fetch("https://api.consia.world/v1/chat",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({message:cmd})
+})
+.then(r=>r.json())
+.then(d=>alert(JSON.stringify(d)))
+
+}
+
+function listen(){
+
+const recognition=new(window.SpeechRecognition||window.webkitSpeechRecognition)()
+recognition.lang="es"
+recognition.start()
+
+recognition.onresult=function(e){
+
+document.getElementById("cmd").value=e.results[0][0].transcript
+
+}
+
+}
+
+function speak(){
+
+const text=document.getElementById("cmd").value
+const utter=new SpeechSynthesisUtterance(text)
+speechSynthesis.speak(utter)
+
+}
+
+function stopVoice(){
+
+speechSynthesis.cancel()
+
+}
+
+setInterval(()=>{
+
+const now=new Date()
+document.getElementById("clock").innerText=now.toLocaleTimeString()
+
+},1000)
+
+</script>
+
 </body>
 </html>
