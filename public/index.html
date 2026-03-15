@@ -2,372 +2,550 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CONSIA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
   <style>
     :root{
-      --bg:#05070c;
-      --bg2:#0a1020;
-      --panel:#0f1730;
-      --panel2:#111b38;
-      --line:#22345f;
-      --text:#f4f7ff;
-      --muted:#aeb9d6;
-      --accent:#4f7dff;
-      --accent2:#7ee7ff;
-      --ok:#15c47e;
-      --radius:24px;
-      --shadow:0 24px 60px rgba(0,0,0,.35);
+      --bg:#050c16;--bg2:#081423;--panel:rgba(10,24,44,.88);--card:rgba(255,255,255,.035);--line:rgba(105,178,255,.14);
+      --line2:rgba(105,178,255,.26);--text:#eaf5ff;--muted:#88a8c8;--cyan:#48d8ff;--blue:#4b7cff;--green:#2ee0a8;
+      --yellow:#ffc95c;--red:#ff6d8b;--ok:#29e3a9;--warn:#ffcb63;--err:#ff7b98;--shadow:0 20px 60px rgba(0,0,0,.45)
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:
-      radial-gradient(circle at top left, rgba(78,126,255,.18), transparent 24%),
-      radial-gradient(circle at top right, rgba(126,231,255,.12), transparent 22%),
-      linear-gradient(180deg,var(--bg),#050913 45%, #04070d 100%);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    *{box-sizing:border-box} html,body{height:100%}
+    body{
+      margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:radial-gradient(1200px 700px at 10% -10%, rgba(72,216,255,.16), transparent 40%),radial-gradient(1000px 600px at 100% 0%, rgba(75,124,255,.16), transparent 40%),linear-gradient(180deg, #050b15, #07111d 28%, #07111b 100%);
+      overflow:auto;
     }
-    .wrap{max-width:1320px;margin:0 auto;padding:20px}
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;
-      padding:14px 0 22px;flex-wrap:wrap;
-    }
-    .brand{display:flex;align-items:center;gap:16px}
-    .logo{
-      width:62px;height:62px;border-radius:20px;
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.9), rgba(126,231,255,.35) 28%, rgba(79,125,255,.95) 62%, #0e1736 100%);
-      display:flex;align-items:center;justify-content:center;
-      color:white;font-weight:800;font-size:28px;
-      box-shadow:0 0 40px rgba(79,125,255,.28);
-      border:1px solid rgba(255,255,255,.1);
-    }
-    .brand h1{margin:0;font-size:34px;letter-spacing:.22em}
-    .brand p{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .rightbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .lang{
-      background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--line);
-      border-radius:14px;padding:12px 14px;
-    }
-    .hero{
-      background:linear-gradient(180deg,rgba(11,18,40,.9),rgba(7,12,26,.86));
-      border:1px solid rgba(126,231,255,.12);
-      border-radius:32px;padding:24px;box-shadow:var(--shadow);overflow:hidden;position:relative;
-    }
-    .hero::after{
-      content:"";position:absolute;right:-90px;top:-70px;width:260px;height:260px;border-radius:50%;
-      background:radial-gradient(circle, rgba(79,125,255,.38), transparent 68%);
-      pointer-events:none;
-    }
-    .chips{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-    .chip{
-      padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.04);
-      border:1px solid var(--line);color:var(--text);font-size:14px;
-    }
-    .chip.ok::before{
-      content:"●";color:var(--ok);margin-right:10px;
-    }
-    .hero h2{
-      margin:8px 0 16px;font-size:62px;line-height:1.02;max-width:980px;
-    }
-    .hero p{
-      margin:0 0 22px;color:var(--muted);font-size:20px;line-height:1.6;max-width:960px;
-    }
-    .core{
-      margin-top:22px;background:linear-gradient(180deg,rgba(18,28,58,.88),rgba(12,20,40,.88));
-      border:1px solid var(--line);border-radius:26px;padding:22px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;
-    }
-    .orb{
-      width:180px;height:180px;border-radius:50%;
-      background:radial-gradient(circle at 35% 30%, #d7e5ff, #7aa0ff 34%, #2b58da 70%, #13204a 100%);
-      box-shadow:0 0 55px rgba(79,125,255,.3);
-      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:44px;color:white;flex:none;
-    }
-    .core .txt h3{margin:0 0 10px;font-size:34px}
-    .core .txt p{margin:0;color:var(--muted);font-size:18px}
-    .toolbar{
-      margin-top:34px;
-      background:linear-gradient(180deg,rgba(11,18,40,.92),rgba(8,14,30,.92));
-      border:1px solid rgba(126,231,255,.12);
-      border-radius:30px;box-shadow:var(--shadow);overflow:hidden;
-    }
-    .toolbar-top{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap;
-    }
-    .tabs,.quick{display:flex;gap:12px;flex-wrap:wrap}
-    .tab,.quick a{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:116px;padding:16px 20px;border-radius:22px;
-      background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);
-      text-decoration:none;font-size:17px;
-    }
-    .tab.active{background:linear-gradient(135deg,var(--accent),#5e8dff)}
-    .chatbox{
-      min-height:380px;padding:26px;display:flex;align-items:center;justify-content:center;
-      color:var(--muted);font-size:22px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .composer{
-      display:grid;grid-template-columns:1fr 170px 150px;gap:14px;padding:22px;
-    }
-    .composer input{
-      width:100%;padding:22px 24px;border-radius:22px;border:1px solid var(--line);
-      background:#091127;color:var(--text);font-size:18px;outline:none;
-    }
-    .btn{
-      border:none;border-radius:22px;cursor:pointer;font-size:18px;
-      color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);
-    }
-    .btn.primary{
-      background:linear-gradient(135deg,var(--accent),#6b92ff);
-      color:white;border:none;
-    }
-    .modules{
-      margin-top:26px;
-      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;
-    }
-    .card{
-      background:linear-gradient(180deg,rgba(11,18,40,.92),rgba(8,14,30,.92));
-      border:1px solid rgba(126,231,255,.12);
-      border-radius:28px;padding:24px;box-shadow:var(--shadow);
-    }
-    .card h3{margin:0 0 16px;font-size:22px}
-    .list{display:grid;gap:14px}
-    .item{
-      padding:18px 20px;border-radius:20px;background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);font-size:18px;
-    }
-    .footer-note{
-      text-align:center;color:var(--muted);font-size:13px;padding:24px 0 10px;
-    }
-    @media (max-width:980px){
-      .hero h2{font-size:46px}
-      .modules{grid-template-columns:1fr}
-      .composer{grid-template-columns:1fr}
-      .orb{width:140px;height:140px;font-size:34px}
-    }
+    .wrap{max-width:1500px;margin:0 auto;padding:18px}
+    .topbar,.card,.section{background:linear-gradient(180deg, rgba(15,31,56,.88), rgba(8,19,35,.92));border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter: blur(16px)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:22px;position:sticky;top:12px;z-index:10}
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .mark{width:44px;height:44px;border-radius:14px;border:1px solid var(--line2);background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(255,255,255,.08) 16%, transparent 17%),radial-gradient(circle at 55% 50%, rgba(72,216,255,.92), rgba(72,216,255,.14) 42%, transparent 43%),linear-gradient(135deg, rgba(72,216,255,.12), rgba(75,124,255,.18))}
+    .brand h1{font-size:15px;margin:0;letter-spacing:.08em}
+    .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{display:flex;align-items:center;gap:8px;min-height:38px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:12px}
+    .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 18px currentColor;background:var(--muted);color:var(--muted)}
+    .dot.ok{background:var(--ok);color:var(--ok)} .dot.warn{background:var(--warn);color:var(--warn)} .dot.err{background:var(--err);color:var(--err)}
+    .btn{appearance:none;border:none;outline:none;cursor:pointer;color:var(--text);border-radius:12px;padding:11px 14px;font-weight:800;background:linear-gradient(180deg, #17365f, #0f2948);border:1px solid rgba(97,157,255,.28);box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.28)}
+    .btn.secondary{background:linear-gradient(180deg, #14253d, #0e1b2f);border:1px solid var(--line)}
+    .btn.ghost{background:rgba(255,255,255,.03);border:1px solid var(--line);box-shadow:none}
+    .hero{display:grid;grid-template-columns:1.35fr .95fr;gap:14px;margin-top:14px}
+    .section{border-radius:22px;padding:16px}
+    .hero h2{margin:0 0 8px;font-size:32px;line-height:1.05}
+    .hero p{margin:0;color:var(--muted);line-height:1.5}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+    .kpi{padding:14px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+    .kpi .value{font-size:28px;font-weight:800;margin-top:6px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}
+    .card{border-radius:22px;overflow:hidden}
+    .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 0;flex-wrap:wrap}
+    .title{font-weight:800} .sub{margin-top:3px;color:var(--muted);font-size:12px}
+    .body{padding:16px}
+    .chat-log{min-height:320px;max-height:520px;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:0 16px 16px}
+    .msg{max-width:86%;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.06);line-height:1.45;white-space:pre-wrap;word-break:break-word}
+    .msg.user{align-self:flex-end;background:linear-gradient(180deg, rgba(75,124,255,.22), rgba(75,124,255,.12));border-color:rgba(75,124,255,.24)}
+    .msg.bot{align-self:flex-start;background:linear-gradient(180deg, rgba(72,216,255,.10), rgba(255,255,255,.02));border-color:rgba(72,216,255,.16)}
+    .msg.system{align-self:center;background:rgba(255,255,255,.035);color:var(--muted);font-size:12px;border-style:dashed}
+    .meta{margin-top:8px;font-size:11px;color:var(--muted)}
+    .composer{padding:14px 16px 16px;border-top:1px solid var(--line);display:grid;gap:10px}
+    .composer-row{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center}
+    textarea.input,input.text{width:100%;min-height:56px;resize:vertical;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;font:inherit}
+    input.text{min-height:48px}
+    .tiny{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    .list{display:grid;gap:10px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .row-left{display:flex;align-items:center;gap:12px;min-width:0}
+    .avatar-mini{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(72,216,255,.18), rgba(75,124,255,.18));border:1px solid rgba(72,216,255,.16);color:var(--cyan);font-weight:800;flex:0 0 auto}
+    .row-title{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .row-sub{margin-top:2px;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+    .tag{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:6px 10px;border-radius:999px;border:1px solid transparent;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+    .tag.ok{background:rgba(41,227,169,.08);border-color:rgba(41,227,169,.18);color:var(--ok)} .tag.warn{background:rgba(255,201,92,.08);border-color:rgba(255,201,92,.18);color:var(--warn)}
+    .tag.err{background:rgba(255,109,139,.08);border-color:rgba(255,109,139,.18);color:var(--err)} .tag.info{background:rgba(72,216,255,.08);border-color:rgba(72,216,255,.18);color:var(--cyan)}
+    .quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .quick{width:100%;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text);font-weight:800;text-align:left;cursor:pointer}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-all}
+    .orb-wrap{display:grid;place-items:center;padding:10px 0 0}
+    .orb{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.06) 18%, transparent 19%),radial-gradient(circle at 50% 45%, rgba(72,216,255,.95), rgba(72,216,255,.2) 42%, rgba(75,124,255,.14) 60%, transparent 70%),radial-gradient(circle at 50% 50%, rgba(75,124,255,.28), transparent 62%);box-shadow:0 0 60px rgba(72,216,255,.32),0 0 120px rgba(75,124,255,.18),inset 0 0 40px rgba(255,255,255,.08);animation:pulse 2.8s ease-in-out infinite;overflow:hidden}
+    .orb::before,.orb::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:1px solid rgba(72,216,255,.18);animation:spin 11s linear infinite}
+    .orb::after{inset:-22%;border-color:rgba(75,124,255,.16);animation-duration:18s;animation-direction:reverse}
+    .orb.listening{animation:listen 1.15s ease-in-out infinite}.orb.speaking{animation:speak .6s ease-in-out infinite}.orb.busy{animation:pulse 1.2s ease-in-out infinite}
+    .orb-label{text-align:center;font-weight:800;letter-spacing:.12em;margin-top:14px}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}} @keyframes speak{0%,100%{transform:scale(1)}50%{transform:scale(1.11)}}
+    @keyframes listen{0%,100%{transform:scale(1)}25%{transform:scale(1.08)}50%{transform:scale(1.02)}75%{transform:scale(1.10)}} @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @media (max-width:1100px){.hero,.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:720px){.kpis,.quick-grid,.composer-row{grid-template-columns:1fr}.topbar{position:static}.actions{width:100%}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="topbar">
+    <header class="topbar">
       <div class="brand">
-        <div class="logo">C</div>
+        <div class="mark"></div>
         <div>
           <h1>CONSIA</h1>
-          <p data-i18n="superInterface">Super Interfaz</p>
+          <p>Core + Chat + Agents + Projects + Memory + Autopilot + Avatar/Voz</p>
         </div>
       </div>
-
-      <div class="rightbar">
-        <select id="langSelector" class="lang" aria-label="Idioma">
-          <option value="es">Español</option>
-          <option value="en">English</option>
-          <option value="pt">Português</option>
-        </select>
+      <div class="actions">
+        <div class="pill"><span class="dot warn" id="globalDot"></span><span id="globalText">BOOTING</span></div>
+        <div class="pill">TIME <strong id="clock">--:--:--</strong></div>
+        <button class="btn secondary" id="refreshBtn">Refresh</button>
+        <button class="btn" id="commandCenterBtn">Command Center</button>
       </div>
-    </div>
+    </header>
 
     <section class="hero">
-      <div class="chips">
-        <div class="chip ok" data-i18n="online">CONSIA ONLINE</div>
-        <div class="chip"><span data-i18n="mode">Modo</span>: <strong style="margin-left:8px" data-i18n="chat">CHAT</strong></div>
-        <div class="chip" data-i18n="ultraActive">INDEX ULTRA ACTIVE</div>
+      <div class="section">
+        <h2>CONSIA ya queda con base final para operar.</h2>
+        <p id="heroText">Cargando estado del sistema...</p>
+        <div class="kpis">
+          <div class="kpi"><div class="label">Core/API</div><div class="value" id="kpiCore">--</div></div>
+          <div class="kpi"><div class="label">Agentes</div><div class="value" id="kpiAgents">--</div></div>
+          <div class="kpi"><div class="label">Projects</div><div class="value" id="kpiProjects">--</div></div>
+          <div class="kpi"><div class="label">Memory</div><div class="value" id="kpiMemory">--</div></div>
+        </div>
       </div>
 
-      <h2 data-i18n="heroTitle">Una sola interfaz para conversar, crear, automatizar y operar todo CONSIA.</h2>
-      <p data-i18n="heroText">Chat, imagen, voz, control del ecosistema, acceso a módulos y experiencia tipo plataforma mundial desde la home.</p>
-
-      <div class="core">
-        <div class="orb">AI</div>
-        <div class="txt">
-          <h3>CONSIA CORE</h3>
-          <p data-i18n="coreText">Inteligencia, comercio, agentes, pagos, logística y automatización en una sola capa operativa.</p>
+      <div class="section">
+        <div class="head" style="padding:0">
+          <div>
+            <div class="title">Avatar/Voz</div>
+            <div class="sub">Orb local + ASR/TTS del navegador</div>
+          </div>
+          <span class="tag info" id="voiceStatusTag">IDLE</span>
+        </div>
+        <div class="orb-wrap">
+          <div>
+            <div class="orb" id="orb"></div>
+            <div class="orb-label">CONSIA</div>
+          </div>
+        </div>
+        <div class="body" style="padding-bottom:0">
+          <div class="quick-grid">
+            <button class="quick" id="voiceBtn">Escuchar</button>
+            <button class="quick" id="stopVoiceBtn">Detener voz</button>
+            <button class="quick" id="speakLastBtn">Hablar última respuesta</button>
+            <button class="quick" id="muteBtn">Mute</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="toolbar">
-      <div class="toolbar-top">
-        <div class="tabs">
-          <button class="tab active" type="button" data-i18n="chat">CHAT</button>
-          <button class="tab" type="button" data-i18n="image">IMAGEN</button>
-          <button class="tab" type="button" data-i18n="voice">VOZ</button>
+    <section class="grid">
+      <article class="card">
+        <div class="head">
+          <div>
+            <div class="title">Chat principal</div>
+            <div class="sub">Conectado a /v1/chat</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn ghost" id="exportTxtBtn">Export TXT</button>
+            <button class="btn ghost" id="clearChatBtn">Clear</button>
+          </div>
         </div>
-
-        <div class="quick">
-          <a href="/apps.html" data-i18n="apps">Apps</a>
-          <a href="/marketplace.html" data-i18n="marketplace">Marketplace</a>
-          <a href="/command-center.html" data-i18n="command">Command</a>
+        <div class="chat-log" id="chatLog"></div>
+        <div class="composer">
+          <div class="composer-row">
+            <textarea class="input" id="chatInput" placeholder="Escribí una orden para CONSIA..."></textarea>
+            <button class="btn secondary" id="composerVoiceBtn">Voice</button>
+            <button class="btn ghost" id="composerStopBtn">Stop</button>
+            <button class="btn" id="sendBtn">Send</button>
+          </div>
+          <div class="tiny">
+            <span>Enter envía · Shift+Enter salto de línea · Ctrl/Cmd+K enfoca chat</span>
+            <span id="composerInfo">Voice: off</span>
+          </div>
         </div>
-      </div>
+      </article>
 
-      <div class="chatbox" id="chatStatus" data-i18n="consiaReady">CONSIA listo.</div>
+      <article class="card">
+        <div class="head">
+          <div>
+            <div class="title">Launch rápido</div>
+            <div class="sub">Bloques principales de CONSIA</div>
+          </div>
+        </div>
+        <div class="body">
+          <div class="quick-grid">
+            <button class="quick" data-prompt="Decime el estado actual de CONSIA y qué falta cerrar.">Estado</button>
+            <button class="quick" data-prompt="Armá un roadmap directo para cerrar CONSIA al 100%.">Roadmap</button>
+            <button class="quick" data-prompt="Mostrame el swarm de agentes actual y la cobertura.">Agentes</button>
+            <button class="quick" data-prompt="Definí la monetización de CONSIA.">Economy</button>
+            <button class="quick" data-prompt="Diseñá el siguiente paso de avatar y voz.">Avatar/Voz</button>
+            <button class="quick" id="openCCQuick">Abrir Command Center</button>
+          </div>
 
-      <div class="composer">
-        <input id="mainInput" type="text" placeholder="Habla con CONSIA..." />
-        <button class="btn primary" id="sendBtn" data-i18n="send">Enviar</button>
-        <button class="btn" id="clearBtn" data-i18n="clear">Limpiar</button>
-      </div>
+          <div class="list" id="statusList" style="margin-top:14px"></div>
+
+          <div class="head" style="padding-left:0;padding-right:0;margin-top:6px">
+            <div>
+              <div class="title">Settings locales</div>
+              <div class="sub">Persisten en el navegador</div>
+            </div>
+          </div>
+
+          <div class="list">
+            <div class="row">
+              <div class="row-left">
+                <div class="avatar-mini">A</div>
+                <div>
+                  <div class="row-title">API Base</div>
+                  <div class="row-sub mono" id="apiBaseLabel">https://api.consia.world</div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="display:block">
+              <div class="row-title" style="margin-bottom:8px">API Base editable</div>
+              <input class="text mono" id="apiBaseInput" value="https://api.consia.world" />
+            </div>
+            <div class="row" style="display:block">
+              <div class="row-title" style="margin-bottom:8px">Owner Token opcional</div>
+              <input class="text mono" id="ownerTokenInput" placeholder="X-Owner-Token opcional" />
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn" id="saveSettingsBtn">Save settings</button>
+              <button class="btn secondary" id="healthBtn">Health</button>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
 
-    <section class="modules">
-      <div class="card">
-        <h3 data-i18n="modules">Módulos</h3>
-        <div class="list">
-          <div class="item" data-i18n="dashboard">Dashboard</div>
-          <div class="item" data-i18n="appStore">AI App Store</div>
-          <div class="item" data-i18n="marketplace">Marketplace</div>
-          <div class="item" data-i18n="consiaOS">CONSIA OS</div>
-          <div class="item" data-i18n="commandCenter">Command Center</div>
-          <div class="item" data-i18n="ownerConsole">Owner Console</div>
+    <section class="grid">
+      <article class="card">
+        <div class="head">
+          <div>
+            <div class="title">Agent swarm</div>
+            <div class="sub">/v1/agents + autopilot local</div>
+          </div>
+          <button class="btn ghost" id="reloadAgentsBtn">Reload</button>
         </div>
-      </div>
+        <div class="body">
+          <div class="list" id="agentsList"></div>
+        </div>
+      </article>
 
-      <div class="card">
-        <h3 data-i18n="quickAccess">Acceso rápido</h3>
-        <div class="list">
-          <a class="item" href="/owner.html" data-i18n="ownerConsole">Owner Console</a>
-          <a class="item" href="/command-center.html" data-i18n="commandCenter">Command Center</a>
-          <a class="item" href="/marketplace.html" data-i18n="marketplace">Marketplace</a>
-          <a class="item" href="/dashboard.html" data-i18n="dashboard">Dashboard</a>
+      <article class="card">
+        <div class="head">
+          <div>
+            <div class="title">Autopilot</div>
+            <div class="sub">Plan inmediato para ejecutar</div>
+          </div>
+          <button class="btn ghost" id="runAutopilotBtn">Run</button>
         </div>
-      </div>
+        <div class="body">
+          <div class="list" id="autopilotList"></div>
+        </div>
+      </article>
     </section>
-
-    <div class="footer-note">CONSIA · Global AI Operating System</div>
   </div>
 
+  <script src="./agents-autopilot-final.js"></script>
+  <script src="./avatar-voice-final.js"></script>
   <script>
-    const I18N = {
-      es: {
-        superInterface: "Super Interfaz",
-        online: "CONSIA ONLINE",
-        mode: "Modo",
-        ultraActive: "INDEX ULTRA ACTIVE",
-        chat: "CHAT",
-        image: "IMAGEN",
-        voice: "VOZ",
-        heroTitle: "Una sola interfaz para conversar, crear, automatizar y operar todo CONSIA.",
-        heroText: "Chat, imagen, voz, control del ecosistema, acceso a módulos y experiencia tipo plataforma mundial desde la home.",
-        coreText: "Inteligencia, comercio, agentes, pagos, logística y automatización en una sola capa operativa.",
-        consiaReady: "CONSIA listo.",
-        send: "Enviar",
-        clear: "Limpiar",
-        modules: "Módulos",
-        dashboard: "Dashboard",
-        appStore: "AI App Store",
-        marketplace: "Marketplace",
-        consiaOS: "CONSIA OS",
-        commandCenter: "Command Center",
-        ownerConsole: "Owner Console",
-        quickAccess: "Acceso rápido",
-        apps: "Apps",
-        command: "Command"
-      },
-      en: {
-        superInterface: "Super Interface",
-        online: "CONSIA ONLINE",
-        mode: "Mode",
-        ultraActive: "INDEX ULTRA ACTIVE",
-        chat: "CHAT",
-        image: "IMAGE",
-        voice: "VOICE",
-        heroTitle: "One interface to talk, create, automate and operate all CONSIA.",
-        heroText: "Chat, image, voice, ecosystem control, module access and a global platform-like experience from home.",
-        coreText: "Intelligence, commerce, agents, payments, logistics and automation in one operational layer.",
-        consiaReady: "CONSIA ready.",
-        send: "Send",
-        clear: "Clear",
-        modules: "Modules",
-        dashboard: "Dashboard",
-        appStore: "AI App Store",
-        marketplace: "Marketplace",
-        consiaOS: "CONSIA OS",
-        commandCenter: "Command Center",
-        ownerConsole: "Owner Console",
-        quickAccess: "Quick access",
-        apps: "Apps",
-        command: "Command"
-      },
-      pt: {
-        superInterface: "Super Interface",
-        online: "CONSIA ONLINE",
-        mode: "Modo",
-        ultraActive: "INDEX ULTRA ACTIVE",
-        chat: "CHAT",
-        image: "IMAGEM",
-        voice: "VOZ",
-        heroTitle: "Uma única interface para conversar, criar, automatizar e operar todo o CONSIA.",
-        heroText: "Chat, imagem, voz, controle do ecossistema, acesso a módulos e experiência de plataforma global desde a home.",
-        coreText: "Inteligência, comércio, agentes, pagamentos, logística e automação em uma única camada operacional.",
-        consiaReady: "CONSIA pronto.",
-        send: "Enviar",
-        clear: "Limpar",
-        modules: "Módulos",
-        dashboard: "Painel",
-        appStore: "AI App Store",
-        marketplace: "Marketplace",
-        consiaOS: "CONSIA OS",
-        commandCenter: "Command Center",
-        ownerConsole: "Console Owner",
-        quickAccess: "Acesso rápido",
-        apps: "Apps",
-        command: "Command"
-      }
-    };
-
-    const LANG_KEY = "CONSIA_LANG";
-    let currentLang = localStorage.getItem(LANG_KEY) || "es";
-
-    const selector = document.getElementById("langSelector");
-    const mainInput = document.getElementById("mainInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const chatStatus = document.getElementById("chatStatus");
-
-    function placeholderFor(lang){
-      const map = {
-        es: "Habla con CONSIA...",
-        en: "Talk to CONSIA...",
-        pt: "Fale com CONSIA..."
+    (() => {
+      const STORE_KEY = "consia_index_final_settings_v1";
+      const CHAT_KEY = "consia_index_final_chat_v1";
+      const state = {
+        apiBase: "https://api.consia.world",
+        ownerToken: "",
+        lastReply: "",
+        muted: false,
+        chat: []
       };
-      return map[lang] || map.es;
-    }
 
-    function applyTranslations() {
-      document.documentElement.lang = currentLang;
-      selector.value = currentLang;
+      const els = {
+        globalDot: document.getElementById("globalDot"),
+        globalText: document.getElementById("globalText"),
+        clock: document.getElementById("clock"),
+        commandCenterBtn: document.getElementById("commandCenterBtn"),
+        heroText: document.getElementById("heroText"),
+        kpiCore: document.getElementById("kpiCore"),
+        kpiAgents: document.getElementById("kpiAgents"),
+        kpiProjects: document.getElementById("kpiProjects"),
+        kpiMemory: document.getElementById("kpiMemory"),
+        voiceStatusTag: document.getElementById("voiceStatusTag"),
+        orb: document.getElementById("orb"),
+        voiceBtn: document.getElementById("voiceBtn"),
+        stopVoiceBtn: document.getElementById("stopVoiceBtn"),
+        speakLastBtn: document.getElementById("speakLastBtn"),
+        muteBtn: document.getElementById("muteBtn"),
+        chatLog: document.getElementById("chatLog"),
+        chatInput: document.getElementById("chatInput"),
+        composerVoiceBtn: document.getElementById("composerVoiceBtn"),
+        composerStopBtn: document.getElementById("composerStopBtn"),
+        sendBtn: document.getElementById("sendBtn"),
+        exportTxtBtn: document.getElementById("exportTxtBtn"),
+        clearChatBtn: document.getElementById("clearChatBtn"),
+        composerInfo: document.getElementById("composerInfo"),
+        statusList: document.getElementById("statusList"),
+        apiBaseLabel: document.getElementById("apiBaseLabel"),
+        apiBaseInput: document.getElementById("apiBaseInput"),
+        ownerTokenInput: document.getElementById("ownerTokenInput"),
+        saveSettingsBtn: document.getElementById("saveSettingsBtn"),
+        healthBtn: document.getElementById("healthBtn"),
+        agentsList: document.getElementById("agentsList"),
+        autopilotList: document.getElementById("autopilotList"),
+        reloadAgentsBtn: document.getElementById("reloadAgentsBtn"),
+        runAutopilotBtn: document.getElementById("runAutopilotBtn"),
+        openCCQuick: document.getElementById("openCCQuick")
+      };
 
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.dataset.i18n;
-        if (I18N[currentLang] && I18N[currentLang][key]) {
-          el.textContent = I18N[currentLang][key];
+      const voice = window.CONSIAVoiceAvatar.create({
+        lang: "es-AR",
+        muted: state.muted,
+        onTranscript: (text) => {
+          els.chatInput.value = text;
+          sendChat(text);
+        },
+        onStateChange: (mode) => {
+          window.CONSIAVoiceAvatar.updateOrb(els.orb, mode);
+          els.voiceStatusTag.textContent = mode.toUpperCase();
+          els.composerInfo.textContent = `Voice: ${mode}`;
         }
       });
 
-      mainInput.placeholder = placeholderFor(currentLang);
-    }
+      function nowTime() {
+        return new Date().toLocaleTimeString("es-AR", { hour12: false });
+      }
 
-    function setLang(lang) {
-      currentLang = lang;
-      localStorage.setItem(LANG_KEY, lang);
-      applyTranslations();
-    }
+      function setGlobal(kind, text) {
+        els.globalDot.className = `dot ${kind}`;
+        els.globalText.textContent = text;
+      }
 
-    selector.addEventListener("change", e => setLang(e.target.value));
+      function saveSettings() {
+        localStorage.setItem(STORE_KEY, JSON.stringify({
+          apiBase: state.apiBase,
+          ownerToken: state.ownerToken,
+          muted: state.muted
+        }));
+      }
 
-    sendBtn.addEventListener("click", () => {
-      const value = (mainInput.value || "").trim();
-      chatStatus.textContent = value ? value : I18N[currentLang].consiaReady;
-    });
+      function loadSettings() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+          state.apiBase = raw.apiBase || state.apiBase;
+          state.ownerToken = raw.ownerToken || "";
+          state.muted = !!raw.muted;
+        } catch {}
+        try {
+          state.chat = JSON.parse(localStorage.getItem(CHAT_KEY) || "[]");
+        } catch {}
+      }
 
-    clearBtn.addEventListener("click", () => {
-      mainInput.value = "";
-      chatStatus.textContent = I18N[currentLang].consiaReady;
-    });
+      function saveChat() {
+        localStorage.setItem(CHAT_KEY, JSON.stringify(state.chat));
+      }
 
-    applyTranslations();
+      function syncSettingsUI() {
+        els.apiBaseLabel.textContent = state.apiBase;
+        els.apiBaseInput.value = state.apiBase;
+        els.ownerTokenInput.value = state.ownerToken;
+        els.muteBtn.textContent = state.muted ? "Unmute" : "Mute";
+        voice.setMuted(state.muted);
+      }
+
+      async function api(path, options = {}) {
+        const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+        if (state.ownerToken) headers["X-Owner-Token"] = state.ownerToken;
+        const res = await fetch(`${state.apiBase}${path}`, { ...options, headers });
+        const text = await res.text();
+        let data = text;
+        try { data = JSON.parse(text); } catch {}
+        return { ok: res.ok, status: res.status, data };
+      }
+
+      function addMessage(role, text) {
+        state.chat.push({ role, text, time: nowTime() });
+        state.chat = state.chat.slice(-120);
+        renderChat();
+        saveChat();
+      }
+
+      function renderChat() {
+        els.chatLog.innerHTML = "";
+        if (!state.chat.length) {
+          addMessage("system", "CONSIA listo. Escribí una orden o usá Voice.");
+          return;
+        }
+        state.chat.forEach(item => {
+          const div = document.createElement("div");
+          div.className = `msg ${item.role}`;
+          div.innerHTML = `${escapeHtml(item.text)}<div class="meta">${escapeHtml(item.time)}</div>`;
+          els.chatLog.appendChild(div);
+        });
+        els.chatLog.scrollTop = els.chatLog.scrollHeight;
+      }
+
+      async function loadBootstrap() {
+        setGlobal("warn", "SCANNING");
+        const res = await api("/v1/bootstrap");
+        if (!res.ok) {
+          setGlobal("err", "ERROR");
+          els.heroText.textContent = "No se pudo cargar el bootstrap del sistema.";
+          return;
+        }
+
+        const data = res.data;
+        setGlobal("ok", "ONLINE");
+        els.heroText.textContent = "CONSIA operativo. Base final cargada y lista para ejecutar.";
+        els.kpiCore.textContent = "OK";
+        els.kpiAgents.textContent = String((data.agents || []).length);
+        els.kpiProjects.textContent = String((data.projects || []).length);
+        els.kpiMemory.textContent = String((data.memory || []).length);
+
+        window.CONSIAAgentsAutopilot.renderAgents(els.agentsList, data.agents || []);
+        const plan = window.CONSIAAgentsAutopilot.buildAutopilotPlan("Cerrar CONSIA al 100%", data.agents || []);
+        window.CONSIAAgentsAutopilot.renderAutopilot(els.autopilotList, plan);
+
+        els.statusList.innerHTML = `
+          <div class="row">
+            <div class="row-left"><div class="avatar-mini">H</div><div><div class="row-title">Health</div><div class="row-sub">API y módulos base</div></div></div>
+            <span class="tag ok">ONLINE</span>
+          </div>
+          <div class="row">
+            <div class="row-left"><div class="avatar-mini">E</div><div><div class="row-title">Economy</div><div class="row-sub">${escapeHtml(JSON.stringify(data.economy))}</div></div></div>
+            <span class="tag info">READY</span>
+          </div>
+          <div class="row">
+            <div class="row-left"><div class="avatar-mini">A</div><div><div class="row-title">Agents coverage</div><div class="row-sub">${window.CONSIAAgentsAutopilot.coverage(data.agents || [])}%</div></div></div>
+            <span class="tag ${window.CONSIAAgentsAutopilot.coverage(data.agents || []) >= 80 ? "ok" : "warn"}">${window.CONSIAAgentsAutopilot.coverage(data.agents || [])}%</span>
+          </div>
+        `;
+      }
+
+      async function sendChat(forced) {
+        const prompt = String(forced || els.chatInput.value || "").trim();
+        if (!prompt) return;
+        addMessage("user", prompt);
+        els.chatInput.value = "";
+        window.CONSIAVoiceAvatar.updateOrb(els.orb, "busy");
+        els.voiceStatusTag.textContent = "PROCESSING";
+
+        const res = await api("/v1/chat", {
+          method: "POST",
+          body: JSON.stringify({ message: prompt })
+        });
+
+        window.CONSIAVoiceAvatar.updateOrb(els.orb, "idle");
+        els.voiceStatusTag.textContent = "IDLE";
+
+        const reply = res?.data?.reply || (typeof res.data === "string" ? res.data : JSON.stringify(res.data, null, 2));
+        state.lastReply = reply;
+        addMessage("bot", reply);
+      }
+
+      async function runHealth() {
+        const res = await api("/health");
+        if (!res.ok) {
+          setGlobal("err", "ERROR");
+          return;
+        }
+        setGlobal("ok", "ONLINE");
+        els.kpiCore.textContent = "OK";
+      }
+
+      function exportTxt() {
+        const content = state.chat.map(m => `[${m.time}] ${m.role.toUpperCase()}: ${m.text}`).join("\n\n");
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "consia-chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function bind() {
+        els.commandCenterBtn.addEventListener("click", () => location.href = "./command-center-final.html");
+        els.openCCQuick.addEventListener("click", () => location.href = "./command-center-final.html");
+        document.querySelectorAll("[data-prompt]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const prompt = btn.dataset.prompt || "";
+            els.chatInput.value = prompt;
+            els.chatInput.focus();
+          });
+        });
+
+        els.voiceBtn.addEventListener("click", () => voice.startListening());
+        els.stopVoiceBtn.addEventListener("click", () => { voice.stopListening(); voice.stopSpeaking(); });
+        els.speakLastBtn.addEventListener("click", () => state.lastReply && voice.speak(state.lastReply));
+        els.muteBtn.addEventListener("click", () => {
+          state.muted = !state.muted;
+          syncSettingsUI();
+          saveSettings();
+        });
+
+        els.composerVoiceBtn.addEventListener("click", () => voice.startListening());
+        els.composerStopBtn.addEventListener("click", () => { voice.stopListening(); voice.stopSpeaking(); });
+        els.sendBtn.addEventListener("click", () => sendChat());
+        els.exportTxtBtn.addEventListener("click", exportTxt);
+        els.clearChatBtn.addEventListener("click", () => {
+          state.chat = [];
+          saveChat();
+          renderChat();
+        });
+
+        els.chatInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendChat();
+          }
+        });
+
+        els.saveSettingsBtn.addEventListener("click", () => {
+          state.apiBase = (els.apiBaseInput.value || state.apiBase).replace(/\/+$/, "");
+          state.ownerToken = els.ownerTokenInput.value || "";
+          saveSettings();
+          syncSettingsUI();
+          loadBootstrap();
+        });
+
+        els.healthBtn.addEventListener("click", runHealth);
+        els.reloadAgentsBtn.addEventListener("click", loadBootstrap);
+        els.runAutopilotBtn.addEventListener("click", () => {
+          const plan = window.CONSIAAgentsAutopilot.buildAutopilotPlan("Cerrar CONSIA al 100%");
+          window.CONSIAAgentsAutopilot.renderAutopilot(els.autopilotList, plan);
+        });
+
+        document.addEventListener("keydown", (e) => {
+          const key = e.key.toLowerCase();
+          if ((e.ctrlKey || e.metaKey) && key === "k") {
+            e.preventDefault();
+            els.chatInput.focus();
+          }
+        });
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      }
+
+      function bootClock() {
+        const tick = () => els.clock.textContent = new Date().toLocaleTimeString("es-AR", { hour12: false });
+        tick();
+        setInterval(tick, 1000);
+      }
+
+      function init() {
+        loadSettings();
+        syncSettingsUI();
+        bind();
+        bootClock();
+        renderChat();
+        loadBootstrap();
+      }
+
+      init();
+    })();
   </script>
 </body>
 </html>
