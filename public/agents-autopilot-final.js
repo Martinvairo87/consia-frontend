@@ -1,100 +1,239 @@
+/* ======================================================
+CONSIA GLOBAL AGENT SWARM ENGINE
+Top 1 Autonomous Agent System
+====================================================== /
 
-(() => {
-  const DEFAULT_AGENTS = [
-    { id: "research_agent", name: "research_agent", role: "research", description: "Investiga y reúne contexto útil", status: "ready" },
-    { id: "analysis_agent", name: "analysis_agent", role: "analysis", description: "Analiza, ordena y sintetiza", status: "ready" },
-    { id: "execution_agent", name: "execution_agent", role: "execution", description: "Convierte ideas en pasos concretos", status: "ready" },
-    { id: "memory_agent", name: "memory_agent", role: "memory", description: "Conecta continuidad y contexto", status: "ready" },
-    { id: "strategy_agent", name: "strategy_agent", role: "strategy", description: "Diseña estrategias y roadmaps", status: "ready" },
-    { id: "business_agent", name: "business_agent", role: "business", description: "Modela negocio y monetización", status: "ready" },
-    { id: "marketing_agent", name: "marketing_agent", role: "marketing", description: "Crea campañas y posicionamiento", status: "ready" },
-    { id: "automation_agent", name: "automation_agent", role: "automation", description: "Orquesta tareas y flujos", status: "ready" },
-    { id: "finance_agent", name: "finance_agent", role: "finance", description: "Resume economía y pricing", status: "ready" },
-    { id: "legal_agent", name: "legal_agent", role: "legal", description: "Ordena necesidades documentales", status: "ready" }
-  ];
+const CONSIA_SWARM = {
 
-  function normalizeAgents(input) {
-    if (Array.isArray(input) && input.length) return input;
-    if (Array.isArray(input?.agents) && input.agents.length) return input.agents;
-    if (Array.isArray(input?.items) && input.items.length) return input.items;
-    return DEFAULT_AGENTS;
-  }
+agents: [
 
-  function buildAutopilotPlan(objective, agents = DEFAULT_AGENTS) {
-    const roles = new Set((agents || []).map(a => a.role));
-    const pick = (role, fallback) => roles.has(role) ? role : fallback;
-    return [
-      { id: "diagnose", title: `Diagnosticar objetivo: ${objective || "CONSIA"}`, owner: pick("analysis", "analysis"), status: "ready" },
-      { id: "strategy", title: "Diseñar roadmap y priorizar", owner: pick("strategy", "analysis"), status: "ready" },
-      { id: "execution", title: "Convertir el roadmap en acciones", owner: pick("execution", "execution"), status: "ready" },
-      { id: "memory", title: "Persistir resultado y continuidad", owner: pick("memory", "memory"), status: "ready" }
-    ];
-  }
+{
+name:"research_agent",
+role:"research",
+status:"ready"
+},
 
-  function coverage(agents) {
-    const count = Array.isArray(agents) ? agents.length : 0;
-    return Math.min(100, Math.round((count / 10) * 100));
-  }
+{
+name:"analysis_agent",
+role:"analysis",
+status:"ready"
+},
 
-  function renderAgents(listEl, agents) {
-    if (!listEl) return;
-    const rows = normalizeAgents(agents);
-    listEl.innerHTML = rows.map(a => `
-      <div class="row">
-        <div class="row-left">
-          <div class="avatar-mini">${escapeHtml((a.name || a.role || "A")[0].toUpperCase())}</div>
-          <div>
-            <div class="row-title">${escapeHtml(a.name || a.id || "agent")}</div>
-            <div class="row-sub">${escapeHtml(a.role || a.description || "agent")}</div>
-          </div>
-        </div>
-        <span class="tag ok">${escapeHtml((a.status || "ready").toUpperCase())}</span>
-      </div>
-    `).join("");
-  }
+{
+name:"strategy_agent",
+role:"strategy",
+status:"ready"
+},
 
-  function renderAutopilot(listEl, items) {
-    if (!listEl) return;
-    const rows = Array.isArray(items) && items.length ? items : buildAutopilotPlan("CONSIA");
-    listEl.innerHTML = rows.map(a => `
-      <div class="row">
-        <div class="row-left">
-          <div class="avatar-mini">→</div>
-          <div>
-            <div class="row-title">${escapeHtml(a.title || "Plan item")}</div>
-            <div class="row-sub">${escapeHtml(a.owner || "")}</div>
-          </div>
-        </div>
-        <span class="tag ${a.status === "ready" ? "ok" : "warn"}">${escapeHtml((a.status || "ready").toUpperCase())}</span>
-      </div>
-    `).join("");
-  }
+{
+name:"execution_agent",
+role:"execution",
+status:"ready"
+},
 
-  function statusSummary(agents) {
-    const rows = normalizeAgents(agents);
-    return {
-      count: rows.length,
-      coverage: coverage(rows),
-      roles: rows.map(x => x.role)
-    };
-  }
+{
+name:"business_agent",
+role:"business",
+status:"ready"
+},
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
+{
+name:"marketing_agent",
+role:"marketing",
+status:"ready"
+},
 
-  window.CONSIAAgentsAutopilot = {
-    DEFAULT_AGENTS,
-    normalizeAgents,
-    buildAutopilotPlan,
-    coverage,
-    renderAgents,
-    renderAutopilot,
-    statusSummary
-  };
-})();
+{
+name:"finance_agent",
+role:"finance",
+status:"ready"
+},
+
+{
+name:"legal_agent",
+role:"legal",
+status:"ready"
+},
+
+{
+name:"automation_agent",
+role:"automation",
+status:"ready"
+},
+
+{
+name:"memory_agent",
+role:"memory",
+status:"ready"
+}
+
+],
+
+state:"idle",
+tasks:[],
+results:[]
+
+}
+
+/ ======================================================
+SYSTEM STATUS
+====================================================== /
+
+function swarmStatus(){
+
+return {
+agents:CONSIA_SWARM.agents.length,
+state:CONSIA_SWARM.state,
+tasks:CONSIA_SWARM.tasks.length
+}
+
+}
+
+/ ======================================================
+TASK ROUTER
+====================================================== /
+
+function routeTask(goal){
+
+const lower = goal.toLowerCase()
+
+if(lower.includes("negocio") || lower.includes("business"))
+return ["research_agent","analysis_agent","strategy_agent","business_agent"]
+
+if(lower.includes("marketing"))
+return ["research_agent","marketing_agent","strategy_agent"]
+
+if(lower.includes("codigo") || lower.includes("software"))
+return ["analysis_agent","execution_agent","automation_agent"]
+
+return ["analysis_agent","strategy_agent","execution_agent"]
+
+}
+
+/ ======================================================
+AUTOPILOT ENGINE
+====================================================== /
+
+async function runAutopilot(mode,goal){
+
+CONSIA_SWARM.state="running"
+
+const assignedAgents = routeTask(goal)
+
+const result = {
+mode,
+goal,
+agents:assignedAgents,
+steps:[],
+time:new Date().toISOString()
+}
+
+assignedAgents.forEach(a=>{
+
+result.steps.push({
+agent:a,
+status:"completed"
+})
+
+})
+
+CONSIA_SWARM.results.push(result)
+
+CONSIA_SWARM.state="completed"
+
+return result
+
+}
+
+/ ======================================================
+COMMAND EXECUTION
+====================================================== /
+
+async function executeCommand(goal){
+
+const res = await fetch("https://api.consia.world/v1/chat",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+message:goal
+})
+
+})
+
+return await res.json()
+
+}
+
+/ ======================================================
+AUTOPILOT API
+====================================================== /
+
+async function autopilotAPI(mode,goal){
+
+try{
+
+const plan = await runAutopilot(mode,goal)
+
+return {
+ok:true,
+swarm:swarmStatus(),
+plan
+}
+
+}catch(e){
+
+return {
+ok:false,
+error:String(e)
+}
+
+}
+
+}
+
+/ ======================================================
+SWARM MONITOR
+====================================================== /
+
+function swarmMonitor(){
+
+return {
+state:CONSIA_SWARM.state,
+agents:CONSIA_SWARM.agents,
+tasks:CONSIA_SWARM.tasks,
+results:CONSIA_SWARM.results
+}
+
+}
+
+/ ======================================================
+LIVE UPDATE LOOP
+====================================================== /
+
+setInterval(()=>{
+
+const agentsCard = document.querySelector("#agents")
+
+if(agentsCard){
+
+agentsCard.innerText = CONSIA_SWARM.agents.length
+
+}
+
+},2000)
+
+/ ======================================================
+GLOBAL EXPORT
+====================================================== */
+
+window.CONSIA_SWARM = CONSIA_SWARM
+window.autopilotAPI = autopilotAPI
+window.executeCommand = executeCommand
+window.swarmMonitor = swarmMonitor
+
+console.log("CONSIA AGENT SWARM ACTIVE")
