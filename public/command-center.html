@@ -1,255 +1,242 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>CONSIA GLOBAL COMMAND CENTER</title>
 
 <style>
 
 body{
-margin:0;
-font-family:system-ui;
-background:#020617;
+background:#060f1f;
 color:white;
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+overflow:hidden;
 }
 
-header{
+.topbar{
+height:60px;
+background:#081a36;
 display:flex;
-justify-content:space-between;
 align-items:center;
-padding:14px 20px;
-background:#0f172a;
-border-bottom:1px solid #1e293b;
+justify-content:space-between;
+padding:0 25px;
+border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
-.logo{
+.title{
 font-size:20px;
 font-weight:700;
-letter-spacing:2px;
+letter-spacing:1px;
 }
 
-.status{
+.system-status{
+color:#4cffb0;
+font-weight:600;
+}
+
+.container{
 display:flex;
-gap:12px;
-align-items:center;
-}
-
-.badge{
-padding:6px 10px;
-border-radius:8px;
-font-size:12px;
-background:#0ea5e9;
-}
-
-.layout{
-display:grid;
-grid-template-columns:220px 1fr 280px;
 height:calc(100vh - 60px);
 }
 
 .sidebar{
-background:#020617;
-border-right:1px solid #1e293b;
+width:220px;
+background:#08152b;
 padding:20px;
+box-sizing:border-box;
+border-right:1px solid rgba(255,255,255,0.05);
 }
 
-.sidebar button{
-width:100%;
-background:#0f172a;
-border:none;
-color:white;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-cursor:pointer;
-}
-
-.main{
-padding:20px;
-overflow:auto;
-}
-
-.card{
-background:#0f172a;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:14px;
-}
-
-.metric{
-background:#020617;
-padding:16px;
-border-radius:10px;
-text-align:center;
-}
-
-.metric h3{
-margin:0;
-font-size:28px;
-}
-
-.console{
-width:100%;
-padding:14px;
-border-radius:8px;
-border:none;
-background:#020617;
-color:white;
+.menu{
 margin-top:10px;
 }
 
-.right{
-border-left:1px solid #1e293b;
-padding:20px;
-}
-
-.avatar{
-background:#020617;
-border-radius:50%;
-height:120px;
-width:120px;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:22px;
-}
-
-.button{
+.menu button{
 width:100%;
-padding:10px;
-border:none;
+padding:12px;
+margin-bottom:10px;
+background:#0c1e3f;
+border:0;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.menu button:hover{
+background:#12326b;
+}
+
+.main{
+flex:1;
+padding:25px;
+overflow:auto;
+}
+
+.cards{
+display:flex;
+gap:20px;
+margin-bottom:25px;
+}
+
+.card{
+flex:1;
+background:#0b1c3a;
+padding:20px;
 border-radius:8px;
-margin-top:8px;
-background:#0ea5e9;
+}
+
+.card-title{
+font-size:18px;
+margin-bottom:5px;
+}
+
+.card-value{
+font-size:14px;
+opacity:.8;
+}
+
+.panel{
+background:#081933;
+padding:20px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+.section-title{
+font-size:18px;
+margin-bottom:15px;
+}
+
+.agent{
+background:#0c254d;
+padding:10px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.brain-input{
+width:100%;
+padding:12px;
+background:#0b2044;
+border:0;
+color:white;
+border-radius:6px;
+margin-bottom:10px;
+}
+
+.brain-button{
+padding:10px 16px;
+background:#1f5eff;
+border:0;
+border-radius:6px;
 color:white;
 cursor:pointer;
 }
 
-.agent{
-display:flex;
-justify-content:space-between;
-padding:8px 0;
-border-bottom:1px solid #1e293b;
-}
-
-pre{
-background:#020617;
-padding:12px;
-border-radius:8px;
+.output{
+margin-top:15px;
+font-size:13px;
+background:#041020;
+padding:15px;
+border-radius:6px;
 white-space:pre-wrap;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<header>
+<div class="topbar">
 
-<div class="logo">CONSIA</div>
-
-<div class="status">
-<div class="badge">CORE ONLINE</div>
-<div class="badge">AGENTS ACTIVE</div>
-<div class="badge" id="clock"></div>
+<div class="title">
+CONSIA GLOBAL COMMAND CENTER
 </div>
 
-</header>
+<div class="system-status">
+SYSTEM ONLINE
+</div>
 
-<div class="layout">
+</div>
+
+<div class="container">
 
 <div class="sidebar">
 
-<button onclick="section('system')">System</button>
-<button onclick="section('agents')">Agent Swarm</button>
-<button onclick="section('projects')">Projects</button>
-<button onclick="section('memory')">Memory</button>
-<button onclick="section('autopilot')">Autopilot</button>
-<button onclick="section('economy')">Economy</button>
-<button onclick="section('owner')">Owner</button>
+<div class="menu">
+
+<button onclick="showSection('agents')">Agents</button>
+<button onclick="showSection('projects')">Projects</button>
+<button onclick="showSection('memory')">Memory</button>
+<button onclick="showSection('system')">System</button>
+
+</div>
 
 </div>
 
 <div class="main">
 
+<div class="cards">
+
 <div class="card">
-
-<h2>SYSTEM STATUS</h2>
-
-<div class="grid">
-
-<div class="metric"><p>Agents</p><h3 id="agents">10</h3></div>
-<div class="metric"><p>Memory</p><h3 id="memory">3</h3></div>
-<div class="metric"><p>Projects</p><h3 id="projects">5</h3></div>
-<div class="metric"><p>Marketplace</p><h3 id="market">8</h3></div>
-
-</div>
-
+<div class="card-title">CORE</div>
+<div class="card-value" id="core-status">ACTIVE</div>
 </div>
 
 <div class="card">
-
-<h2>COMMAND CONSOLE</h2>
-
-<input class="console" id="cmd" placeholder="Ej: crear negocio digital para Real Work">
-
-<button class="button" onclick="runCommand()">Ejecutar</button>
-
-<pre id="output"></pre>
-
+<div class="card-title">API</div>
+<div class="card-value" id="api-status">CONNECTING...</div>
 </div>
 
 <div class="card">
-
-<h2>CONSIA GLOBAL AUTOPILOT ENGINE</h2>
-
-<input class="console" id="ap-input" placeholder="Ej: crear negocio inmobiliario digital">
-
-<button class="button" onclick="runAutopilot('analyze')">Analyze</button>
-<button class="button" onclick="runAutopilot('build')">Build</button>
-<button class="button" onclick="runAutopilot('launch')">Launch</button>
-<button class="button" onclick="runAutopilot('optimize')">Optimize</button>
-
-<pre id="ap-output"></pre>
-
+<div class="card-title">AGENTS</div>
+<div class="card-value" id="agents-count">loading...</div>
 </div>
 
 </div>
 
-<div class="right">
+<div class="panel">
 
-<div class="card">
+<div class="section-title">
+CONSIA GLOBAL BRAIN
+</div>
 
-<div class="avatar">CONSIA</div>
+<input
+id="brain-input"
+class="brain-input"
+placeholder="Ask CONSIA or execute a command"
+/>
 
-<button class="button" onclick="listen()">Escuchar</button>
-<button class="button" onclick="speak()">Hablar</button>
-<button class="button" onclick="stopVoice()">Detener</button>
+<button
+class="brain-button"
+id="brain-run"
+>
+RUN
+</button>
+
+<div
+class="output"
+id="brain-output"
+>
+Waiting command...
+</div>
 
 </div>
 
-<div class="card">
+<div class="panel">
 
-<h3>AGENT SWARM</h3>
+<div class="section-title">
+ACTIVE AGENTS
+</div>
 
-<div class="agent"><span>research</span><span>ready</span></div>
-<div class="agent"><span>analysis</span><span>ready</span></div>
-<div class="agent"><span>execution</span><span>ready</span></div>
-<div class="agent"><span>strategy</span><span>ready</span></div>
-<div class="agent"><span>business</span><span>ready</span></div>
-<div class="agent"><span>marketing</span><span>ready</span></div>
-<div class="agent"><span>automation</span><span>ready</span></div>
-<div class="agent"><span>finance</span><span>ready</span></div>
-<div class="agent"><span>legal</span><span>ready</span></div>
-<div class="agent"><span>memory</span><span>ready</span></div>
+<div id="agents-list">
+loading agents...
+</div>
 
 </div>
 
@@ -259,78 +246,63 @@ white-space:pre-wrap;
 
 <script>
 
-function section(name){
-alert("Opening "+name)
+function showSection(name){
+console.log("open section:",name)
 }
 
-function runCommand(){
+async function checkAPI(){
 
-const cmd=document.getElementById("cmd").value
+try{
 
-fetch("https://api.consia.world/v1/chat",{
-method:"POST",
-headers:{ "Content-Type":"application/json"},
-body:JSON.stringify({message:cmd})
-})
-.then(r=>r.json())
-.then(d=>{
-document.getElementById("output").innerText=JSON.stringify(d,null,2)
-})
+const res=await fetch("https://api.consia.world/")
+const data=await res.json()
 
-}
+document.getElementById("api-status").innerText="CONNECTED"
 
-function runAutopilot(mode){
+}catch(e){
 
-const goal=document.getElementById("ap-input").value
+document.getElementById("api-status").innerText="OFFLINE"
 
-fetch("https://api.consia.world/v1/actions/dispatch",{
-method:"POST",
-headers:{ "Content-Type":"application/json"},
-body:JSON.stringify({
-type:"autopilot",
-mode:mode,
-goal:goal
-})
-})
-.then(r=>r.json())
-.then(d=>{
-document.getElementById("ap-output").innerText=JSON.stringify(d,null,2)
-})
-
-}
-
-function listen(){
-
-const recognition=new(window.SpeechRecognition||window.webkitSpeechRecognition)()
-recognition.lang="es"
-recognition.start()
-
-recognition.onresult=function(e){
-document.getElementById("cmd").value=e.results[0][0].transcript
 }
 
 }
 
-function speak(){
+checkAPI()
 
-const text=document.getElementById("cmd").value
-const utter=new SpeechSynthesisUtterance(text)
-speechSynthesis.speak(utter)
+async function loadAgents(){
+
+try{
+
+const res=await fetch("https://api.consia.world/v1/agents")
+const data=await res.json()
+
+const box=document.getElementById("agents-list")
+
+if(!data.agents){
+box.innerHTML="No agents found"
+return
+}
+
+document.getElementById("agents-count").innerText=data.agents.length+" ONLINE"
+
+box.innerHTML=data.agents
+.map(a=>`<div class="agent">${a.name}</div>`)
+.join("")
+
+}catch(e){
+
+document.getElementById("agents-list").innerText="Agents loading fallback"
 
 }
 
-function stopVoice(){
-speechSynthesis.cancel()
 }
 
-setInterval(()=>{
-
-const now=new Date()
-document.getElementById("clock").innerText=now.toLocaleTimeString()
-
-},1000)
+loadAgents()
 
 </script>
+
+<script src="/agents-autopilot-final.js"></script>
+<script src="/global-brain.js"></script>
 
 </body>
 </html>
