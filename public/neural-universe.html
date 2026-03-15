@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA 3D NEURAL UNIVERSE</title>
+  <style>
+    :root{
+      --bg:#020813;
+      --bg2:#041120;
+      --cyan:#39f3ff;
+      --cyan2:#00d9ff;
+      --white:#ffffff;
+      --panel:rgba(6,18,36,.78);
+      --line:rgba(57,243,255,.18);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.66);
+      --ok:#49ffb3;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:radial-gradient(circle at center, #031224 0%, #01060d 65%, #000 100%);
+      font-family:Arial,Helvetica,sans-serif;
+      color:var(--text);
+    }
+
+    #universe{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      display:block;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(57,243,255,.05) 0%, transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(57,243,255,.025) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.4));
+    }
+
+    .topbar{
+      position:fixed;
+      top:20px;
+      left:24px;
+      right:24px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:20px;
+      z-index:10;
+      pointer-events:none;
+    }
+
+    .brand,
+    .hud,
+    .dock{
+      pointer-events:auto;
+      background:var(--panel);
+      border:1px solid var(--line);
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 30px rgba(0,217,255,.08), inset 0 0 20px rgba(57,243,255,.03);
+    }
+
+    .brand{
+      min-width:360px;
+      padding:16px 18px;
+    }
+
+    .brand-title{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:.04em;
+      margin-bottom:8px;
+    }
+
+    .brand-sub{
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hud{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      padding:14px 18px;
+      min-width:380px;
+      justify-content:space-between;
+    }
+
+    .hud-item{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:72px;
+    }
+
+    .hud-label{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+
+    .hud-value{
+      font-size:16px;
+      font-weight:700;
+    }
+
+    .ok{ color:var(--ok); }
+
+    .left-panel{
+      position:fixed;
+      top:110px;
+      left:24px;
+      width:320px;
+      max-height:calc(100vh - 150px);
+      overflow:auto;
+      z-index:10;
+      pointer-events:auto;
+      background:var(--panel);
+      border:1px solid var(--line);
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 30px rgba(0,217,255,.08);
+      padding:18px;
+    }
+
+    .section{
+      margin-bottom:18px;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      padding-bottom:16px;
+    }
+
+    .section:last-child{
+      margin-bottom:0;
+      border-bottom:none;
+      padding-bottom:0;
+    }
+
+    .section-title{
+      font-size:13px;
+      color:var(--cyan);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:10px;
+    }
+
+    .module{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:rgba(8,29,58,.7);
+      border:1px solid rgba(57,243,255,.08);
+      padding:10px 12px;
+      margin-bottom:8px;
+      font-size:13px;
+    }
+
+    .module:last-child{ margin-bottom:0; }
+
+    .module-name{ font-weight:700; }
+    .module-state{ color:var(--ok); }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      background:#0c2953;
+      color:#fff;
+      padding:11px 12px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border:1px solid rgba(57,243,255,.12);
+    }
+
+    .btn:hover{
+      background:#11356b;
+    }
+
+    .right-panel{
+      position:fixed;
+      right:24px;
+      top:110px;
+      width:300px;
+      max-height:calc(100vh - 150px);
+      overflow:auto;
+      z-index:10;
+      pointer-events:auto;
+      background:var(--panel);
+      border:1px solid var(--line);
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 30px rgba(0,217,255,.08);
+      padding:18px;
+    }
+
+    .log{
+      background:rgba(4,14,28,.78);
+      border:1px solid rgba(57,243,255,.07);
+      padding:10px 12px;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+      line-height:1.45;
+    }
+
+    .center-tag{
+      position:fixed;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      z-index:8;
+      text-align:center;
+      pointer-events:none;
+      width:240px;
+    }
+
+    .core-title{
+      font-size:30px;
+      letter-spacing:.14em;
+      font-weight:700;
+      text-shadow:0 0 18px rgba(57,243,255,.22);
+    }
+
+    .core-sub{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    @media (max-width: 1200px){
+      .left-panel,.right-panel{ width:260px; }
+      .hud{ min-width:320px; }
+    }
+
+    @media (max-width: 980px){
+      .topbar{
+        flex-direction:column;
+        right:auto;
+      }
+      .hud{ min-width:unset; width:100%; }
+      .left-panel,.right-panel{
+        position:fixed;
+        bottom:14px;
+        top:auto;
+        max-height:34vh;
+      }
+      .left-panel{ left:14px; width:42vw; }
+      .right-panel{ right:14px; width:42vw; }
+    }
+
+    @media (max-width: 700px){
+      .brand{ min-width:unset; width:100%; }
+      .left-panel,.right-panel{
+        width:calc(50vw - 18px);
+      }
+      .controls{
+        grid-template-columns:1fr;
+      }
+      .core-title{
+        font-size:22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="universe"></canvas>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-title">CONSIA 3D NEURAL UNIVERSE</div>
+    <div class="brand-sub">Holographic neural visualization · AI-OS core · live modules</div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-item">
+      <div class="hud-label">System</div>
+      <div class="hud-value ok" id="hud-system">ONLINE</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">API</div>
+      <div class="hud-value" id="hud-api">CHECKING</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Agents</div>
+      <div class="hud-value" id="hud-agents">--</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Nodes</div>
+      <div class="hud-value" id="hud-nodes">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Clock</div>
+      <div class="hud-value" id="hud-clock">--:--:--</div>
+    </div>
+  </div>
+</div>
+
+<div class="left-panel">
+  <div class="section">
+    <div class="section-title">Core Modules</div>
+    <div class="module"><span class="module-name">CONSIA CORE</span><span class="module-state">ACTIVE</span></div>
+    <div class="module"><span class="module-name">GLOBAL BRAIN</span><span class="module-state">ONLINE</span></div>
+    <div class="module"><span class="module-name">STRATEGIC ENGINE</span><span class="module-state">READY</span></div>
+    <div class="module"><span class="module-name">AGENT SWARM</span><span class="module-state">ACTIVE</span></div>
+    <div class="module"><span class="module-name">SELF LEARNING</span><span class="module-state">ACTIVE</span></div>
+    <div class="module"><span class="module-name">GLOBAL MEMORY</span><span class="module-state">READY</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Universe Controls</div>
+    <div class="controls">
+      <button class="btn" id="btn-speed-up">Speed +</button>
+      <button class="btn" id="btn-speed-down">Speed -</button>
+      <button class="btn" id="btn-density-up">Density +</button>
+      <button class="btn" id="btn-density-down">Density -</button>
+      <button class="btn" id="btn-pulse">Pulse</button>
+      <button class="btn" id="btn-reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="section">
+    <div class="section-title">Live Feed</div>
+    <div class="log" id="log-1">CONSIA neural universe booting...</div>
+    <div class="log" id="log-2">Loading system modules...</div>
+    <div class="log" id="log-3">Waiting API sync...</div>
+    <div class="log" id="log-4">Agent swarm handshake pending...</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Metrics</div>
+    <div class="module"><span class="module-name">Orbit Speed</span><span id="metric-speed">1.00x</span></div>
+    <div class="module"><span class="module-name">Connection Density</span><span id="metric-density">100%</span></div>
+    <div class="module"><span class="module-name">Neural Activity</span><span id="metric-activity">STABLE</span></div>
+    <div class="module"><span class="module-name">Focus Node</span><span id="metric-focus">CONSIA CORE</span></div>
+  </div>
+</div>
+
+<div class="center-tag">
+  <div class="core-title">CONSIA</div>
+  <div class="core-sub">Neural universe active</div>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById("universe");
+  const ctx = canvas.getContext("2d");
+
+  const hudApi = document.getElementById("hud-api");
+  const hudAgents = document.getElementById("hud-agents");
+  const hudNodes = document.getElementById("hud-nodes");
+  const hudClock = document.getElementById("hud-clock");
+
+  const metricSpeed = document.getElementById("metric-speed");
+  const metricDensity = document.getElementById("metric-density");
+  const metricActivity = document.getElementById("metric-activity");
+  const metricFocus = document.getElementById("metric-focus");
+
+  const logs = [
+    document.getElementById("log-1"),
+    document.getElementById("log-2"),
+    document.getElementById("log-3"),
+    document.getElementById("log-4")
+  ];
+
+  let w = canvas.width = window.innerWidth;
+  let h = canvas.height = window.innerHeight;
+  let cx = w / 2;
+  let cy = h / 2;
+
+  let speed = 1;
+  let density = 1;
+  let pulseBoost = 0;
+
+  const modules = [
+    "GLOBAL BRAIN",
+    "STRATEGIC",
+    "AGENTS",
+    "MEMORY",
+    "PROJECTS",
+    "LEARNING",
+    "AUTOPILOT",
+    "ECONOMY",
+    "VOICE",
+    "AVATAR"
+  ];
+
+  const layers = [
+    { radius: 110, count: 70, alpha: 0.90 },
+    { radius: 185, count: 120, alpha: 0.52 },
+    { radius: 270, count: 180, alpha: 0.30 },
+    { radius: 360, count: 210, alpha: 0.18 }
+  ];
+
+  const nodes = [];
+  const stars = [];
+  const floaters = [];
+
+  function rand(min, max){
+    return Math.random() * (max - min) + min;
+  }
+
+  function createScene(){
+    nodes.length = 0;
+    floaters.length = 0;
+
+    layers.forEach((layer, layerIndex) => {
+      const count = Math.max(10, Math.floor(layer.count * density));
+      for(let i = 0; i < count; i++){
+        const angle = rand(0, Math.PI * 2);
+        const tilt = rand(-0.9, 0.9);
+        const orbitSpeed = rand(0.0008, 0.0035) * (layerIndex + 1);
+        const size = rand(0.8, 2.8);
+        nodes.push({
+          layer: layerIndex,
+          radius: layer.radius,
+          angle,
+          tilt,
+          orbitSpeed,
+          size,
+          alpha: layer.alpha,
+          module: modules[i % modules.length]
+        });
+      }
+    });
+
+    for(let i = 0; i < 200; i++){
+      stars.push({
+        x: rand(0, w),
+        y: rand(0, h),
+        size: rand(0.4, 2.6),
+        alpha: rand(0.2, 1)
+      });
+    }
+
+    for(let i = 0; i < 40; i++){
+      floaters.push({
+        angle: rand(0, Math.PI * 2),
+        radius: rand(90, 380),
+        speed: rand(0.001, 0.006),
+        size: rand(2, 5),
+        alpha: rand(0.25, 0.9)
+      });
+    }
+
+    hudNodes.textContent = String(nodes.length);
+    metricDensity.textContent = Math.round(density * 100) + "%";
+  }
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    cx = w / 2;
+    cy = h / 2;
+  }
+
+  function drawBackground(){
+    ctx.clearRect(0, 0, w, h);
+
+    const grad = ctx.createRadialGradient(cx, cy, 40, cx, cy, Math.max(w, h) * 0.55);
+    grad.addColorStop(0, "rgba(0,220,255,0.06)");
+    grad.addColorStop(0.25, "rgba(0,180,255,0.025)");
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    stars.forEach(s => {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.fill();
+    });
+  }
+
+  function drawCore(t){
+    const pulse = Math.sin(t * 0.0024) * 8 + pulseBoost;
+    pulseBoost *= 0.95;
+
+    for(let i = 4; i >= 1; i--){
+      ctx.beginPath();
+      ctx.arc(cx, cy, 65 + i * 20 + pulse, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(57,243,255,${0.05 * i})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    const coreGrad = ctx.createRadialGradient(cx - 18, cy - 22, 8, cx, cy, 90 + pulse);
+    coreGrad.addColorStop(0, "rgba(255,255,255,0.95)");
+    coreGrad.addColorStop(0.18, "rgba(135,255,255,0.95)");
+    coreGrad.addColorStop(0.45, "rgba(57,243,255,0.9)");
+    coreGrad.addColorStop(1, "rgba(57,243,255,0.08)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 86 + pulse, 0, Math.PI * 2);
+    ctx.fillStyle = coreGrad;
+    ctx.fill();
+  }
+
+  function projectNode(n, t){
+    const a = n.angle + t * n.orbitSpeed * speed;
+    const rx = Math.cos(a) * n.radius;
+    const ry = Math.sin(a) * n.radius * (0.55 + (n.layer * 0.12));
+    const rz = Math.sin(a * 1.7 + n.tilt) * 90;
+
+    const scale = 1 + rz / 340;
+    return {
+      x: cx + rx,
+      y: cy + ry,
+      z: rz,
+      scale,
+      alpha: Math.max(0.08, Math.min(1, n.alpha * scale))
+    };
+  }
+
+  function drawConnections(projected){
+    const maxLinks = Math.min(380, Math.floor(projected.length * 1.2));
+    let links = 0;
+
+    for(let i = 0; i < projected.length && links < maxLinks; i += 2){
+      const a = projected[i];
+      const b = projected[(i * 7) % projected.length];
+      if(!a || !b) continue;
+
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if(dist < 220){
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(57,243,255,${0.02 + (0.16 * (1 - dist / 220))})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        links++;
+      }
+    }
+  }
+
+  function drawNodes(projected){
+    projected.sort((a, b) => a.z - b.z);
+
+    projected.forEach((p, idx) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.scale, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(57,243,255,${p.alpha})`;
+      ctx.fill();
+
+      if(idx % 45 === 0){
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, p.alpha + 0.2)})`;
+        ctx.fillText(p.label, p.x + 10, p.y + 4);
+      }
+    });
+  }
+
+  function drawFloaters(t){
+    floaters.forEach((f, i) => {
+      const a = f.angle + t * f.speed * speed;
+      const x = cx + Math.cos(a) * f.radius;
+      const y = cy + Math.sin(a) * f.radius * 0.72;
+
+      ctx.beginPath();
+      ctx.arc(x, y, f.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+      ctx.fill();
+
+      if(i % 10 === 0){
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = "rgba(255,255,255,0.04)";
+        ctx.stroke();
+      }
+    });
+  }
+
+  function animate(t){
+    drawBackground();
+    drawCore(t);
+
+    const projected = nodes.map(n => {
+      const p = projectNode(n, t);
+      return {
+        ...p,
+        size: n.size,
+        label: n.module
+      };
+    });
+
+    drawConnections(projected);
+    drawNodes(projected);
+    drawFloaters(t);
+
+    requestAnimationFrame(animate);
+  }
+
+  function clockLoop(){
+    setInterval(() => {
+      hudClock.textContent = new Date().toLocaleTimeString("es-AR", { hour12:false });
+    }, 1000);
+  }
+
+  async function checkAPI(){
+    try{
+      const res = await fetch("https://api.consia.world/health");
+      const data = await res.json();
+      if(data && data.ok){
+        hudApi.textContent = "CONNECTED";
+        logs[1].textContent = "API handshake successful.";
+      }else{
+        hudApi.textContent = "LIMITED";
+      }
+    }catch(e){
+      hudApi.textContent = "OFFLINE";
+      logs[1].textContent = "API sync unavailable.";
+    }
+  }
+
+  async function loadAgents(){
+    try{
+      const res = await fetch("https://api.consia.world/v1/agents");
+      const data = await res.json();
+
+      if(data && data.agents && data.agents.length){
+        hudAgents.textContent = `${data.agents.length} ONLINE`;
+        logs[2].textContent = `Agent swarm synced: ${data.agents.length} agents online.`;
+        metricFocus.textContent = data.agents[0].name || "CONSIA CORE";
+      }else{
+        throw new Error("no_agents");
+      }
+    }catch(e){
+      hudAgents.textContent = "6 ONLINE";
+      logs[2].textContent = "Agent swarm fallback loaded.";
+      metricFocus.textContent = "research_agent";
+    }
+  }
+
+  function bootLogs(){
+    logs[0].textContent = "CONSIA multiverse ready.";
+    logs[3].textContent = "Neural universe stabilized.";
+  }
+
+  document.getElementById("btn-speed-up").onclick = () => {
+    speed = Math.min(3, speed + 0.15);
+    metricSpeed.textContent = speed.toFixed(2) + "x";
+    metricActivity.textContent = "AMPLIFIED";
+  };
+
+  document.getElementById("btn-speed-down").onclick = () => {
+    speed = Math.max(0.4, speed - 0.15);
+    metricSpeed.textContent = speed.toFixed(2) + "x";
+    metricActivity.textContent = "STABLE";
+  };
+
+  document.getElementById("btn-density-up").onclick = () => {
+    density = Math.min(1.8, density + 0.15);
+    createScene();
+    metricActivity.textContent = "DENSE";
+  };
+
+  document.getElementById("btn-density-down").onclick = () => {
+    density = Math.max(0.5, density - 0.15);
+    createScene();
+    metricActivity.textContent = "FOCUSED";
+  };
+
+  document.getElementById("btn-pulse").onclick = () => {
+    pulseBoost = 14;
+    metricActivity.textContent = "PULSE";
+  };
+
+  document.getElementById("btn-reset").onclick = () => {
+    speed = 1;
+    density = 1;
+    pulseBoost = 0;
+    metricSpeed.textContent = "1.00x";
+    metricDensity.textContent = "100%";
+    metricActivity.textContent = "STABLE";
+    createScene();
+  };
+
+  window.addEventListener("resize", resize);
+
+  createScene();
+  bootLogs();
+  checkAPI();
+  loadAgents();
+  clockLoop();
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>
