@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<title>CONSIA HOLOGRAPHIC CONTROL ROOM</title>
+
+<style>
+
+body{
+margin:0;
+background:#020a18;
+font-family:Arial;
+overflow:hidden;
+color:white;
+}
+
+#canvas{
+position:absolute;
+width:100vw;
+height:100vh;
+}
+
+#panel{
+
+position:absolute;
+right:0;
+top:0;
+width:320px;
+height:100vh;
+background:#06142c;
+padding:20px;
+}
+
+.module{
+background:#0b2b5a;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+font-size:13px;
+}
+
+.title{
+position:absolute;
+top:20px;
+left:30px;
+font-size:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="title">CONSIA HOLOGRAPHIC CONTROL ROOM</div>
+
+<canvas id="canvas"></canvas>
+
+<div id="panel">
+
+<div class="module" id="core">CORE : ACTIVE</div>
+<div class="module" id="brain">GLOBAL BRAIN : ONLINE</div>
+<div class="module" id="agents">AGENT SWARM : LOADING</div>
+<div class="module" id="memory">GLOBAL MEMORY : READY</div>
+<div class="module" id="strategic">STRATEGIC ENGINE : READY</div>
+<div class="module" id="learning">SELF LEARNING : ACTIVE</div>
+
+</div>
+
+<script>
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let centerX=canvas.width/2
+let centerY=canvas.height/2
+
+const modules=[
+
+{label:"GLOBAL BRAIN",angle:0,r:200},
+{label:"STRATEGIC",angle:1,r:200},
+{label:"AGENTS",angle:2,r:200},
+{label:"MEMORY",angle:3,r:200},
+{label:"PROJECTS",angle:4,r:200},
+{label:"LEARNING",angle:5,r:200}
+
+]
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+drawCore()
+
+modules.forEach(m=>{
+m.angle+=0.002
+drawModule(m)
+})
+
+requestAnimationFrame(draw)
+
+}
+
+function drawCore(){
+
+ctx.beginPath()
+ctx.arc(centerX,centerY,50,0,Math.PI*2)
+ctx.fillStyle="#49ffb3"
+ctx.fill()
+
+ctx.fillStyle="#000"
+ctx.fillText("CONSIA",centerX-20,centerY+4)
+
+}
+
+function drawModule(m){
+
+let x=centerX+Math.cos(m.angle)*m.r
+let y=centerY+Math.sin(m.angle)*m.r
+
+ctx.beginPath()
+ctx.arc(x,y,6,0,Math.PI*2)
+ctx.fillStyle="#00eaff"
+ctx.fill()
+
+ctx.fillStyle="#fff"
+ctx.fillText(m.label,x+10,y+4)
+
+ctx.beginPath()
+ctx.moveTo(centerX,centerY)
+ctx.lineTo(x,y)
+ctx.strokeStyle="rgba(0,255,255,0.2)"
+ctx.stroke()
+
+}
+
+draw()
+
+</script>
+
+</body>
+</html>
