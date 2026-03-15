@@ -140,12 +140,20 @@ padding:8px 0;
 border-bottom:1px solid #1e293b;
 }
 
+pre{
+background:#020617;
+padding:12px;
+border-radius:8px;
+white-space:pre-wrap;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <div class="logo">CONSIA</div>
 
 <div class="status">
@@ -170,9 +178,10 @@ border-bottom:1px solid #1e293b;
 
 </div>
 
-<div class="main" id="main">
+<div class="main">
 
 <div class="card">
+
 <h2>SYSTEM STATUS</h2>
 
 <div class="grid">
@@ -183,15 +192,33 @@ border-bottom:1px solid #1e293b;
 <div class="metric"><p>Marketplace</p><h3 id="market">8</h3></div>
 
 </div>
+
 </div>
 
 <div class="card">
 
 <h2>COMMAND CONSOLE</h2>
 
-<input class="console" id="cmd" placeholder="Ej: crear proyecto inmobiliario en Posadas">
+<input class="console" id="cmd" placeholder="Ej: crear negocio digital para Real Work">
 
 <button class="button" onclick="runCommand()">Ejecutar</button>
+
+<pre id="output"></pre>
+
+</div>
+
+<div class="card">
+
+<h2>CONSIA GLOBAL AUTOPILOT ENGINE</h2>
+
+<input class="console" id="ap-input" placeholder="Ej: crear negocio inmobiliario digital">
+
+<button class="button" onclick="runAutopilot('analyze')">Analyze</button>
+<button class="button" onclick="runAutopilot('build')">Build</button>
+<button class="button" onclick="runAutopilot('launch')">Launch</button>
+<button class="button" onclick="runAutopilot('optimize')">Optimize</button>
+
+<pre id="ap-output"></pre>
 
 </div>
 
@@ -246,7 +273,29 @@ headers:{ "Content-Type":"application/json"},
 body:JSON.stringify({message:cmd})
 })
 .then(r=>r.json())
-.then(d=>alert(JSON.stringify(d)))
+.then(d=>{
+document.getElementById("output").innerText=JSON.stringify(d,null,2)
+})
+
+}
+
+function runAutopilot(mode){
+
+const goal=document.getElementById("ap-input").value
+
+fetch("https://api.consia.world/v1/actions/dispatch",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body:JSON.stringify({
+type:"autopilot",
+mode:mode,
+goal:goal
+})
+})
+.then(r=>r.json())
+.then(d=>{
+document.getElementById("ap-output").innerText=JSON.stringify(d,null,2)
+})
 
 }
 
@@ -257,9 +306,7 @@ recognition.lang="es"
 recognition.start()
 
 recognition.onresult=function(e){
-
 document.getElementById("cmd").value=e.results[0][0].transcript
-
 }
 
 }
@@ -273,9 +320,7 @@ speechSynthesis.speak(utter)
 }
 
 function stopVoice(){
-
 speechSynthesis.cancel()
-
 }
 
 setInterval(()=>{
