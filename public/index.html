@@ -2,691 +2,647 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONSIA MASTER CONTROL</title>
-  <meta name="theme-color" content="#05070a" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CONSIA Avatar OS</title>
   <style>
     :root{
-      --bg:#05070a;
-      --bg2:#07101a;
-      --panel:#0d1623;
-      --panel2:#101b2b;
-      --line:#22344a;
-      --line2:#304862;
-      --text:#edf4ff;
-      --muted:#8fa6c3;
-      --blue:#3b82f6;
-      --blue2:#1d4ed8;
-      --cyan:#06b6d4;
-      --green:#22c55e;
-      --green2:#15803d;
-      --yellow:#f59e0b;
-      --orange:#ea580c;
-      --red:#ef4444;
-      --red2:#b91c1c;
-      --violet:#8b5cf6;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --bg:#06080d;
+      --panel:#0f1520;
+      --panel2:#121a27;
+      --line:rgba(255,255,255,.08);
+      --text:#eef4ff;
+      --muted:#9fb0c7;
+      --accent:#33d6ff;
+      --accent2:#7a5cff;
+      --ok:#47e58d;
+      --danger:#ff6b6b;
+      --shadow:0 25px 80px rgba(0,0,0,.45);
       --radius:22px;
-      --radius-sm:16px;
-      --glass:rgba(12,18,29,.78);
     }
-
     *{box-sizing:border-box}
     html,body{
-      margin:0;padding:0;
-      background:
-        radial-gradient(circle at top right, rgba(59,130,246,.12), transparent 22%),
-        radial-gradient(circle at top left, rgba(6,182,212,.10), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
+      margin:0;padding:0;background:
+      radial-gradient(circle at top, rgba(51,214,255,.14), transparent 30%),
+      radial-gradient(circle at 80% 20%, rgba(122,92,255,.12), transparent 25%),
+      linear-gradient(180deg,#06080d 0%, #0a1018 100%);
       color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
+      min-height:100%;
     }
     body{min-height:100vh}
-    a{text-decoration:none;color:inherit}
-    button,input,select,textarea{font:inherit}
-    .wrap{max-width:1700px;margin:0 auto;padding:18px}
-    .grid{display:grid;gap:14px}
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-      border:1px solid var(--line);
-      background:var(--glass);
-      backdrop-filter:blur(12px);
-      border-radius:26px;padding:18px;
-      box-shadow:var(--shadow);
-      margin-bottom:18px;
+    .app{
+      max-width:1200px;
+      margin:0 auto;
+      padding:18px;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:18px;
+      min-height:100vh;
     }
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{
-      width:58px;height:58px;border-radius:18px;
-      display:grid;place-items:center;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 34%),
-        linear-gradient(180deg,#122038,#0b1220);
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 20px 40px rgba(59,130,246,.18);
-      font-size:26px;font-weight:900;letter-spacing:.6px
-    }
-    .brand h1{margin:0;font-size:24px;font-weight:900;letter-spacing:.4px}
-    .brand p{margin:5px 0 0;color:var(--muted);font-size:13px}
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      height:44px;padding:0 16px;border-radius:14px;
-      border:1px solid var(--line2);
-      background:#101b2b;color:var(--text);cursor:pointer;font-weight:800;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      transition:.18s ease;box-shadow:0 10px 22px rgba(0,0,0,.16)
-    }
-    .btn:hover{transform:translateY(-1px);border-color:#496482}
-    .btn.primary{background:linear-gradient(180deg,var(--blue),var(--blue2));border-color:transparent}
-    .btn.green{background:linear-gradient(180deg,var(--green),var(--green2));border-color:transparent}
-    .btn.yellow{background:linear-gradient(180deg,var(--yellow),var(--orange));border-color:transparent}
-    .btn.red{background:linear-gradient(180deg,var(--red),var(--red2));border-color:transparent}
-    .btn.ghost{background:transparent}
-    .btn.sm{height:36px;padding:0 12px;font-size:13px}
-
-    .hero{
-      display:grid;grid-template-columns:1.35fr .9fr;gap:14px;margin-bottom:18px
-    }
-    .panel{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    .hero-main{padding:22px}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      background:#0f1828;border:1px solid #273d58;color:#dbeafe;
-      border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800
+    .left{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
-    .hero-main h2{margin:14px 0 10px;font-size:34px;line-height:1.05}
-    .hero-main p{margin:0;color:var(--muted);font-size:14px;max-width:760px;line-height:1.5}
-    .hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .tag{
-      padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800;
-      border:1px solid #223854;background:#0c1420;color:#d7e6fb
+    .hero{
+      padding:18px;
+      position:relative;
+      min-height:420px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
     }
-    .hero-side{padding:18px;display:flex;flex-direction:column;gap:12px}
-    .side-row{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      border:1px solid #1d3149;background:#0b1320;border-radius:16px;padding:14px
+    .brand{
+      position:absolute;
+      top:16px;left:16px;right:16px;
+      display:flex;align-items:center;justify-content:space-between;
     }
-    .side-row .k{font-size:12px;color:var(--muted)}
-    .side-row .v{font-size:15px;font-weight:900}
-    .status-dot{width:10px;height:10px;border-radius:999px;background:var(--green);box-shadow:0 0 0 6px rgba(34,197,94,.12)}
-    .status-dot.off{background:var(--red);box-shadow:0 0 0 6px rgba(239,68,68,.12)}
-
-    .stats{
-      display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:18px
+    .brand-left{
+      display:flex;align-items:center;gap:12px;
     }
-    .stat{
-      padding:16px;
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(51,214,255,.22), rgba(122,92,255,.22));
+      border:1px solid rgba(255,255,255,.1);
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+    .brand-title{font-size:16px;font-weight:700}
+    .brand-sub{font-size:12px;color:var(--muted)}
+    .status{
+      display:flex;align-items:center;gap:8px;
+      padding:9px 12px;border-radius:999px;
       border:1px solid var(--line);
-      border-radius:20px;
-      box-shadow:var(--shadow)
+      background:rgba(255,255,255,.03);
+      font-size:12px;color:var(--muted);
     }
-    .stat .label{font-size:12px;color:var(--muted);margin-bottom:8px}
-    .stat .value{font-size:30px;font-weight:900}
-    .stat .sub{font-size:11px;color:var(--muted);margin-top:6px}
-
-    .main{
-      display:grid;grid-template-columns:1.25fr .95fr;gap:14px;margin-bottom:18px
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--ok);
+      box-shadow:0 0 18px rgba(71,229,141,.65);
     }
-    .section-head{
+    .avatar-wrap{
+      position:relative;
+      width:280px;height:280px;
+      display:grid;place-items:center;
+    }
+    .ring, .ring2, .core{
+      position:absolute;border-radius:50%;
+    }
+    .ring{
+      inset:0;
+      border:1px solid rgba(51,214,255,.28);
+      box-shadow:0 0 60px rgba(51,214,255,.12), inset 0 0 60px rgba(122,92,255,.08);
+      animation: spin 12s linear infinite;
+    }
+    .ring2{
+      inset:18px;
+      border:1px solid rgba(122,92,255,.25);
+      animation: spinReverse 10s linear infinite;
+    }
+    .core{
+      inset:54px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.65), transparent 22%),
+        radial-gradient(circle at 65% 35%, rgba(51,214,255,.8), transparent 28%),
+        radial-gradient(circle at 50% 65%, rgba(122,92,255,.8), transparent 30%),
+        radial-gradient(circle at center, rgba(18,27,44,.95), rgba(7,10,18,1));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 0 50px rgba(51,214,255,.18),
+        0 0 100px rgba(122,92,255,.14),
+        inset 0 0 40px rgba(255,255,255,.05);
+      display:grid;place-items:center;
+      overflow:hidden;
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .core.speaking{
+      transform:scale(1.04);
+      box-shadow:
+        0 0 70px rgba(51,214,255,.32),
+        0 0 120px rgba(122,92,255,.24),
+        inset 0 0 40px rgba(255,255,255,.08);
+    }
+    .pulse{
+      position:absolute;
+      width:52px;height:52px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.95), rgba(51,214,255,.6), transparent 70%);
+      filter:blur(1px);
+      animation:pulse 2.4s ease-in-out infinite;
+    }
+    .hero-title{margin-top:22px;font-size:30px;font-weight:800;letter-spacing:-.04em;text-align:center}
+    .hero-sub{margin-top:8px;color:var(--muted);font-size:14px;text-align:center;line-height:1.5;max-width:320px}
+    .controls{
+      width:100%;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      padding:0 18px 18px;
+    }
+    button{
+      border:none;outline:none;cursor:pointer;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:700;
+      transition:.18s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#06111a;
+    }
+    .btn-secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--text);
+    }
+    .btn-danger{
+      background:linear-gradient(135deg,#ff8a7a,#ff5f7c);
+      color:#180607;
+    }
+    .panel-head{
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
       display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:16px 18px;border-bottom:1px solid var(--line)
     }
-    .section-head h3{margin:0;font-size:17px}
-    .section-sub{font-size:12px;color:var(--muted);margin-top:4px}
-
-    .pipeline{
+    .panel-title{font-size:15px;font-weight:700}
+    .panel-sub{font-size:12px;color:var(--muted)}
+    .right{
+      display:grid;
+      grid-template-rows:auto auto 1fr auto;
+      gap:18px;
+      min-height:0;
+    }
+    .presentation{
+      padding:18px;
+      display:grid;
+      grid-template-columns: repeat(4,1fr);
+      gap:12px;
+    }
+    .tile{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:18px;
       padding:14px;
-      display:grid;grid-template-columns:repeat(6,minmax(180px,1fr));gap:12px
+      min-height:130px;
     }
-    .stage{
-      background:#0b1220;border:1px solid #1d2d45;border-radius:18px;min-height:200px;padding:12px
+    .tile-kicker{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .tile-title{margin-top:10px;font-size:15px;font-weight:700}
+    .tile-text{margin-top:8px;font-size:13px;line-height:1.5;color:var(--muted)}
+    .chat{
+      min-height:0;
+      display:flex;
+      flex-direction:column;
     }
-    .stage-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-    .stage-title{font-size:13px;font-weight:900}
-    .count{
-      min-width:28px;height:28px;padding:0 8px;border-radius:999px;
-      display:grid;place-items:center;font-weight:900;font-size:12px;
-      background:#0f1828;border:1px solid #29415f
+    .chat-body{
+      padding:18px;
+      overflow:auto;
+      min-height:280px;
+      max-height:420px;
+      display:flex;flex-direction:column;gap:12px;
     }
-    .stage-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
-    .mini-list{display:flex;flex-direction:column;gap:8px}
-    .mini{
-      border:1px solid #18283d;background:#0d1521;border-radius:12px;padding:10px
+    .msg-row{display:flex}
+    .msg-row.user{justify-content:flex-end}
+    .msg-row.assistant{justify-content:flex-start}
+    .bubble{
+      max-width:80%;
+      padding:14px 15px;
+      border-radius:18px;
+      white-space:pre-wrap;
+      line-height:1.5;
+      font-size:14px;
     }
-    .mini .nm{font-size:13px;font-weight:900}
-    .mini .tx{font-size:11px;color:var(--muted);margin-top:4px}
-    .mini .sc{margin-top:6px;font-size:11px;color:#cfe0fa}
-    .empty{
-      border:1px dashed #314862;background:#0b1220;border-radius:14px;
-      padding:16px;text-align:center;color:var(--muted);font-size:12px
+    .msg-row.user .bubble{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#071219;
+      font-weight:700;
+      border-bottom-right-radius:6px;
     }
-
-    .side-stack{display:grid;gap:14px}
-    .module-grid{
-      padding:14px;
-      display:grid;grid-template-columns:repeat(2,1fr);gap:10px
+    .msg-row.assistant .bubble{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-bottom-left-radius:6px;
     }
-    .module{
-      background:#0b1220;border:1px solid #1d2d45;border-radius:16px;padding:14px
+    .input-wrap{
+      padding:14px 18px 18px;
+      border-top:1px solid var(--line);
+      display:flex;gap:10px;align-items:flex-end;
     }
-    .module .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .module .name{font-size:13px;font-weight:900}
-    .module .desc{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
-    .module .badge{
-      display:inline-flex;align-items:center;justify-content:center;
-      border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;
-      border:1px solid transparent
+    textarea{
+      flex:1;resize:none;min-height:56px;max-height:180px;
+      padding:14px 15px;border-radius:16px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);color:var(--text);outline:none;
+      font:inherit;line-height:1.45;
     }
-    .badge.on{background:#0f1d13;color:#b7f7cc;border-color:#1b5e31}
-    .badge.off{background:#251012;color:#ffc7cb;border-color:#5c1e25}
-
-    .actions{
-      padding:14px;display:grid;gap:10px
-    }
-    .action-row{
-      display:grid;grid-template-columns:1fr auto;gap:10px;
-      border:1px solid #1d3149;background:#0b1320;border-radius:16px;padding:14px
-    }
-    .action-row h4{margin:0 0 4px;font-size:14px}
-    .action-row p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
-
-    .table-wrap{margin-bottom:18px}
-    .table-scroll{overflow:auto}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:12px 14px;border-bottom:1px solid #1b2c42;text-align:left;font-size:13px;white-space:nowrap}
-    th{color:#d9e7fb;background:#0e1724;font-size:12px;position:sticky;top:0}
-    tr:hover td{background:#0c1420}
-    .pill{
-      display:inline-flex;align-items:center;justify-content:center;
-      border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;
-      text-transform:uppercase;border:1px solid transparent;letter-spacing:.3px
-    }
-    .pill.high{background:#251012;color:#ffc7cb;border-color:#5c1e25}
-    .pill.medium{background:#241a08;color:#ffe4a8;border-color:#6e4c0c}
-    .pill.low{background:#0f1d13;color:#b7f7cc;border-color:#1b5e31}
-    .pill.blue{background:#0f1828;color:#dbeafe;border-color:#29415f}
-    .scorebar{
-      width:140px;height:10px;border-radius:999px;background:#0d1522;border:1px solid #1b2d45;overflow:hidden
-    }
-    .scorebar span{
-      display:block;height:100%;
-      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
-      width:0%
-    }
-
+    .input-actions{display:flex;gap:10px}
     .console{
-      padding:14px;display:grid;gap:10px
-    }
-    .console-box{
-      border:1px solid #1b2d45;background:#09111b;border-radius:16px;padding:14px;min-height:180px;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-      font-size:12px;color:#d5e5fb;white-space:pre-wrap;word-break:break-word;overflow:auto
-    }
-
-    .footer-links{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:12px
+      padding:14px 18px 18px;
+      color:var(--muted);
+      font-size:12px;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      min-height:78px;
+      white-space:pre-wrap;
     }
     .quick{
-      padding:16px;background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)
+      padding:18px;
+      display:flex;flex-wrap:wrap;gap:10px;
     }
-    .quick h4{margin:0 0 8px;font-size:15px}
-    .quick p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.45}
-
-    .toast{
-      position:fixed;right:18px;bottom:18px;z-index:99;
-      display:none;background:#0e1725;border:1px solid #2d4664;color:var(--text);
-      border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)
+    .chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      border-radius:999px;
+      padding:10px 13px;
+      font-size:13px;
+      cursor:pointer;
     }
-
-    @media (max-width:1450px){
-      .stats{grid-template-columns:repeat(4,1fr)}
-      .hero,.main{grid-template-columns:1fr}
-      .pipeline{grid-template-columns:repeat(3,minmax(180px,1fr))}
-      .footer-links{grid-template-columns:repeat(2,1fr)}
+    .chip:hover{
+      border-color:rgba(51,214,255,.3);
+      background:rgba(51,214,255,.08);
     }
-    @media (max-width:900px){
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .pipeline{grid-template-columns:1fr}
-      .module-grid{grid-template-columns:1fr}
-      .footer-links{grid-template-columns:1fr}
+    .typing{
+      display:inline-flex;gap:5px;align-items:center;
+    }
+    .typing span{
+      width:7px;height:7px;border-radius:50%;
+      background:#bcc9da;display:inline-block;
+      animation: blink 1.2s infinite ease-in-out;
+    }
+    .typing span:nth-child(2){animation-delay:.15s}
+    .typing span:nth-child(3){animation-delay:.3s}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes spinReverse{from{transform:rotate(360deg)}to{transform:rotate(0)}}
+    @keyframes pulse{
+      0%,100%{transform:scale(.9);opacity:.75}
+      50%{transform:scale(1.12);opacity:1}
+    }
+    @keyframes blink{
+      0%,80%,100%{opacity:.25;transform:scale(.85)}
+      40%{opacity:1;transform:scale(1)}
+    }
+    @media (max-width: 1024px){
+      .app{grid-template-columns:1fr}
+      .presentation{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .presentation{grid-template-columns:1fr}
+      .controls{grid-template-columns:1fr}
+      .avatar-wrap{width:220px;height:220px}
+      .hero-title{font-size:24px}
+      .bubble{max-width:92%}
+      .status{display:none}
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo">C</div>
-        <div>
-          <h1>CONSIA MASTER CONTROL</h1>
-          <p>Centro maestro · CRM · cierre automático · seguimiento · realtime · billing · WhatsApp</p>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <button class="btn" onclick="loadAll()">Actualizar</button>
-        <button class="btn green" onclick="runFollowup()">Seguimiento PRO</button>
-        <button class="btn yellow" onclick="runClosing()">Cierre automático</button>
-        <a class="btn primary" href="./crm.html">Abrir CRM PRO</a>
-        <a class="btn ghost" href="https://consia-api.jbdkb7r94d.workers.dev/v1/status" target="_blank" rel="noreferrer">Abrir API</a>
-      </div>
-    </div>
-
-    <div class="hero">
-      <div class="panel hero-main">
-        <div class="eyebrow">● SISTEMA MAESTRO CONSIA</div>
-        <h2>Operación inteligente, seguimiento comercial y cierre automático.</h2>
-        <p>
-          Este panel concentra el estado general de CONSIA, métricas del CRM, módulos activos,
-          pipeline vivo y ejecución directa de seguimiento y cierre.
-        </p>
-        <div class="hero-tags">
-          <div class="tag">CRM PRO</div>
-          <div class="tag">Follow-up Engine</div>
-          <div class="tag">Closing Engine</div>
-          <div class="tag">Realtime</div>
-          <div class="tag">Billing</div>
-          <div class="tag">WhatsApp Ready</div>
-        </div>
-      </div>
-
-      <div class="panel hero-side">
-        <div class="side-row">
-          <div>
-            <div class="k">Sistema</div>
-            <div class="v" id="sys-name">CONSIA</div>
-          </div>
-          <div class="status-dot" id="sys-dot"></div>
-        </div>
-        <div class="side-row">
-          <div>
-            <div class="k">Versión</div>
-            <div class="v" id="sys-version">—</div>
-          </div>
-        </div>
-        <div class="side-row">
-          <div>
-            <div class="k">Modelo</div>
-            <div class="v" id="sys-model">—</div>
-          </div>
-        </div>
-        <div class="side-row">
-          <div>
-            <div class="k">Realtime</div>
-            <div class="v" id="sys-realtime">—</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="stats">
-      <div class="stat"><div class="label">Leads totales</div><div class="value" id="stat-total">0</div><div class="sub">Base activa</div></div>
-      <div class="stat"><div class="label">Alta prioridad</div><div class="value" id="stat-high">0</div><div class="sub">Leads calientes</div></div>
-      <div class="stat"><div class="label">Compra</div><div class="value" id="stat-compra">0</div><div class="sub">Búsqueda activa</div></div>
-      <div class="stat"><div class="label">Alquiler</div><div class="value" id="stat-alquiler">0</div><div class="sub">Demanda locativa</div></div>
-      <div class="stat"><div class="label">Inversión</div><div class="value" id="stat-inversion">0</div><div class="sub">Capital listo</div></div>
-      <div class="stat"><div class="label">Venta</div><div class="value" id="stat-venta">0</div><div class="sub">Propietarios</div></div>
-      <div class="stat"><div class="label">Suscripciones</div><div class="value" id="stat-subs">0</div><div class="sub">Billing activo</div></div>
-    </div>
-
-    <div class="main">
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h3>Pipeline maestro</h3>
-            <div class="section-sub">Vista ejecutiva de todas las etapas</div>
-          </div>
-        </div>
-        <div class="pipeline" id="pipeline"></div>
-      </div>
-
-      <div class="side-stack">
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h3>Módulos activos</h3>
-              <div class="section-sub">Estado real del backend</div>
-            </div>
-          </div>
-          <div class="module-grid" id="modules"></div>
-        </div>
-
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h3>Acciones rápidas</h3>
-              <div class="section-sub">Ejecutar motores de CONSIA</div>
-            </div>
-          </div>
-          <div class="actions">
-            <div class="action-row">
+  <div class="app">
+    <section class="left">
+      <div class="card">
+        <div class="hero">
+          <div class="brand">
+            <div class="brand-left">
+              <div class="logo">C</div>
               <div>
-                <h4>Seguimiento PRO</h4>
-                <p>Detecta leads vencidos y arma mensajes automáticos de recontacto.</p>
+                <div class="brand-title">CONSIA Avatar OS</div>
+                <div class="brand-sub">Modo presentación · voz · realtime base</div>
               </div>
-              <button class="btn green sm" onclick="runFollowup()">Ejecutar</button>
             </div>
-            <div class="action-row">
-              <div>
-                <h4>Cierre automático</h4>
-                <p>Mueve etapas, empuja visita/propuesta/negociación y prepara cierre comercial.</p>
-              </div>
-              <button class="btn yellow sm" onclick="runClosing()">Ejecutar</button>
+            <div class="status">
+              <span class="dot"></span>
+              <span id="statusText">Conectando...</span>
             </div>
-            <div class="action-row">
-              <div>
-                <h4>CRM PRO</h4>
-                <p>Entrá al tablero comercial completo para gestión detallada de leads.</p>
-              </div>
-              <a class="btn primary sm" href="./crm.html">Abrir</a>
+          </div>
+
+          <div class="avatar-wrap">
+            <div class="ring"></div>
+            <div class="ring2"></div>
+            <div id="avatarCore" class="core">
+              <div class="pulse"></div>
             </div>
+          </div>
+
+          <div class="hero-title">CONSIA activo</div>
+          <div class="hero-sub">
+            Asistente visual e interactivo para presentación, ventas, CRM y operación ejecutiva.
           </div>
         </div>
 
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h3>Console</h3>
-              <div class="section-sub">Último resultado ejecutado</div>
-            </div>
-          </div>
-          <div class="console">
-            <div class="console-box" id="console">CONSIA MASTER listo.</div>
-          </div>
+        <div class="controls">
+          <button class="btn-primary" onclick="toggleMic()" id="micBtn">🎙️ Activar voz</button>
+          <button class="btn-secondary" onclick="speakPresentation()">▶️ Presentación</button>
+          <button class="btn-secondary" onclick="loadPresentation()">🧠 Recargar presentación</button>
+          <button class="btn-danger" onclick="stopVoice()">⏹️ Detener voz</button>
         </div>
       </div>
-    </div>
 
-    <div class="panel table-wrap">
-      <div class="section-head">
-        <div>
-          <h3>Leads activos</h3>
-          <div class="section-sub">Ordenados por score y actualización</div>
+      <div class="card">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Comandos rápidos</div>
+            <div class="panel-sub">Modo presentación y modo comercial</div>
+          </div>
+        </div>
+        <div class="quick">
+          <button class="chip" onclick="quick('Presentate como CONSIA')">Presentate</button>
+          <button class="chip" onclick="quick('Mostrame qué puede hacer CONSIA')">Qué puede hacer</button>
+          <button class="chip" onclick="quick('Quiero invertir USD 80000 en Posadas')">Lead inversión</button>
+          <button class="chip" onclick="quick('Necesito construir una casa llave en mano')">Lead construcción</button>
+          <button class="chip" onclick="quick('Mostrame el modo empresa Manglar')">Modo empresa</button>
+          <button class="chip" onclick="quick('Dame un resumen ejecutivo del sistema')">Resumen ejecutivo</button>
         </div>
       </div>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Lead</th>
-              <th>Intent</th>
-              <th>Stage</th>
-              <th>Status</th>
-              <th>Prioridad</th>
-              <th>Score</th>
-              <th>Zona</th>
-              <th>Teléfono</th>
-              <th>Presupuesto</th>
-              <th>Actualizado</th>
-            </tr>
-          </thead>
-          <tbody id="leads-table"></tbody>
-        </table>
-      </div>
-    </div>
+    </section>
 
-    <div class="footer-links">
-      <div class="quick">
-        <h4>CRM PRO</h4>
-        <p>Pipeline visual, edición, eliminación, limpieza y seguimiento.</p>
-        <a class="btn primary sm" href="./crm.html">Abrir CRM</a>
+    <section class="right">
+      <div class="card">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Modo presentación CONSIA</div>
+            <div class="panel-sub">Narrativa institucional y ejecutiva</div>
+          </div>
+        </div>
+        <div id="presentationGrid" class="presentation"></div>
       </div>
-      <div class="quick">
-        <h4>Status API</h4>
-        <p>Chequeo directo de módulos, versión, modelo y flags activos.</p>
-        <a class="btn sm" href="https://consia-api.jbdkb7r94d.workers.dev/v1/status" target="_blank" rel="noreferrer">Abrir status</a>
+
+      <div class="card chat">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Realtime base</div>
+            <div class="panel-sub">Texto + voz + respuesta hablada</div>
+          </div>
+        </div>
+
+        <div id="chatBody" class="chat-body"></div>
+
+        <div class="input-wrap">
+          <textarea id="msg" placeholder="Escribí o hablá con CONSIA..." oninput="autoResize(this)"></textarea>
+          <div class="input-actions">
+            <button class="btn-secondary" onclick="toggleMic()">🎙️</button>
+            <button class="btn-primary" onclick="send()">Enviar</button>
+          </div>
+        </div>
+
+        <div id="console" class="console">CONSIA iniciando...</div>
       </div>
-      <div class="quick">
-        <h4>Pipeline JSON</h4>
-        <p>Vista cruda para validar etapas y sincronización del motor comercial.</p>
-        <a class="btn sm" href="https://consia-api.jbdkb7r94d.workers.dev/v1/pipeline" target="_blank" rel="noreferrer">Abrir pipeline</a>
-      </div>
-      <div class="quick">
-        <h4>Health</h4>
-        <p>Chequeo rápido del worker y versión desplegada actualmente.</p>
-        <a class="btn sm" href="https://consia-api.jbdkb7r94d.workers.dev/health" target="_blank" rel="noreferrer">Abrir health</a>
-      </div>
-    </div>
+    </section>
   </div>
 
-  <div class="toast" id="toast"></div>
-
   <script>
-    const API = "https://consia-api.jbdkb7r94d.workers.dev";
-    const PIPE = [
-      { key:"captado", label:"Captado", sub:"Lead entrante / nuevo contacto" },
-      { key:"calificado", label:"Calificado", sub:"Lead filtrado y con potencial real" },
-      { key:"visita", label:"Visita", sub:"Visita coordinada o próxima" },
-      { key:"propuesta", label:"Propuesta", sub:"Oferta / alternativas enviadas" },
-      { key:"negociacion", label:"Negociación", sub:"Condiciones y cierre en curso" },
-      { key:"cierre", label:"Cierre", sub:"Operación concretada" }
-    ];
+    const API_BASE = "https://api.consia.world";
+    const chatBody = document.getElementById("chatBody");
+    const msgEl = document.getElementById("msg");
+    const statusText = document.getElementById("statusText");
+    const consoleEl = document.getElementById("console");
+    const avatarCore = document.getElementById("avatarCore");
+    const micBtn = document.getElementById("micBtn");
+    const grid = document.getElementById("presentationGrid");
 
-    let statusData = null;
-    let statsData = null;
-    let pipelineData = {};
-    let leadsData = [];
+    let speaking = false;
+    let listening = false;
+    let recognition = null;
 
-    function qs(id){ return document.getElementById(id); }
-
-    function toast(msg){
-      const el = qs("toast");
-      el.textContent = msg;
-      el.style.display = "block";
-      clearTimeout(window.__toast);
-      window.__toast = setTimeout(() => el.style.display = "none", 2500);
+    function log(text){
+      consoleEl.textContent = text;
     }
 
-    function esc(v){
-      return String(v ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    function autoResize(el){
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 180) + "px";
     }
 
-    function normPriority(v){
-      const p = String(v || "").toLowerCase();
-      if (p === "high") return "alta";
-      if (p === "medium" || p === "normal") return "media";
-      if (p === "low") return "baja";
-      return p || "baja";
+    function addMessage(role, text){
+      const row = document.createElement("div");
+      row.className = "msg-row " + role;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      row.appendChild(bubble);
+      chatBody.appendChild(row);
+      chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function priorityClass(v){
-      const p = normPriority(v);
-      if (p === "alta") return "high";
-      if (p === "media") return "medium";
-      return "low";
+    function addTyping(){
+      const row = document.createElement("div");
+      row.className = "msg-row assistant";
+      row.id = "typingRow";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+
+      row.appendChild(bubble);
+      chatBody.appendChild(row);
+      chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function fmtDate(ts){
-      if (!ts) return "—";
-      try { return new Date(ts).toLocaleString(); } catch { return "—"; }
+    function removeTyping(){
+      const el = document.getElementById("typingRow");
+      if (el) el.remove();
     }
 
-    function scorePct(v){
-      const n = Number(v || 0);
-      return Math.max(4, Math.min(100, n));
-    }
-
-    function setConsole(data){
-      qs("console").textContent =
-        typeof data === "string" ? data : JSON.stringify(data, null, 2);
-    }
-
-    async function fetchJson(url, opts){
-      const res = await fetch(url, opts);
-      const text = await res.text();
-      let data;
-      try { data = text ? JSON.parse(text) : {}; }
-      catch { data = { raw:text }; }
-      if (!res.ok) throw new Error(data.message || data.error || ("HTTP " + res.status));
-      return data;
-    }
-
-    async function loadAll(){
-      try{
-        const [status, stats, pipeline, leads] = await Promise.all([
-          fetchJson(API + "/v1/status"),
-          fetchJson(API + "/v1/stats"),
-          fetchJson(API + "/v1/pipeline"),
-          fetchJson(API + "/v1/leads")
-        ]);
-
-        statusData = status;
-        statsData = stats.stats || {};
-        pipelineData = pipeline.pipeline || {};
-        leadsData = Array.isArray(leads.leads) ? leads.leads.filter(Boolean) : [];
-
-        renderStatus();
-        renderStats();
-        renderModules();
-        renderPipeline();
-        renderLeads();
-        setConsole("CONSIA MASTER sincronizado.");
-      }catch(err){
-        setConsole("Error cargando CONSIA MASTER: " + err.message);
-        toast("Error cargando panel");
+    async function checkHealth(){
+      try {
+        const r = await fetch(API_BASE + "/health");
+        const d = await r.json();
+        if (d.ok) {
+          statusText.textContent = "Online";
+          log("API conectada correctamente.");
+        } else {
+          statusText.textContent = "Error";
+          log("La API respondió, pero no confirmó estado OK.");
+        }
+      } catch (e) {
+        statusText.textContent = "Sin conexión";
+        log("No pude conectar con la API.");
       }
     }
 
-    function renderStatus(){
-      qs("sys-name").textContent = statusData?.system || "CONSIA";
-      qs("sys-version").textContent = statusData?.version || "—";
-      qs("sys-model").textContent = statusData?.model || "—";
-      qs("sys-realtime").textContent = statusData?.realtime_model || "—";
-      qs("sys-dot").className = "status-dot" + ((statusData?.ok && statusData?.system) ? "" : " off");
+    async function loadPresentation(){
+      try {
+        const r = await fetch(API_BASE + "/v1/avatar/presentation");
+        const d = await r.json();
+
+        grid.innerHTML = "";
+        (d.sections || []).forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "tile";
+          div.innerHTML = `
+            <div class="tile-kicker">${item.kicker || "CONSIA"}</div>
+            <div class="tile-title">${item.title || ""}</div>
+            <div class="tile-text">${item.text || ""}</div>
+          `;
+          grid.appendChild(div);
+        });
+
+        log("Modo presentación cargado.");
+      } catch (e) {
+        grid.innerHTML = "";
+        log("No pude cargar la presentación.");
+      }
     }
 
-    function renderStats(){
-      qs("stat-total").textContent = statsData?.total_leads ?? 0;
-      qs("stat-high").textContent = statsData?.high_priority ?? 0;
-      qs("stat-compra").textContent = statsData?.compra ?? 0;
-      qs("stat-alquiler").textContent = statsData?.alquiler ?? 0;
-      qs("stat-inversion").textContent = statsData?.inversion ?? 0;
-      qs("stat-venta").textContent = statsData?.venta ?? 0;
-      qs("stat-subs").textContent = statsData?.active_subscriptions ?? 0;
+    async function send(){
+      const text = msgEl.value.trim();
+      if (!text) return;
+
+      addMessage("user", text);
+      msgEl.value = "";
+      autoResize(msgEl);
+      addTyping();
+      log("Procesando mensaje...");
+
+      try {
+        const r = await fetch(API_BASE + "/v1/avatar/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text,
+            source: "avatar-ui"
+          })
+        });
+
+        const d = await r.json();
+        removeTyping();
+
+        const reply = d.response || "Sin respuesta.";
+        addMessage("assistant", reply);
+        speak(reply);
+        log("Respuesta generada.");
+      } catch (e) {
+        removeTyping();
+        addMessage("assistant", "No pude conectar con CONSIA.");
+        log("Error al enviar mensaje.");
+      }
     }
 
-    function renderModules(){
-      const el = qs("modules");
-      const mods = statusData?.modules || {};
-      const labels = {
-        chat: "Chat",
-        crm: "CRM",
-        inmobiliaria: "Inmobiliaria",
-        seguimiento: "Seguimiento",
-        cierre_automatico: "Cierre automático",
-        owner_only: "Owner Only",
-        realtime: "Realtime",
-        avatar: "Avatar",
-        billing: "Billing",
-        whatsapp: "WhatsApp",
-        whatsapp_auto_reply: "WhatsApp Auto Reply",
-        whatsapp_auto_send: "WhatsApp Auto Send"
+    function quick(text){
+      msgEl.value = text;
+      autoResize(msgEl);
+      send();
+    }
+
+    function speak(text){
+      if (!("speechSynthesis" in window)) {
+        log("SpeechSynthesis no disponible en este navegador.");
+        return;
+      }
+
+      stopVoice();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "es-AR";
+      utter.rate = 1;
+      utter.pitch = 1;
+
+      utter.onstart = () => {
+        speaking = true;
+        avatarCore.classList.add("speaking");
+        log("CONSIA hablando...");
       };
 
-      el.innerHTML = Object.keys(labels).map(key => {
-        const on = !!mods[key];
-        return `
-          <div class="module">
-            <div class="top">
-              <div class="name">${esc(labels[key])}</div>
-              <div class="badge ${on ? "on":"off"}">${on ? "ON":"OFF"}</div>
-            </div>
-            <div class="desc">${on ? "Módulo operativo." : "Módulo pendiente o sin conexión final."}</div>
-          </div>
-        `;
-      }).join("");
+      utter.onend = () => {
+        speaking = false;
+        avatarCore.classList.remove("speaking");
+        log("Voz finalizada.");
+      };
+
+      utter.onerror = () => {
+        speaking = false;
+        avatarCore.classList.remove("speaking");
+        log("Error de voz.");
+      };
+
+      window.speechSynthesis.speak(utter);
     }
 
-    function renderPipeline(){
-      const el = qs("pipeline");
-      el.innerHTML = PIPE.map(stage => {
-        const items = (pipelineData[stage.key] || []).filter(Boolean).slice(0,4);
-        return `
-          <div class="stage">
-            <div class="stage-head">
-              <div class="stage-title">${esc(stage.label)}</div>
-              <div class="count">${items.length}</div>
-            </div>
-            <div class="stage-sub">${esc(stage.sub)}</div>
-            <div class="mini-list">
-              ${
-                items.length
-                ? items.map(lead => `
-                  <div class="mini">
-                    <div class="nm">${esc(lead.name || "Sin nombre")}</div>
-                    <div class="tx">${esc(lead.intent || "general")} · ${esc(lead.status || "new")}</div>
-                    <div class="sc">score ${esc(lead.score || 0)}</div>
-                  </div>
-                `).join("")
-                : `<div class="empty">Sin leads en esta etapa</div>`
-              }
-            </div>
-          </div>
-        `;
-      }).join("");
+    function stopVoice(){
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      speaking = false;
+      avatarCore.classList.remove("speaking");
+      log("Voz detenida.");
     }
 
-    function renderLeads(){
-      const el = qs("leads-table");
-      el.innerHTML = leadsData.map(lead => `
-        <tr>
-          <td><strong>${esc(lead.name || "Sin nombre")}</strong></td>
-          <td><span class="pill blue">${esc(lead.intent || "general")}</span></td>
-          <td>${esc(lead.stage || "captado")}</td>
-          <td>${esc(lead.status || "new")}</td>
-          <td><span class="pill ${priorityClass(lead.priority)}">${esc(normPriority(lead.priority))}</span></td>
-          <td>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="scorebar"><span style="width:${scorePct(lead.score)}%"></span></div>
-              <strong>${esc(lead.score || 0)}</strong>
-            </div>
-          </td>
-          <td>${esc(lead.zone || "—")}</td>
-          <td>${esc(lead.phone || "—")}</td>
-          <td>${esc(lead.budget || "—")}</td>
-          <td>${esc(fmtDate(lead.updated_at))}</td>
-        </tr>
-      `).join("");
-    }
+    function toggleMic(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    async function runFollowup(){
-      try{
-        const data = await fetchJson(API + "/v1/followup/run");
-        setConsole(data);
-        toast("Seguimiento ejecutado");
-        await loadAll();
-      }catch(err){
-        setConsole("Error follow-up: " + err.message);
-        toast("Error en seguimiento");
+      if (!SR) {
+        log("Reconocimiento de voz no disponible en este navegador.");
+        return;
+      }
+
+      if (!recognition) {
+        recognition = new SR();
+        recognition.lang = "es-AR";
+        recognition.interimResults = false;
+        recognition.continuous = false;
+
+        recognition.onstart = () => {
+          listening = true;
+          micBtn.textContent = "🛑 Detener voz";
+          log("Escuchando...");
+          avatarCore.classList.add("speaking");
+        };
+
+        recognition.onend = () => {
+          listening = false;
+          micBtn.textContent = "🎙️ Activar voz";
+          avatarCore.classList.remove("speaking");
+          log("Micrófono detenido.");
+        };
+
+        recognition.onerror = () => {
+          listening = false;
+          micBtn.textContent = "🎙️ Activar voz";
+          avatarCore.classList.remove("speaking");
+          log("Error en reconocimiento de voz.");
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript || "";
+          msgEl.value = transcript;
+          autoResize(msgEl);
+          send();
+        };
+      }
+
+      if (!listening) {
+        recognition.start();
+      } else {
+        recognition.stop();
       }
     }
 
-    async function runClosing(){
-      try{
-        const data = await fetchJson(API + "/v1/closing/run");
-        setConsole(data);
-        toast("Cierre automático ejecutado");
-        await loadAll();
-      }catch(err){
-        setConsole("Error closing: " + err.message);
-        toast("Error en cierre automático");
+    async function speakPresentation(){
+      try {
+        const r = await fetch(API_BASE + "/v1/avatar/presentation");
+        const d = await r.json();
+        const full = (d.sections || [])
+          .map(s => `${s.title}. ${s.text}`)
+          .join(" ");
+
+        if (full) speak(full);
+      } catch (e) {
+        log("No pude narrar la presentación.");
       }
     }
 
-    loadAll();
-    setInterval(loadAll, 20000);
+    addMessage("assistant", "Hola. Soy CONSIA. Estoy listo para presentación, voz y operación ejecutiva.");
+    checkHealth();
+    loadPresentation();
   </script>
 </body>
 </html>
