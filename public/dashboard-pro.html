@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Dashboard Pro</title>
+  <style>
+    body{margin:0;background:#071018;color:#eef4ff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
+    .wrap{max-width:1400px;margin:0 auto;padding:18px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    .title{font-size:34px;font-weight:800}
+    .filters{display:flex;gap:10px;align-items:center}
+    select,button{border:none;border-radius:14px;padding:12px 16px;font-weight:700}
+    select{background:#0f1a27;color:#eef4ff;border:1px solid rgba(255,255,255,.08)}
+    button{cursor:pointer;background:linear-gradient(135deg,#38d9ff,#7b61ff);color:#07111a}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .card{background:#0d1824;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:16px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+    .kicker{font-size:11px;color:#97a7c0;text-transform:uppercase;letter-spacing:.12em}
+    .big{font-size:34px;font-weight:800;margin-top:8px}
+    .sub{margin-top:6px;color:#9db0c7;font-size:13px}
+    .section{margin-top:18px}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.filters{flex-direction:column;align-items:stretch}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">CONSIA Dashboard Pro</div>
+      <div class="filters">
+        <select id="companySelect">
+          <option value="">Todas las empresas</option>
+          <option value="manglar">Manglar</option>
+          <option value="manglar_construcciones">Manglar Construcciones</option>
+          <option value="realwork">Real Work</option>
+        </select>
+        <button onclick="loadDashboard()">Actualizar</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kicker">Total</div><div class="big" id="total">0</div><div class="sub">Leads</div></div>
+      <div class="card"><div class="kicker">Alta prioridad</div><div class="big" id="alta">0</div><div class="sub">Hot / alta</div></div>
+      <div class="card"><div class="kicker">Inversión</div><div class="big" id="inversion">0</div><div class="sub">Intent detected</div></div>
+      <div class="card"><div class="kicker">Score promedio</div><div class="big" id="score">0</div><div class="sub">Calidad media</div></div>
+    </div>
+
+    <div class="section card">
+      <div class="kicker">Pipeline</div>
+      <h3>Embudo comercial</h3>
+      <table id="pipelineTable">
+        <thead>
+          <tr>
+            <th>Contacto</th>
+            <th>Calificado</th>
+            <th>Visita</th>
+            <th>Decision</th>
+            <th>Cierre</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="5">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="section card">
+      <div class="kicker">Hot leads</div>
+      <h3>Oportunidades top</h3>
+      <table id="hotTable">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Intent</th>
+            <th>Zona</th>
+            <th>Budget</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="section card">
+      <div class="kicker">Recientes</div>
+      <h3>Leads recientes</h3>
+      <table id="recentTable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Empresa</th>
+            <th>Intent</th>
+            <th>Tipo</th>
+            <th>Zona</th>
+            <th>Budget</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API = "https://api.consia.world";
+
+    async function loadDashboard() {
+      const company = document.getElementById("companySelect").value;
+      const qs = company ? `?company=${encodeURIComponent(company)}` : "";
+
+      const r = await fetch(API + "/v1/dashboard/pro" + qs);
+      const d = await r.json();
+
+      document.getElementById("total").textContent = d.summary?.total || 0;
+      document.getElementById("alta").textContent = d.summary?.alta || 0;
+      document.getElementById("inversion").textContent = d.summary?.inversion || 0;
+      document.getElementById("score").textContent = d.summary?.score_promedio || 0;
+
+      const p = d.pipeline || {};
+      document.querySelector("#pipelineTable tbody").innerHTML = `
+        <tr>
+          <td>${p.contacto || 0}</td>
+          <td>${p.calificado || 0}</td>
+          <td>${p.visita || 0}</td>
+          <td>${p.decision || 0}</td>
+          <td>${p.cierre || 0}</td>
+        </tr>
+      `;
+
+      const hotBody = document.querySelector("#hotTable tbody");
+      hotBody.innerHTML = "";
+      (d.hot || []).forEach((lead) => {
+        hotBody.innerHTML += `
+          <tr>
+            <td>${lead.company || ""}</td>
+            <td>${lead.intent || ""}</td>
+            <td>${lead.zone || ""}</td>
+            <td>${lead.budget || 0}</td>
+            <td>${lead.score || 0}</td>
+          </tr>
+        `;
+      });
+
+      const recentBody = document.querySelector("#recentTable tbody");
+      recentBody.innerHTML = "";
+      (d.recent || []).forEach((lead) => {
+        recentBody.innerHTML += `
+          <tr>
+            <td>${new Date(lead.created_at).toLocaleString()}</td>
+            <td>${lead.company || ""}</td>
+            <td>${lead.intent || ""}</td>
+            <td>${lead.property_type || ""}</td>
+            <td>${lead.zone || ""}</td>
+            <td>${lead.budget || 0}</td>
+          </tr>
+        `;
+      });
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>
