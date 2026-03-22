@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Panel Premium</title>
+  <style>
+    :root{
+      --bg:#071018;
+      --card:#0d1824;
+      --line:rgba(255,255,255,.08);
+      --text:#eef4ff;
+      --muted:#9db0c7;
+      --a1:#38d9ff;
+      --a2:#7b61ff;
+      --ok:#39f0a2;
+      --warn:#ffc857;
+      --danger:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif
+    }
+    .wrap{max-width:1480px;margin:0 auto;padding:18px}
+    .top{
+      display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+      margin-bottom:18px
+    }
+    .title{font-size:34px;font-weight:800}
+    .sub{font-size:13px;color:var(--muted)}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav button,.action{
+      border:none;border-radius:14px;padding:12px 14px;font:inherit;cursor:pointer;
+      background:linear-gradient(135deg,var(--a1),var(--a2));color:#07111a;font-weight:800
+    }
+    .ghost{
+      background:#101c2a!important;color:var(--text)!important;border:1px solid var(--line)
+    }
+    .row{display:grid;grid-template-columns:300px 1fr;gap:18px}
+    .side,.main{display:flex;flex-direction:column;gap:18px}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;
+      box-shadow:0 24px 80px rgba(0,0,0,.28)
+    }
+    .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .big{font-size:34px;font-weight:800;margin-top:8px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    input,select,textarea{
+      width:100%;border:none;border-radius:14px;padding:12px 14px;background:#101c2a;
+      color:var(--text);border:1px solid var(--line);font:inherit;margin-bottom:10px
+    }
+    textarea{min-height:90px;resize:vertical}
+    table{width:100%;border-collapse:collapse}
+    th,td{
+      text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:13px;vertical-align:top
+    }
+    .chat{
+      max-height:360px;overflow:auto;display:flex;flex-direction:column;gap:10px;
+      padding-right:4px
+    }
+    .b{
+      padding:12px 14px;border-radius:16px;max-width:82%;white-space:pre-wrap
+    }
+    .u{
+      align-self:flex-end;background:linear-gradient(135deg,var(--a1),var(--a2));
+      color:#07111a;font-weight:800
+    }
+    .a{
+      align-self:flex-start;background:#101c2a;border:1px solid var(--line)
+    }
+    .good{color:var(--ok)}
+    .warn{color:var(--warn)}
+    .danger{color:var(--danger)}
+    pre{
+      white-space:pre-wrap;background:#0a1320;border-radius:16px;padding:12px;overflow:auto
+    }
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid var(--line);background:#101c2a;font-size:12px;color:var(--muted)
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+    @media(max-width:1100px){.row{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="title">CONSIA Panel Premium</div>
+      <div class="sub">Consola única · navegación consolidada · realtime continuo · billing pro · backup y auditoría</div>
+    </div>
+    <div class="nav">
+      <button onclick="loadAll()">Actualizar todo</button>
+      <button class="ghost" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="side">
+      <div class="card">
+        <div class="k">Auth</div>
+        <div class="pill"><span class="dot"></span><span id="authState">Sin sesión</span></div>
+        <input id="email" placeholder="owner@consia.world" />
+        <input id="password" placeholder="password" type="password" />
+        <button class="action" onclick="login()">Login</button>
+        <button class="action ghost" onclick="me()">Who am I</button>
+      </div>
+
+      <div class="card">
+        <div class="k">Tenant / Plan</div>
+        <input id="tenantKey" placeholder="vipwork" value="vipwork" />
+        <select id="planKey">
+          <option value="free">free</option>
+          <option value="pro">pro</option>
+          <option value="business" selected>business</option>
+          <option value="enterprise">enterprise</option>
+        </select>
+        <button class="action" onclick="assignPlan()">Asignar plan</button>
+      </div>
+
+      <div class="card">
+        <div class="k">Realtime premium</div>
+        <input id="rtTenant" placeholder="tenant" value="vipwork" />
+        <input id="rtTitle" placeholder="Título sesión" value="Sesión premium" />
+        <button class="action" onclick="startSession()">Iniciar sesión</button>
+        <input id="rtSessionId" placeholder="session id" />
+        <textarea id="rtMessage" placeholder="Mensaje"></textarea>
+        <div class="toolbar">
+          <button class="action" onclick="sendRealtime()">Enviar mensaje</button>
+          <button class="action ghost" onclick="loadSessions()">Ver sesiones</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="k">Backup / Auditoría</div>
+        <div class="toolbar">
+          <button class="action" onclick="exportBackup()">Export backup</button>
+          <button class="action ghost" onclick="loadAudit()">Ver auditoría</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="grid">
+        <div class="card"><div class="k">Tenants</div><div class="big" id="mTenants">0</div></div>
+        <div class="card"><div class="k">Users</div><div class="big" id="mUsers">0</div></div>
+        <div class="card"><div class="k">Leads</div><div class="big" id="mLeads">0</div></div>
+        <div class="card"><div class="k">MRR</div><div class="big" id="mrr">0</div></div>
+      </div>
+
+      <div class="card">
+        <div class="k">Resumen global</div>
+        <pre id="summaryBox">Sin datos</pre>
+      </div>
+
+      <div class="card">
+        <div class="k">Revenue</div>
+        <table id="revTable">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>MRR</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="k">Realtime premium</div>
+        <div class="chat" id="chat"></div>
+      </div>
+
+      <div class="card">
+        <div class="k">Auditoría / Backup</div>
+        <pre id="auditBox">Sin datos</pre>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const API='https://api.consia.world';
+let TOKEN=localStorage.getItem('CONSIA_OWNER_TOKEN')||'';
+let CURRENT_SESSION='';
+
+function headers(extra={}){
+  const h={'Content-Type':'application/json',...extra};
+  if(TOKEN) h.Authorization='Bearer '+TOKEN;
+  return h;
+}
+
+function setAuthState(){
+  document.getElementById('authState').textContent = TOKEN ? 'Sesión activa' : 'Sin sesión';
+}
+
+function setOut(id,data){
+  document.getElementById(id).textContent=
+    typeof data==='string'?data:JSON.stringify(data,null,2);
+}
+
+function row(html){
+  document.querySelector('#revTable tbody').insertAdjacentHTML('beforeend',html);
+}
+
+function addChat(role,text){
+  const el=document.createElement('div');
+  el.className='b '+(role==='user'?'u':'a');
+  el.textContent=text;
+  document.getElementById('chat').appendChild(el);
+  document.getElementById('chat').scrollTop=999999;
+}
+async function api(path, opts={}){
+  const r=await fetch(API+path,{...opts,headers:headers(opts.headers||{})});
+  return r.json();
+}
+
+async function login(){
+  const d=await api('/v1/auth/login',{
+    method:'POST',
+    body:JSON.stringify({
+      email:document.getElementById('email').value,
+      password:document.getElementById('password').value
+    })
+  });
+  if(d.token){
+    TOKEN=d.token;
+    localStorage.setItem('CONSIA_OWNER_TOKEN',TOKEN);
+    setAuthState();
+  }
+  setOut('summaryBox',d);
+  await loadAll();
+}
+
+async function me(){
+  const d=await api('/v1/auth/me');
+  setOut('summaryBox',d);
+}
+
+async function loadAll(){
+  const s=await api('/v1/platform/global/summary');
+  const r=await api('/v1/platform/global/revenue');
+
+  document.getElementById('mTenants').textContent=s.summary?.tenants||0;
+  document.getElementById('mUsers').textContent=s.summary?.users||0;
+  document.getElementById('mLeads').textContent=s.summary?.leads||0;
+  document.getElementById('mrr').textContent=r.mrr_total||0;
+
+  setOut('summaryBox',s);
+
+  const tb=document.querySelector('#revTable tbody');
+  tb.innerHTML='';
+  (r.tenants||[]).forEach(x=>{
+    row(`<tr>
+      <td>${x.tenant}</td>
+      <td>${x.plan_key||''}</td>
+      <td>${x.billing_status||''}</td>
+      <td>${x.monthly_recurring_revenue||0}</td>
+    </tr>`);
+  });
+}
+
+async function assignPlan(){
+  const d=await api('/v1/tenant/plan/update',{
+    method:'POST',
+    body:JSON.stringify({
+      tenant:document.getElementById('tenantKey').value,
+      plan_key:document.getElementById('planKey').value,
+      billing_status:'active'
+    })
+  });
+  setOut('summaryBox',d);
+  await loadAll();
+}
+
+async function startSession(){
+  const d=await api('/v1/realtime/session/start',{
+    method:'POST',
+    body:JSON.stringify({
+      tenant:document.getElementById('rtTenant').value,
+      title:document.getElementById('rtTitle').value
+    })
+  });
+  CURRENT_SESSION=d.session?.id||'';
+  document.getElementById('rtSessionId').value=CURRENT_SESSION;
+  setOut('summaryBox',d);
+}
+
+async function sendRealtime(){
+  const sid=document.getElementById('rtSessionId').value||CURRENT_SESSION;
+  if(!sid) return;
+
+  const msg=document.getElementById('rtMessage').value;
+  if(!msg.trim()) return;
+
+  addChat('user',msg);
+
+  const d=await api('/v1/realtime/session/message',{
+    method:'POST',
+    body:JSON.stringify({
+      session_id:sid,
+      message:msg
+    })
+  });
+
+  addChat('assistant',d.reply||'');
+  document.getElementById('rtMessage').value='';
+}
+
+async function loadSessions(){
+  const d=await api('/v1/realtime/session/list');
+  setOut('summaryBox',d);
+}
+
+async function exportBackup(){
+  const d=await api('/v1/backup/export');
+  setOut('auditBox',d);
+}
+
+async function loadAudit(){
+  const d=await api('/v1/audit/logs');
+  setOut('auditBox',d);
+}
+
+function logout(){
+  TOKEN='';
+  localStorage.removeItem('CONSIA_OWNER_TOKEN');
+  location.reload();
+}
+
+setAuthState();
+loadAll();
+</script>
+</body>
+</html>
