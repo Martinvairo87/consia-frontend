@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA CRM PRO</title>
+  <style>
+    :root{
+      --bg:#05070a;
+      --bg2:#0a0f16;
+      --panel:#0f1722;
+      --panel2:#131d2b;
+      --line:#233247;
+      --text:#eef4ff;
+      --muted:#93a4bd;
+      --blue:#3b82f6;
+      --blue2:#2563eb;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --violet:#8b5cf6;
+      --radius:18px;
+      --shadow:0 16px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif}
+    a{color:inherit}
+    .wrap{max-width:1600px;margin:0 auto;padding:18px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 16px;border:1px solid var(--line);border-radius:20px;
+      background:rgba(15,23,34,.88);backdrop-filter:blur(8px);box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-badge{
+      width:42px;height:42px;border-radius:14px;
+      background:radial-gradient(circle at 30% 30%, #60a5fa 0%, #2563eb 35%, #0b1020 100%);
+      display:grid;place-items:center;font-weight:800;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 8px 24px rgba(37,99,235,.35);
+    }
+    .brand h1{font-size:20px;margin:0;letter-spacing:.3px}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--line);background:#111a27;color:var(--text);
+      padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600;
+      transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:#35506f}
+    .btn.primary{background:linear-gradient(180deg,var(--blue),var(--blue2));border-color:transparent}
+    .btn.ok{background:linear-gradient(180deg,#22c55e,#16a34a);border-color:transparent}
+    .btn.warn{background:linear-gradient(180deg,#f59e0b,#d97706);border-color:transparent}
+    .btn.danger{background:linear-gradient(180deg,#ef4444,#dc2626);border-color:transparent}
+    .grid-stats{
+      display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px;
+    }
+    .stat{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);
+      min-height:88px;
+    }
+    .stat .label{font-size:12px;color:var(--muted);margin-bottom:8px}
+    .stat .value{font-size:28px;font-weight:800;letter-spacing:.2px}
+    .stat .sub{font-size:12px;color:var(--muted);margin-top:6px}
+    .filters{
+      display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr auto;gap:12px;margin-bottom:18px;
+      align-items:end;
+    }
+    .field{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:1px solid var(--line);border-radius:16px;padding:12px 14px;
+      box-shadow:var(--shadow);
+    }
+    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+    .field input,.field select,.field textarea{
+      width:100%;background:#0b1220;border:1px solid #20314a;color:var(--text);
+      border-radius:12px;padding:12px 12px;font-size:14px;outline:none;
+    }
+    .field textarea{min-height:110px;resize:vertical}
+    .board{
+      display:grid;grid-template-columns:repeat(6,minmax(280px,1fr));gap:14px;overflow:auto;
+      padding-bottom:20px;
+    }
+    .col{
+      min-height:520px;background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
+      display:flex;flex-direction:column;
+    }
+    .col-head{
+      position:sticky;top:0;padding:14px 14px 10px;border-bottom:1px solid var(--line);
+      background:rgba(15,23,34,.92);backdrop-filter:blur(8px);border-radius:20px 20px 0 0;
+      z-index:2;
+    }
+    .col-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .col-title h3{margin:0;font-size:15px}
+    .count{
+      min-width:28px;height:28px;padding:0 8px;border-radius:999px;
+      display:grid;place-items:center;background:#0b1220;border:1px solid #26405f;font-size:12px;font-weight:800
+    }
+    .col-sub{margin-top:6px;font-size:11px;color:var(--muted)}
+    .list{padding:12px;display:flex;flex-direction:column;gap:10px}
+    .card{
+      position:relative;background:#0b1220;border:1px solid #1f314a;border-radius:16px;
+      padding:14px;cursor:pointer;transition:.18s ease;overflow:hidden;
+    }
+    .card:hover{transform:translateY(-1px);border-color:#3b5d87;box-shadow:0 12px 24px rgba(0,0,0,.22)}
+    .card::before{
+      content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#334155;
+    }
+    .card.high::before{background:var(--danger)}
+    .card.medium::before{background:var(--warn)}
+    .card.low::before{background:var(--ok)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .name{font-weight:800;font-size:15px}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+      font-size:11px;font-weight:700;border:1px solid #27405f;background:#101a28;color:#cfe0ff;
+      text-transform:uppercase;letter-spacing:.3px;
+    }
+    .pill.high{border-color:#5b2222;color:#ffc9c9;background:#261111}
+    .pill.medium{border-color:#5e4416;color:#ffe3a8;background:#261d09}
+    .pill.low{border-color:#174d28;color:#bbf7d0;background:#0d1f15}
+    .meta{
+      margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--muted)
+    }
+    .meta div{
+      background:#0f1826;border:1px solid #18283d;padding:8px 10px;border-radius:10px;min-height:42px
+    }
+    .intent{
+      margin-top:10px;font-size:12px;color:#dbe8ff;background:#101a2a;border:1px solid #21324c;
+      padding:8px 10px;border-radius:10px;text-transform:capitalize
+    }
+    .msg{
+      margin-top:10px;font-size:12px;line-height:1.45;color:#c9d6ea;background:#0c1420;
+      border:1px solid #172437;padding:10px;border-radius:12px;max-height:110px;overflow:auto
+    }
+    .footer{
+      margin-top:10px;display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted)
+    }
+    .empty{
+      margin:30px 12px;padding:18px;border:1px dashed #2b415f;border-radius:16px;
+      text-align:center;color:var(--muted);font-size:13px
+    }
+    .modal-bg{
+      position:fixed;inset:0;background:rgba(0,0,0,.56);display:none;align-items:center;justify-content:center;
+      padding:18px;z-index:50;
+    }
+    .modal{
+      width:min(900px,100%);max-height:90vh;overflow:auto;background:linear-gradient(180deg,#0d1521,#0b1220);
+      border:1px solid #22324a;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.5);
+      padding:18px;
+    }
+    .modal-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px
+    }
+    .modal-title{font-size:22px;font-weight:900}
+    .x{
+      width:40px;height:40px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;
+      background:#121c2b;cursor:pointer;font-size:20px
+    }
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .span-2{grid-column:1 / -1}
+    .note-list{
+      display:flex;flex-direction:column;gap:8px
+    }
+    .note-item{
+      background:#0b1320;border:1px solid #1b2b42;border-radius:12px;padding:10px 12px;font-size:13px;color:#d8e4f7
+    }
+    .note-item small{display:block;color:var(--muted);margin-top:6px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .loading{
+      position:fixed;right:18px;bottom:18px;background:#0e1827;border:1px solid #223452;border-radius:14px;
+      padding:10px 14px;box-shadow:var(--shadow);font-size:13px;display:none;z-index:60
+    }
+    .muted{color:var(--muted)}
+    @media (max-width: 1200px){
+      .grid-stats{grid-template-columns:repeat(3,1fr)}
+      .filters{grid-template-columns:1fr 1fr;gap:10px}
+      .board{grid-template-columns:repeat(3,minmax(280px,1fr))}
+    }
+    @media (max-width: 760px){
+      .grid-stats{grid-template-columns:repeat(2,1fr)}
+      .filters{grid-template-columns:1fr}
+      .board{grid-template-columns:1fr}
+      .modal-grid{grid-template-columns:1fr}
+      .span-2{grid-column:auto}
+      .topbar{flex-direction:column;align-items:stretch}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-badge">C</div>
+        <div>
+          <h1>CONSIA CRM PRO</h1>
+          <p>Dashboard comercial inmobiliario · Pipeline · Seguimiento · Gestión premium</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" onclick="loadAll()">Actualizar</button>
+        <button class="btn primary" onclick="openManualLead()">Nuevo lead</button>
+        <button class="btn ok" onclick="openApi()">Abrir API</button>
+      </div>
+    </div>
+
+    <div class="grid-stats">
+      <div class="stat"><div class="label">Leads totales</div><div class="value" id="stat-total">0</div><div class="sub">Base consolidada</div></div>
+      <div class="stat"><div class="label">Alta prioridad</div><div class="value" id="stat-high">0</div><div class="sub">Leads calientes</div></div>
+      <div class="stat"><div class="label">Compra</div><div class="value" id="stat-compra">0</div><div class="sub">Búsqueda activa</div></div>
+      <div class="stat"><div class="label">Alquiler</div><div class="value" id="stat-alquiler">0</div><div class="sub">Demanda locativa</div></div>
+      <div class="stat"><div class="label">Inversión</div><div class="value" id="stat-inversion">0</div><div class="sub">Capital listo</div></div>
+      <div class="stat"><div class="label">Venta</div><div class="value" id="stat-venta">0</div><div class="sub">Propietarios</div></div>
+    </div>
+
+    <div class="filters">
+      <div class="field">
+        <label>Buscar</label>
+        <input id="search" type="text" placeholder="Nombre, teléfono, email, zona, necesidad..." oninput="renderBoard()" />
+      </div>
+
+      <div class="field">
+        <label>Prioridad</label>
+        <select id="filter-priority" onchange="renderBoard()">
+          <option value="">Todas</option>
+          <option value="alta">Alta</option>
+          <option value="media">Media</option>
+          <option value="baja">Baja</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Intención</label>
+        <select id="filter-intent" onchange="renderBoard()">
+          <option value="">Todas</option>
+          <option value="compra">Compra</option>
+          <option value="alquiler">Alquiler</option>
+          <option value="inversion">Inversión</option>
+          <option value="venta">Venta</option>
+          <option value="general">General</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Estado</label>
+        <select id="filter-status" onchange="renderBoard()">
+          <option value="">Todos</option>
+          <option value="new">new</option>
+          <option value="contactado">contactado</option>
+          <option value="seguimiento">seguimiento</option>
+          <option value="cerrado">cerrado</option>
+        </select>
+      </div>
+
+      <button class="btn warn" onclick="clearFilters()">Limpiar filtros</button>
+    </div>
+
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="modal-title">Lead</div>
+          <div class="muted" id="modal-subtitle">Detalle comercial</div>
+        </div>
+        <div class="x" onclick="closeModal()">×</div>
+      </div>
+
+      <div class="modal-grid">
+        <div class="field">
+          <label>Nombre</label>
+          <input id="m-name" type="text" />
+        </div>
+        <div class="field">
+          <label>Teléfono</label>
+          <input id="m-phone" type="text" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="m-email" type="text" />
+        </div>
+        <div class="field">
+          <label>Zona</label>
+          <input id="m-zone" type="text" />
+        </div>
+        <div class="field">
+          <label>Presupuesto</label>
+          <input id="m-budget" type="text" />
+        </div>
+        <div class="field">
+          <label>Dormitorios</label>
+          <input id="m-bedrooms" type="text" />
+        </div>
+        <div class="field">
+          <label>Tipo de propiedad</label>
+          <input id="m-property" type="text" />
+        </div>
+        <div class="field">
+          <label>Intención</label>
+          <select id="m-intent">
+            <option value="general">general</option>
+            <option value="compra">compra</option>
+            <option value="alquiler">alquiler</option>
+            <option value="inversion">inversion</option>
+            <option value="venta">venta</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Stage</label>
+          <select id="m-stage">
+            <option value="captado">captado</option>
+            <option value="calificado">calificado</option>
+            <option value="visita">visita</option>
+            <option value="propuesta">propuesta</option>
+            <option value="negociacion">negociacion</option>
+            <option value="cierre">cierre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="m-status">
+            <option value="new">new</option>
+            <option value="contactado">contactado</option>
+            <option value="seguimiento">seguimiento</option>
+            <option value="cerrado">cerrado</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Prioridad</label>
+          <select id="m-priority">
+            <option value="alta">alta</option>
+            <option value="media">media</option>
+            <option value="baja">baja</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Origen</label>
+          <input id="m-source" type="text" disabled />
+        </div>
+
+        <div class="field span-2">
+          <label>Necesidad / resumen</label>
+          <textarea id="m-need"></textarea>
+        </div>
+
+        <div class="field span-2">
+          <label>Agregar nota comercial</label>
+          <textarea id="m-note" placeholder="Ej: cliente con interés concreto, coordinar visita, enviar opciones de inversión..."></textarea>
+        </div>
+
+        <div class="field span-2">
+          <label>Historial de notas</label>
+          <div class="note-list" id="m-notes"></div>
+        </div>
+
+        <div class="span-2 toolbar">
+          <button class="btn ok" onclick="saveLeadChanges()">Guardar cambios</button>
+          <button class="btn primary" onclick="quickStage('visita')">Mover a visita</button>
+          <button class="btn primary" onclick="quickStage('propuesta')">Mover a propuesta</button>
+          <button class="btn warn" onclick="quickStage('negociacion')">Mover a negociación</button>
+          <button class="btn danger" onclick="quickStage('cierre')">Mover a cierre</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">Actualizando...</div>
+
+  <script>
+    const API = "https://consia-api.jbdkb7r94d.workers.dev";
+
+    const stages = [
+      { key: "captado", label: "Captado", sub: "Lead entrante / nuevo contacto" },
+      { key: "calificado", label: "Calificado", sub: "Lead filtrado y con potencial real" },
+      { key: "visita", label: "Visita", sub: "Visita coordinada o próxima" },
+      { key: "propuesta", label: "Propuesta", sub: "Oferta / alternativas enviadas" },
+      { key: "negociacion", label: "Negociación", sub: "Condiciones y cierre en curso" },
+      { key: "cierre", label: "Cierre", sub: "Operación finalizada" }
+    ];
+
+    let pipelineData = {};
+    let leadsFlat = [];
+    let selectedLead = null;
+
+    function showLoading(v=true){
+      document.getElementById("loading").style.display = v ? "block" : "none";
+    }
+
+    function openApi(){
+      window.open(API + "/v1/status", "_blank");
+    }
+
+    function clearFilters(){
+      document.getElementById("search").value = "";
+      document.getElementById("filter-priority").value = "";
+      document.getElementById("filter-intent").value = "";
+      document.getElementById("filter-status").value = "";
+      renderBoard();
+    }
+
+    async function loadAll(){
+      showLoading(true);
+      try{
+        const [pipelineRes, leadsRes] = await Promise.all([
+          fetch(API + "/v1/pipeline"),
+          fetch(API + "/v1/leads")
+        ]);
+
+        const pipelineJson = await pipelineRes.json();
+        const leadsJson = await leadsRes.json();
+
+        pipelineData = pipelineJson.pipeline || {};
+        leadsFlat = Array.isArray(leadsJson.leads) ? leadsJson.leads.filter(Boolean) : [];
+
+        updateStats(leadsFlat);
+        renderBoard();
+      }catch(err){
+        alert("Error cargando CRM: " + err.message);
+      }finally{
+        showLoading(false);
+      }
+    }
+
+    function updateStats(leads){
+      const total = leads.length;
+      const high = leads.filter(l => normPriority(l.priority) === "alta").length;
+      const compra = leads.filter(l => (l.intent || "") === "compra").length;
+      const alquiler = leads.filter(l => (l.intent || "") === "alquiler").length;
+      const inversion = leads.filter(l => (l.intent || "") === "inversion").length;
+      const venta = leads.filter(l => (l.intent || "") === "venta").length;
+
+      document.getElementById("stat-total").textContent = total;
+      document.getElementById("stat-high").textContent = high;
+      document.getElementById("stat-compra").textContent = compra;
+      document.getElementById("stat-alquiler").textContent = alquiler;
+      document.getElementById("stat-inversion").textContent = inversion;
+      document.getElementById("stat-venta").textContent = venta;
+    }
+
+    function normPriority(p){
+      const x = String(p || "").toLowerCase();
+      if (x === "high") return "alta";
+      if (x === "medium" || x === "normal") return "media";
+      if (x === "low") return "baja";
+      return x || "baja";
+    }
+
+    function priorityClass(p){
+      const n = normPriority(p);
+      if (n === "alta") return "high";
+      if (n === "media") return "medium";
+      return "low";
+    }
+
+    function stageFromLead(lead){
+      return lead.stage || lead.pipeline_stage || "captado";
+    }
+
+    function filterLead(lead){
+      const q = document.getElementById("search").value.trim().toLowerCase();
+      const fp = document.getElementById("filter-priority").value;
+      const fi = document.getElementById("filter-intent").value;
+      const fs = document.getElementById("filter-status").value;
+
+      const hay = [
+        lead.name,
+        lead.phone,
+        lead.email,
+        lead.zone,
+        lead.need,
+        lead.intent,
+        lead.property_type,
+        lead.budget,
+        lead.bedrooms
+      ].join(" ").toLowerCase();
+
+      if (q && !hay.includes(q)) return false;
+      if (fp && normPriority(lead.priority) !== fp) return false;
+      if (fi && (lead.intent || "") !== fi) return false;
+      if (fs && (lead.status || "") !== fs) return false;
+      return true;
+    }
+
+    function renderBoard(){
+      const board = document.getElementById("board");
+      board.innerHTML = "";
+
+      stages.forEach(stage => {
+        const col = document.createElement("div");
+        col.className = "col";
+
+        const stageLeads = (pipelineData[stage.key] || []).filter(Boolean).filter(filterLead);
+
+        col.innerHTML = `
+          <div class="col-head">
+            <div class="col-title">
+              <h3>${stage.label}</h3>
+              <div class="count">${stageLeads.length}</div>
+            </div>
+            <div class="col-sub">${stage.sub}</div>
+          </div>
+          <div class="list"></div>
+        `;
+
+        const list = col.querySelector(".list");
+
+        if (!stageLeads.length){
+          const empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "Sin leads en esta etapa";
+          list.appendChild(empty);
+        } else {
+          stageLeads.forEach(lead => {
+            const card = document.createElement("div");
+            card.className = `card ${priorityClass(lead.priority)}`;
+            card.onclick = () => openLeadModal(lead);
+
+            const updated = lead.updated_at ? new Date(lead.updated_at).toLocaleString() : "";
+            const phone = lead.phone || "Sin teléfono";
+            const zone = lead.zone || "Sin zona";
+            const budget = lead.budget || "Sin presupuesto";
+            const intent = lead.intent || "general";
+            const name = lead.name || "Sin nombre";
+            const property = lead.property_type || "Sin tipo";
+            const bedrooms = lead.bedrooms ? `${lead.bedrooms} dorm.` : "Dormitorios s/d";
+            const msg = lead.need || lead.last_message || "Sin resumen";
+
+            card.innerHTML = `
+              <div class="row">
+                <div class="name">${escapeHtml(name)}</div>
+                <div class="pill ${priorityClass(lead.priority)}">${escapeHtml(normPriority(lead.priority))}</div>
+              </div>
+
+              <div class="meta">
+                <div>📞 ${escapeHtml(phone)}</div>
+                <div>📍 ${escapeHtml(zone)}</div>
+                <div>💰 ${escapeHtml(budget)}</div>
+                <div>🏠 ${escapeHtml(property)} · ${escapeHtml(bedrooms)}</div>
+              </div>
+
+              <div class="intent">Intención: ${escapeHtml(intent)}</div>
+              <div class="msg">${escapeHtml(msg)}</div>
+
+              <div class="footer">
+                <span>${escapeHtml(lead.status || "new")}</span>
+                <span>${escapeHtml(updated)}</span>
+              </div>
+            `;
+            list.appendChild(card);
+          });
+        }
+
+        board.appendChild(col);
+      });
+    }
+
+    function openLeadModal(lead){
+      selectedLead = JSON.parse(JSON.stringify(lead || {}));
+
+      document.getElementById("modal-title").textContent = selectedLead.name || "Lead sin nombre";
+      document.getElementById("modal-subtitle").textContent = `${selectedLead.intent || "general"} · ${selectedLead.phone || "sin teléfono"}`;
+
+      document.getElementById("m-name").value = selectedLead.name || "";
+      document.getElementById("m-phone").value = selectedLead.phone || "";
+      document.getElementById("m-email").value = selectedLead.email || "";
+      document.getElementById("m-zone").value = selectedLead.zone || "";
+      document.getElementById("m-budget").value = selectedLead.budget || "";
+      document.getElementById("m-bedrooms").value = selectedLead.bedrooms || "";
+      document.getElementById("m-property").value = selectedLead.property_type || "";
+      document.getElementById("m-intent").value = selectedLead.intent || "general";
+      document.getElementById("m-stage").value = stageFromLead(selectedLead);
+      document.getElementById("m-status").value = selectedLead.status || "new";
+      document.getElementById("m-priority").value = normPriority(selectedLead.priority);
+      document.getElementById("m-source").value = selectedLead.source || "";
+      document.getElementById("m-need").value = selectedLead.need || selectedLead.last_message || "";
+      document.getElementById("m-note").value = "";
+
+      const notesEl = document.getElementById("m-notes");
+      notesEl.innerHTML = "";
+      const notes = Array.isArray(selectedLead.notes) ? selectedLead.notes : [];
+      if (!notes.length){
+        notesEl.innerHTML = `<div class="note-item">Sin notas comerciales</div>`;
+      } else {
+        notes.slice().reverse().forEach(n => {
+          const item = document.createElement("div");
+          item.className = "note-item";
+          const date = new Date(n.at || n.created_at || Date.now()).toLocaleString();
+          item.innerHTML = `${escapeHtml(n.text || "")}<small>${escapeHtml(date)}</small>`;
+          notesEl.appendChild(item);
+        });
+      }
+
+      document.getElementById("modal-bg").style.display = "flex";
+    }
+
+    function closeModal(){
+      selectedLead = null;
+      document.getElementById("modal-bg").style.display = "none";
+    }
+
+    async function quickStage(stage){
+      if (!selectedLead?.id) return;
+      document.getElementById("m-stage").value = stage;
+      await saveLeadChanges();
+    }
+
+    async function saveLeadChanges(){
+      if (!selectedLead?.id) return;
+
+      showLoading(true);
+      try{
+        const body = {
+          stage: document.getElementById("m-stage").value,
+          status: document.getElementById("m-status").value,
+          priority: document.getElementById("m-priority").value,
+          note: document.getElementById("m-note").value.trim() || undefined
+        };
+
+        const res = await fetch(API + "/v1/leads/" + selectedLead.id, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          alert(data.message || data.error || "No se pudo guardar");
+          return;
+        }
+
+        closeModal();
+        await loadAll();
+      }catch(err){
+        alert("Error guardando lead: " + err.message);
+      }finally{
+        showLoading(false);
+      }
+    }
+
+    function openManualLead(){
+      selectedLead = { id: null };
+      document.getElementById("modal-title").textContent = "Nuevo lead";
+      document.getElementById("modal-subtitle").textContent = "Carga manual";
+
+      document.getElementById("m-name").value = "";
+      document.getElementById("m-phone").value = "";
+      document.getElementById("m-email").value = "";
+      document.getElementById("m-zone").value = "";
+      document.getElementById("m-budget").value = "";
+      document.getElementById("m-bedrooms").value = "";
+      document.getElementById("m-property").value = "";
+      document.getElementById("m-intent").value = "general";
+      document.getElementById("m-stage").value = "captado";
+      document.getElementById("m-status").value = "new";
+      document.getElementById("m-priority").value = "baja";
+      document.getElementById("m-source").value = "manual";
+      document.getElementById("m-need").value = "";
+      document.getElementById("m-note").value = "";
+      document.getElementById("m-notes").innerHTML = `<div class="note-item">Lead nuevo sin historial</div>`;
+
+      document.getElementById("modal-bg").style.display = "flex";
+
+      const saveBtn = document.querySelector('.btn.ok');
+      saveBtn.onclick = saveManualLead;
+    }
+
+    async function saveManualLead(){
+      showLoading(true);
+      try{
+        const body = {
+          name: document.getElementById("m-name").value.trim(),
+          phone: document.getElementById("m-phone").value.trim(),
+          email: document.getElementById("m-email").value.trim(),
+          zone: document.getElementById("m-zone").value.trim(),
+          budget: document.getElementById("m-budget").value.trim(),
+          bedrooms: document.getElementById("m-bedrooms").value.trim(),
+          property_type: document.getElementById("m-property").value.trim(),
+          intent: document.getElementById("m-intent").value,
+          stage: document.getElementById("m-stage").value,
+          status: document.getElementById("m-status").value,
+          priority: document.getElementById("m-priority").value,
+          source: "manual",
+          message: document.getElementById("m-need").value.trim(),
+          note: document.getElementById("m-note").value.trim()
+        };
+
+        const res = await fetch(API + "/v1/leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        if (!data.ok){
+          alert(data.message || data.error || "No se pudo crear el lead");
+          return;
+        }
+
+        document.querySelector('.btn.ok').onclick = saveLeadChanges;
+        closeModal();
+        await loadAll();
+      }catch(err){
+        alert("Error creando lead: " + err.message);
+      }finally{
+        showLoading(false);
+      }
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadAll();
+    setInterval(loadAll, 12000);
+  </script>
+</body>
+</html>
