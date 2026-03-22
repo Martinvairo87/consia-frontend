@@ -2,647 +2,122 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>CONSIA Avatar OS</title>
-  <style>
-    :root{
-      --bg:#06080d;
-      --panel:#0f1520;
-      --panel2:#121a27;
-      --line:rgba(255,255,255,.08);
-      --text:#eef4ff;
-      --muted:#9fb0c7;
-      --accent:#33d6ff;
-      --accent2:#7a5cff;
-      --ok:#47e58d;
-      --danger:#ff6b6b;
-      --shadow:0 25px 80px rgba(0,0,0,.45);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;background:
-      radial-gradient(circle at top, rgba(51,214,255,.14), transparent 30%),
-      radial-gradient(circle at 80% 20%, rgba(122,92,255,.12), transparent 25%),
-      linear-gradient(180deg,#06080d 0%, #0a1018 100%);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
-      min-height:100%;
-    }
-    body{min-height:100vh}
-    .app{
-      max-width:1200px;
-      margin:0 auto;
-      padding:18px;
-      display:grid;
-      grid-template-columns: 420px 1fr;
-      gap:18px;
-      min-height:100vh;
-    }
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .left{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-    .hero{
-      padding:18px;
-      position:relative;
-      min-height:420px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-    }
-    .brand{
-      position:absolute;
-      top:16px;left:16px;right:16px;
-      display:flex;align-items:center;justify-content:space-between;
-    }
-    .brand-left{
-      display:flex;align-items:center;gap:12px;
-    }
-    .logo{
-      width:42px;height:42px;border-radius:14px;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg, rgba(51,214,255,.22), rgba(122,92,255,.22));
-      border:1px solid rgba(255,255,255,.1);
-      font-weight:800;
-      letter-spacing:.08em;
-    }
-    .brand-title{font-size:16px;font-weight:700}
-    .brand-sub{font-size:12px;color:var(--muted)}
-    .status{
-      display:flex;align-items:center;gap:8px;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:12px;color:var(--muted);
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--ok);
-      box-shadow:0 0 18px rgba(71,229,141,.65);
-    }
-    .avatar-wrap{
-      position:relative;
-      width:280px;height:280px;
-      display:grid;place-items:center;
-    }
-    .ring, .ring2, .core{
-      position:absolute;border-radius:50%;
-    }
-    .ring{
-      inset:0;
-      border:1px solid rgba(51,214,255,.28);
-      box-shadow:0 0 60px rgba(51,214,255,.12), inset 0 0 60px rgba(122,92,255,.08);
-      animation: spin 12s linear infinite;
-    }
-    .ring2{
-      inset:18px;
-      border:1px solid rgba(122,92,255,.25);
-      animation: spinReverse 10s linear infinite;
-    }
-    .core{
-      inset:54px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.65), transparent 22%),
-        radial-gradient(circle at 65% 35%, rgba(51,214,255,.8), transparent 28%),
-        radial-gradient(circle at 50% 65%, rgba(122,92,255,.8), transparent 30%),
-        radial-gradient(circle at center, rgba(18,27,44,.95), rgba(7,10,18,1));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:
-        0 0 50px rgba(51,214,255,.18),
-        0 0 100px rgba(122,92,255,.14),
-        inset 0 0 40px rgba(255,255,255,.05);
-      display:grid;place-items:center;
-      overflow:hidden;
-      transition:transform .25s ease, box-shadow .25s ease;
-    }
-    .core.speaking{
-      transform:scale(1.04);
-      box-shadow:
-        0 0 70px rgba(51,214,255,.32),
-        0 0 120px rgba(122,92,255,.24),
-        inset 0 0 40px rgba(255,255,255,.08);
-    }
-    .pulse{
-      position:absolute;
-      width:52px;height:52px;border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,.95), rgba(51,214,255,.6), transparent 70%);
-      filter:blur(1px);
-      animation:pulse 2.4s ease-in-out infinite;
-    }
-    .hero-title{margin-top:22px;font-size:30px;font-weight:800;letter-spacing:-.04em;text-align:center}
-    .hero-sub{margin-top:8px;color:var(--muted);font-size:14px;text-align:center;line-height:1.5;max-width:320px}
-    .controls{
-      width:100%;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      padding:0 18px 18px;
-    }
-    button{
-      border:none;outline:none;cursor:pointer;
-      border-radius:16px;
-      padding:14px 16px;
-      font-weight:700;
-      transition:.18s ease;
-    }
-    button:hover{transform:translateY(-1px)}
-    .btn-primary{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#06111a;
-    }
-    .btn-secondary{
-      background:rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      color:var(--text);
-    }
-    .btn-danger{
-      background:linear-gradient(135deg,#ff8a7a,#ff5f7c);
-      color:#180607;
-    }
-    .panel-head{
-      padding:16px 18px;
-      border-bottom:1px solid var(--line);
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-    }
-    .panel-title{font-size:15px;font-weight:700}
-    .panel-sub{font-size:12px;color:var(--muted)}
-    .right{
-      display:grid;
-      grid-template-rows:auto auto 1fr auto;
-      gap:18px;
-      min-height:0;
-    }
-    .presentation{
-      padding:18px;
-      display:grid;
-      grid-template-columns: repeat(4,1fr);
-      gap:12px;
-    }
-    .tile{
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-      min-height:130px;
-    }
-    .tile-kicker{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
-    .tile-title{margin-top:10px;font-size:15px;font-weight:700}
-    .tile-text{margin-top:8px;font-size:13px;line-height:1.5;color:var(--muted)}
-    .chat{
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-    }
-    .chat-body{
-      padding:18px;
-      overflow:auto;
-      min-height:280px;
-      max-height:420px;
-      display:flex;flex-direction:column;gap:12px;
-    }
-    .msg-row{display:flex}
-    .msg-row.user{justify-content:flex-end}
-    .msg-row.assistant{justify-content:flex-start}
-    .bubble{
-      max-width:80%;
-      padding:14px 15px;
-      border-radius:18px;
-      white-space:pre-wrap;
-      line-height:1.5;
-      font-size:14px;
-    }
-    .msg-row.user .bubble{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#071219;
-      font-weight:700;
-      border-bottom-right-radius:6px;
-    }
-    .msg-row.assistant .bubble{
-      background:rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      border-bottom-left-radius:6px;
-    }
-    .input-wrap{
-      padding:14px 18px 18px;
-      border-top:1px solid var(--line);
-      display:flex;gap:10px;align-items:flex-end;
-    }
-    textarea{
-      flex:1;resize:none;min-height:56px;max-height:180px;
-      padding:14px 15px;border-radius:16px;border:1px solid var(--line);
-      background:rgba(0,0,0,.18);color:var(--text);outline:none;
-      font:inherit;line-height:1.45;
-    }
-    .input-actions{display:flex;gap:10px}
-    .console{
-      padding:14px 18px 18px;
-      color:var(--muted);
-      font-size:12px;
-      border-top:1px solid var(--line);
-      background:rgba(255,255,255,.02);
-      min-height:78px;
-      white-space:pre-wrap;
-    }
-    .quick{
-      padding:18px;
-      display:flex;flex-wrap:wrap;gap:10px;
-    }
-    .chip{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      border-radius:999px;
-      padding:10px 13px;
-      font-size:13px;
-      cursor:pointer;
-    }
-    .chip:hover{
-      border-color:rgba(51,214,255,.3);
-      background:rgba(51,214,255,.08);
-    }
-    .typing{
-      display:inline-flex;gap:5px;align-items:center;
-    }
-    .typing span{
-      width:7px;height:7px;border-radius:50%;
-      background:#bcc9da;display:inline-block;
-      animation: blink 1.2s infinite ease-in-out;
-    }
-    .typing span:nth-child(2){animation-delay:.15s}
-    .typing span:nth-child(3){animation-delay:.3s}
-    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-    @keyframes spinReverse{from{transform:rotate(360deg)}to{transform:rotate(0)}}
-    @keyframes pulse{
-      0%,100%{transform:scale(.9);opacity:.75}
-      50%{transform:scale(1.12);opacity:1}
-    }
-    @keyframes blink{
-      0%,80%,100%{opacity:.25;transform:scale(.85)}
-      40%{opacity:1;transform:scale(1)}
-    }
-    @media (max-width: 1024px){
-      .app{grid-template-columns:1fr}
-      .presentation{grid-template-columns:1fr 1fr}
-    }
-    @media (max-width: 640px){
-      .presentation{grid-template-columns:1fr}
-      .controls{grid-template-columns:1fr}
-      .avatar-wrap{width:220px;height:220px}
-      .hero-title{font-size:24px}
-      .bubble{max-width:92%}
-      .status{display:none}
-    }
-  </style>
+  <meta
+    name="description"
+    content="CONSIA Avatar OS - motor propio base sin dependencias externas de avatar o voz."
+  />
+  <link rel="stylesheet" href="/avatar.css" />
 </head>
 <body>
-  <div class="app">
-    <section class="left">
-      <div class="card">
-        <div class="hero">
-          <div class="brand">
-            <div class="brand-left">
-              <div class="logo">C</div>
-              <div>
-                <div class="brand-title">CONSIA Avatar OS</div>
-                <div class="brand-sub">Modo presentación · voz · realtime base</div>
-              </div>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-logo">C</div>
+        <div class="brand-text">
+          <div class="brand-title">CONSIA AVATAR OS</div>
+          <div class="brand-subtitle">Motor propio · voz nativa · realtime base</div>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="status-pill">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Conectando...</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section class="left-panel">
+        <div class="card hero-card">
+          <div class="hero-head">
+            <div>
+              <div class="section-kicker">Avatar</div>
+              <h1 class="hero-title">CONSIA</h1>
+              <p class="hero-subtitle">
+                Sistema visual, conversacional y ejecutivo listo para presentación, ventas y operación.
+              </p>
             </div>
-            <div class="status">
-              <span class="dot"></span>
-              <span id="statusText">Conectando...</span>
+          </div>
+
+          <div class="avatar-stage">
+            <canvas id="avatarCanvas" width="520" height="520" aria-label="CONSIA Avatar"></canvas>
+            <div class="avatar-label" id="avatarModeLabel">Modo standby</div>
+          </div>
+
+          <div class="hero-controls">
+            <button class="btn btn-primary" id="micBtn">🎙️ Activar voz</button>
+            <button class="btn btn-secondary" id="presentBtn">▶️ Presentación</button>
+            <button class="btn btn-secondary" id="stopBtn">⏹️ Detener voz</button>
+            <button class="btn btn-secondary" id="clearBtn">🧹 Limpiar chat</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="section-kicker">Comandos</div>
+              <div class="card-title">Accesos rápidos</div>
             </div>
           </div>
 
-          <div class="avatar-wrap">
-            <div class="ring"></div>
-            <div class="ring2"></div>
-            <div id="avatarCore" class="core">
-              <div class="pulse"></div>
+          <div class="chip-grid">
+            <button class="chip" data-quick="Presentate como CONSIA">Presentate</button>
+            <button class="chip" data-quick="Qué es CONSIA y qué puede hacer">Qué puede hacer</button>
+            <button class="chip" data-quick="Mostrame el modo empresa Manglar">Modo empresa</button>
+            <button class="chip" data-quick="Quiero invertir USD 80000 en departamentos en Posadas">Lead inversión</button>
+            <button class="chip" data-quick="Necesito construir una casa llave en mano en Posadas">Lead construcción</button>
+            <button class="chip" data-quick="Dame un resumen ejecutivo del sistema">Resumen ejecutivo</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="section-kicker">Presentación</div>
+              <div class="card-title">Modo presentación CONSIA</div>
             </div>
           </div>
 
-          <div class="hero-title">CONSIA activo</div>
-          <div class="hero-sub">
-            Asistente visual e interactivo para presentación, ventas, CRM y operación ejecutiva.
+          <div id="presentationGrid" class="presentation-grid"></div>
+        </div>
+
+        <div class="card chat-card">
+          <div class="card-head">
+            <div>
+              <div class="section-kicker">Realtime</div>
+              <div class="card-title">Texto + voz</div>
+            </div>
           </div>
-        </div>
 
-        <div class="controls">
-          <button class="btn-primary" onclick="toggleMic()" id="micBtn">🎙️ Activar voz</button>
-          <button class="btn-secondary" onclick="speakPresentation()">▶️ Presentación</button>
-          <button class="btn-secondary" onclick="loadPresentation()">🧠 Recargar presentación</button>
-          <button class="btn-danger" onclick="stopVoice()">⏹️ Detener voz</button>
-        </div>
-      </div>
+          <div id="chatBody" class="chat-body"></div>
 
-      <div class="card">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Comandos rápidos</div>
-            <div class="panel-sub">Modo presentación y modo comercial</div>
+          <div class="composer-wrap">
+            <textarea
+              id="msg"
+              class="composer-input"
+              placeholder="Escribí o hablá con CONSIA..."
+              rows="1"
+            ></textarea>
+            <div class="composer-actions">
+              <button class="btn btn-secondary" id="composerMicBtn">🎙️</button>
+              <button class="btn btn-primary" id="sendBtn">Enviar</button>
+            </div>
           </div>
-        </div>
-        <div class="quick">
-          <button class="chip" onclick="quick('Presentate como CONSIA')">Presentate</button>
-          <button class="chip" onclick="quick('Mostrame qué puede hacer CONSIA')">Qué puede hacer</button>
-          <button class="chip" onclick="quick('Quiero invertir USD 80000 en Posadas')">Lead inversión</button>
-          <button class="chip" onclick="quick('Necesito construir una casa llave en mano')">Lead construcción</button>
-          <button class="chip" onclick="quick('Mostrame el modo empresa Manglar')">Modo empresa</button>
-          <button class="chip" onclick="quick('Dame un resumen ejecutivo del sistema')">Resumen ejecutivo</button>
-        </div>
-      </div>
-    </section>
 
-    <section class="right">
-      <div class="card">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Modo presentación CONSIA</div>
-            <div class="panel-sub">Narrativa institucional y ejecutiva</div>
-          </div>
+          <div id="console" class="console-box">CONSIA iniciando...</div>
         </div>
-        <div id="presentationGrid" class="presentation"></div>
-      </div>
-
-      <div class="card chat">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Realtime base</div>
-            <div class="panel-sub">Texto + voz + respuesta hablada</div>
-          </div>
-        </div>
-
-        <div id="chatBody" class="chat-body"></div>
-
-        <div class="input-wrap">
-          <textarea id="msg" placeholder="Escribí o hablá con CONSIA..." oninput="autoResize(this)"></textarea>
-          <div class="input-actions">
-            <button class="btn-secondary" onclick="toggleMic()">🎙️</button>
-            <button class="btn-primary" onclick="send()">Enviar</button>
-          </div>
-        </div>
-
-        <div id="console" class="console">CONSIA iniciando...</div>
-      </div>
-    </section>
+      </section>
+    </main>
   </div>
 
-  <script>
-    const API_BASE = "https://api.consia.world";
-    const chatBody = document.getElementById("chatBody");
-    const msgEl = document.getElementById("msg");
-    const statusText = document.getElementById("statusText");
-    const consoleEl = document.getElementById("console");
-    const avatarCore = document.getElementById("avatarCore");
-    const micBtn = document.getElementById("micBtn");
-    const grid = document.getElementById("presentationGrid");
-
-    let speaking = false;
-    let listening = false;
-    let recognition = null;
-
-    function log(text){
-      consoleEl.textContent = text;
-    }
-
-    function autoResize(el){
-      el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 180) + "px";
-    }
-
-    function addMessage(role, text){
-      const row = document.createElement("div");
-      row.className = "msg-row " + role;
-
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.textContent = text;
-
-      row.appendChild(bubble);
-      chatBody.appendChild(row);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function addTyping(){
-      const row = document.createElement("div");
-      row.className = "msg-row assistant";
-      row.id = "typingRow";
-
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
-
-      row.appendChild(bubble);
-      chatBody.appendChild(row);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function removeTyping(){
-      const el = document.getElementById("typingRow");
-      if (el) el.remove();
-    }
-
-    async function checkHealth(){
-      try {
-        const r = await fetch(API_BASE + "/health");
-        const d = await r.json();
-        if (d.ok) {
-          statusText.textContent = "Online";
-          log("API conectada correctamente.");
-        } else {
-          statusText.textContent = "Error";
-          log("La API respondió, pero no confirmó estado OK.");
-        }
-      } catch (e) {
-        statusText.textContent = "Sin conexión";
-        log("No pude conectar con la API.");
-      }
-    }
-
-    async function loadPresentation(){
-      try {
-        const r = await fetch(API_BASE + "/v1/avatar/presentation");
-        const d = await r.json();
-
-        grid.innerHTML = "";
-        (d.sections || []).forEach((item) => {
-          const div = document.createElement("div");
-          div.className = "tile";
-          div.innerHTML = `
-            <div class="tile-kicker">${item.kicker || "CONSIA"}</div>
-            <div class="tile-title">${item.title || ""}</div>
-            <div class="tile-text">${item.text || ""}</div>
-          `;
-          grid.appendChild(div);
-        });
-
-        log("Modo presentación cargado.");
-      } catch (e) {
-        grid.innerHTML = "";
-        log("No pude cargar la presentación.");
-      }
-    }
-
-    async function send(){
-      const text = msgEl.value.trim();
-      if (!text) return;
-
-      addMessage("user", text);
-      msgEl.value = "";
-      autoResize(msgEl);
-      addTyping();
-      log("Procesando mensaje...");
-
-      try {
-        const r = await fetch(API_BASE + "/v1/avatar/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text,
-            source: "avatar-ui"
-          })
-        });
-
-        const d = await r.json();
-        removeTyping();
-
-        const reply = d.response || "Sin respuesta.";
-        addMessage("assistant", reply);
-        speak(reply);
-        log("Respuesta generada.");
-      } catch (e) {
-        removeTyping();
-        addMessage("assistant", "No pude conectar con CONSIA.");
-        log("Error al enviar mensaje.");
-      }
-    }
-
-    function quick(text){
-      msgEl.value = text;
-      autoResize(msgEl);
-      send();
-    }
-
-    function speak(text){
-      if (!("speechSynthesis" in window)) {
-        log("SpeechSynthesis no disponible en este navegador.");
-        return;
-      }
-
-      stopVoice();
-
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "es-AR";
-      utter.rate = 1;
-      utter.pitch = 1;
-
-      utter.onstart = () => {
-        speaking = true;
-        avatarCore.classList.add("speaking");
-        log("CONSIA hablando...");
-      };
-
-      utter.onend = () => {
-        speaking = false;
-        avatarCore.classList.remove("speaking");
-        log("Voz finalizada.");
-      };
-
-      utter.onerror = () => {
-        speaking = false;
-        avatarCore.classList.remove("speaking");
-        log("Error de voz.");
-      };
-
-      window.speechSynthesis.speak(utter);
-    }
-
-    function stopVoice(){
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-      speaking = false;
-      avatarCore.classList.remove("speaking");
-      log("Voz detenida.");
-    }
-
-    function toggleMic(){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-      if (!SR) {
-        log("Reconocimiento de voz no disponible en este navegador.");
-        return;
-      }
-
-      if (!recognition) {
-        recognition = new SR();
-        recognition.lang = "es-AR";
-        recognition.interimResults = false;
-        recognition.continuous = false;
-
-        recognition.onstart = () => {
-          listening = true;
-          micBtn.textContent = "🛑 Detener voz";
-          log("Escuchando...");
-          avatarCore.classList.add("speaking");
-        };
-
-        recognition.onend = () => {
-          listening = false;
-          micBtn.textContent = "🎙️ Activar voz";
-          avatarCore.classList.remove("speaking");
-          log("Micrófono detenido.");
-        };
-
-        recognition.onerror = () => {
-          listening = false;
-          micBtn.textContent = "🎙️ Activar voz";
-          avatarCore.classList.remove("speaking");
-          log("Error en reconocimiento de voz.");
-        };
-
-        recognition.onresult = (event) => {
-          const transcript = event.results[0][0].transcript || "";
-          msgEl.value = transcript;
-          autoResize(msgEl);
-          send();
-        };
-      }
-
-      if (!listening) {
-        recognition.start();
-      } else {
-        recognition.stop();
-      }
-    }
-
-    async function speakPresentation(){
-      try {
-        const r = await fetch(API_BASE + "/v1/avatar/presentation");
-        const d = await r.json();
-        const full = (d.sections || [])
-          .map(s => `${s.title}. ${s.text}`)
-          .join(" ");
-
-        if (full) speak(full);
-      } catch (e) {
-        log("No pude narrar la presentación.");
-      }
-    }
-
-    addMessage("assistant", "Hola. Soy CONSIA. Estoy listo para presentación, voz y operación ejecutiva.");
-    checkHealth();
-    loadPresentation();
-  </script>
+  <script src="/avatar-core.js"></script>
 </body>
 </html>
