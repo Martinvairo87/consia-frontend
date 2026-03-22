@@ -2,122 +2,122 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <title>CONSIA Avatar OS</title>
-  <meta
-    name="description"
-    content="CONSIA Avatar OS - motor propio base sin dependencias externas de avatar o voz."
-  />
-  <link rel="stylesheet" href="/avatar.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Owner</title>
+  <style>
+    body{margin:0;background:#071018;color:#eef4ff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
+    .wrap{max-width:1280px;margin:0 auto;padding:18px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    .title{font-size:34px;font-weight:800}
+    .btn{border:none;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#38d9ff,#7b61ff);color:#07111a}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .card{background:#0d1824;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:16px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+    .kicker{font-size:11px;color:#97a7c0;text-transform:uppercase;letter-spacing:.12em}
+    .big{font-size:34px;font-weight:800;margin-top:8px}
+    .sub{margin-top:6px;color:#9db0c7;font-size:13px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+    .section{margin-top:18px}
+    @media(max-width:1000px){.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-wrap">
-        <div class="brand-logo">C</div>
-        <div class="brand-text">
-          <div class="brand-title">CONSIA AVATAR OS</div>
-          <div class="brand-subtitle">Motor propio · voz nativa · realtime base</div>
-        </div>
-      </div>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">CONSIA OWNER</div>
+      <button class="btn" onclick="loadOwner()">Actualizar</button>
+    </div>
 
-      <div class="topbar-actions">
-        <div class="status-pill">
-          <span class="status-dot" id="statusDot"></span>
-          <span id="statusText">Conectando...</span>
-        </div>
-      </div>
-    </header>
+    <div class="grid">
+      <div class="card"><div class="kicker">Leads</div><div class="big" id="totalLeads">0</div><div class="sub">Base total</div></div>
+      <div class="card"><div class="kicker">Inventario</div><div class="big" id="totalInventory">0</div><div class="sub">Items cargados</div></div>
+      <div class="card"><div class="kicker">Empresas</div><div class="big" id="totalCompanies">0</div><div class="sub">Capas activas</div></div>
+      <div class="card"><div class="kicker">Estado</div><div class="big">ONLINE</div><div class="sub">Owner panel</div></div>
+    </div>
 
-    <main class="main-grid">
-      <section class="left-panel">
-        <div class="card hero-card">
-          <div class="hero-head">
-            <div>
-              <div class="section-kicker">Avatar</div>
-              <h1 class="hero-title">CONSIA</h1>
-              <p class="hero-subtitle">
-                Sistema visual, conversacional y ejecutivo listo para presentación, ventas y operación.
-              </p>
-            </div>
-          </div>
+    <div class="section card">
+      <div class="kicker">Multiempresa</div>
+      <h3>Resumen por empresa</h3>
+      <table id="companiesTable">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Leads</th>
+            <th>Hot</th>
+            <th>Inversión</th>
+            <th>Alquiler</th>
+            <th>Venta</th>
+            <th>Construcción</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-          <div class="avatar-stage">
-            <canvas id="avatarCanvas" width="520" height="520" aria-label="CONSIA Avatar"></canvas>
-            <div class="avatar-label" id="avatarModeLabel">Modo standby</div>
-          </div>
-
-          <div class="hero-controls">
-            <button class="btn btn-primary" id="micBtn">🎙️ Activar voz</button>
-            <button class="btn btn-secondary" id="presentBtn">▶️ Presentación</button>
-            <button class="btn btn-secondary" id="stopBtn">⏹️ Detener voz</button>
-            <button class="btn btn-secondary" id="clearBtn">🧹 Limpiar chat</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="section-kicker">Comandos</div>
-              <div class="card-title">Accesos rápidos</div>
-            </div>
-          </div>
-
-          <div class="chip-grid">
-            <button class="chip" data-quick="Presentate como CONSIA">Presentate</button>
-            <button class="chip" data-quick="Qué es CONSIA y qué puede hacer">Qué puede hacer</button>
-            <button class="chip" data-quick="Mostrame el modo empresa Manglar">Modo empresa</button>
-            <button class="chip" data-quick="Quiero invertir USD 80000 en departamentos en Posadas">Lead inversión</button>
-            <button class="chip" data-quick="Necesito construir una casa llave en mano en Posadas">Lead construcción</button>
-            <button class="chip" data-quick="Dame un resumen ejecutivo del sistema">Resumen ejecutivo</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="right-panel">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="section-kicker">Presentación</div>
-              <div class="card-title">Modo presentación CONSIA</div>
-            </div>
-          </div>
-
-          <div id="presentationGrid" class="presentation-grid"></div>
-        </div>
-
-        <div class="card chat-card">
-          <div class="card-head">
-            <div>
-              <div class="section-kicker">Realtime</div>
-              <div class="card-title">Texto + voz</div>
-            </div>
-          </div>
-
-          <div id="chatBody" class="chat-body"></div>
-
-          <div class="composer-wrap">
-            <textarea
-              id="msg"
-              class="composer-input"
-              placeholder="Escribí o hablá con CONSIA..."
-              rows="1"
-            ></textarea>
-            <div class="composer-actions">
-              <button class="btn btn-secondary" id="composerMicBtn">🎙️</button>
-              <button class="btn btn-primary" id="sendBtn">Enviar</button>
-            </div>
-          </div>
-
-          <div id="console" class="console-box">CONSIA iniciando...</div>
-        </div>
-      </section>
-    </main>
+    <div class="section card">
+      <div class="kicker">Recientes</div>
+      <h3>Últimos leads</h3>
+      <table id="recentTable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Empresa</th>
+            <th>Intent</th>
+            <th>Zona</th>
+            <th>Budget</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
-  <script src="/avatar-core.js"></script>
+  <script>
+    const API = "https://api.consia.world";
+
+    async function loadOwner() {
+      const r = await fetch(API + "/v1/owner");
+      const d = await r.json();
+
+      document.getElementById("totalLeads").textContent = d.totals?.leads || 0;
+      document.getElementById("totalInventory").textContent = d.totals?.inventory || 0;
+      document.getElementById("totalCompanies").textContent = d.totals?.companies || 0;
+
+      const companiesTbody = document.querySelector("#companiesTable tbody");
+      companiesTbody.innerHTML = "";
+      Object.entries(d.companies || {}).forEach(([name, row]) => {
+        companiesTbody.innerHTML += `
+          <tr>
+            <td>${name}</td>
+            <td>${row.leads || 0}</td>
+            <td>${row.hot || 0}</td>
+            <td>${row.inversion || 0}</td>
+            <td>${row.alquiler || 0}</td>
+            <td>${row.venta || 0}</td>
+            <td>${row.construccion || 0}</td>
+          </tr>
+        `;
+      });
+
+      const recentTbody = document.querySelector("#recentTable tbody");
+      recentTbody.innerHTML = "";
+      (d.recentLeads || []).forEach((lead) => {
+        recentTbody.innerHTML += `
+          <tr>
+            <td>${new Date(lead.created_at).toLocaleString()}</td>
+            <td>${lead.company || ""}</td>
+            <td>${lead.intent || ""}</td>
+            <td>${lead.zone || ""}</td>
+            <td>${lead.budget || 0}</td>
+            <td>${lead.score || 0}</td>
+          </tr>
+        `;
+      });
+    }
+
+    loadOwner();
+  </script>
 </body>
 </html>
