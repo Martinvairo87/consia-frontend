@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Owner Hard</title>
+  <style>
+    body{margin:0;background:#071018;color:#eef4ff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
+    .wrap{max-width:1280px;margin:0 auto;padding:18px}
+    .title{font-size:34px;font-weight:800;margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:#0d1824;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:16px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+    input,select,button,textarea{width:100%;border:none;border-radius:14px;padding:12px 14px;margin-bottom:10px;font:inherit}
+    input,select,textarea{background:#101c2a;color:#eef4ff;border:1px solid rgba(255,255,255,.08)}
+    button{cursor:pointer;background:linear-gradient(135deg,#38d9ff,#7b61ff);color:#07111a;font-weight:800}
+    pre{white-space:pre-wrap;background:#0a1320;border-radius:16px;padding:12px;overflow:auto}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">CONSIA Owner Hard</div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Bootstrap owner</h3>
+        <input id="bootstrapKey" placeholder="OWNER_BOOTSTRAP_KEY" />
+        <input id="ownerName" placeholder="Nombre" />
+        <input id="ownerEmail" placeholder="Email" />
+        <input id="ownerPassword" placeholder="Password" />
+        <button onclick="bootstrapOwner()">Crear owner</button>
+
+        <h3>Login</h3>
+        <input id="loginEmail" placeholder="Email" />
+        <input id="loginPassword" placeholder="Password" />
+        <input id="loginTenant" placeholder="Tenant opcional" />
+        <button onclick="login()">Login</button>
+
+        <h3>Auth</h3>
+        <button onclick="me()">Who am I</button>
+        <button onclick="loadOwnerGlobal()">Owner Global</button>
+        <button onclick="loadTenants()">Tenants</button>
+      </div>
+
+      <div class="card">
+        <h3>Crear usuario</h3>
+        <input id="userName" placeholder="Nombre" />
+        <input id="userEmail" placeholder="Email" />
+        <input id="userPassword" placeholder="Password" />
+        <select id="userRole">
+          <option value="admin">admin</option>
+          <option value="agent">agent</option>
+          <option value="viewer">viewer</option>
+        </select>
+        <input id="userTenant" placeholder="Tenant" />
+        <button onclick="createUser()">Crear usuario</button>
+
+        <h3>Config tenant</h3>
+        <input id="tenantKey" placeholder="tenant key" />
+        <input id="tenantBrand" placeholder="brand name" />
+        <button onclick="updateTenantConfig()">Guardar config tenant</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3>Salida</h3>
+      <pre id="out">CONSIA Owner Hard listo.</pre>
+    </div>
+  </div>
+
+  <script>
+    const API = "https://api.consia.world";
+    let TOKEN = localStorage.getItem("CONSIA_OWNER_TOKEN") || "";
+
+    function headers() {
+      const h = { "Content-Type": "application/json" };
+      if (TOKEN) h.Authorization = "Bearer " + TOKEN;
+      return h;
+    }
+
+    function out(data) {
+      document.getElementById("out").textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    async function bootstrapOwner() {
+      const r = await fetch(API + "/v1/auth/bootstrap-owner", {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({
+          key: document.getElementById("bootstrapKey").value,
+          name: document.getElementById("ownerName").value,
+          email: document.getElementById("ownerEmail").value,
+          password: document.getElementById("ownerPassword").value
+        })
+      });
+      const d = await r.json();
+      if (d.token) {
+        TOKEN = d.token;
+        localStorage.setItem("CONSIA_OWNER_TOKEN", TOKEN);
+      }
+      out(d);
+    }
+
+    async function login() {
+      const r = await fetch(API + "/v1/auth/login", {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({
+          email: document.getElementById("loginEmail").value,
+          password: document.getElementById("loginPassword").value,
+          tenant: document.getElementById("loginTenant").value
+        })
+      });
+      const d = await r.json();
+      if (d.token) {
+        TOKEN = d.token;
+        localStorage.setItem("CONSIA_OWNER_TOKEN", TOKEN);
+      }
+      out(d);
+    }
+
+    async function me() {
+      const r = await fetch(API + "/v1/auth/me", { headers: headers() });
+      out(await r.json());
+    }
+
+    async function loadOwnerGlobal() {
+      const r = await fetch(API + "/v1/owner/global", { headers: headers() });
+      out(await r.json());
+    }
+
+    async function loadTenants() {
+      const r = await fetch(API + "/v1/tenants", { headers: headers() });
+      out(await r.json());
+    }
+
+    async function createUser() {
+      const r = await fetch(API + "/v1/users/create", {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({
+          name: document.getElementById("userName").value,
+          email: document.getElementById("userEmail").value,
+          password: document.getElementById("userPassword").value,
+          role: document.getElementById("userRole").value,
+          tenant: document.getElementById("userTenant").value
+        })
+      });
+      out(await r.json());
+    }
+
+    async function updateTenantConfig() {
+      const r = await fetch(API + "/v1/tenant/config", {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({
+          key: document.getElementById("tenantKey").value,
+          brand_name: document.getElementById("tenantBrand").value
+        })
+      });
+      out(await r.json());
+    }
+  </script>
+</body>
+</html>
