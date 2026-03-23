@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONSIA Panel Premium</title>
+  <title>CONSIA Panel Pro</title>
   <style>
     :root{
       --bg:#071018;
+      --bg2:#0b1622;
       --card:#0d1824;
       --line:rgba(255,255,255,.08);
       --text:#eef4ff;
@@ -16,327 +17,579 @@
       --ok:#39f0a2;
       --warn:#ffc857;
       --danger:#ff6b6b;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:20px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif
-    }
+    html,body{margin:0;padding:0;background:radial-gradient(circle at top left, rgba(56,217,255,.08), transparent 25%), radial-gradient(circle at top right, rgba(123,97,255,.08), transparent 25%), var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
     .wrap{max-width:1480px;margin:0 auto;padding:18px}
-    .top{
-      display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-      margin-bottom:18px
+    .hero{
+      display:flex;justify-content:space-between;gap:14px;align-items:center;
+      padding:18px 20px;border:1px solid var(--line);border-radius:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);backdrop-filter:blur(14px);margin-bottom:18px
     }
-    .title{font-size:34px;font-weight:800}
-    .sub{font-size:13px;color:var(--muted)}
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .nav button,.action{
-      border:none;border-radius:14px;padding:12px 14px;font:inherit;cursor:pointer;
-      background:linear-gradient(135deg,var(--a1),var(--a2));color:#07111a;font-weight:800
-    }
-    .ghost{
-      background:#101c2a!important;color:var(--text)!important;border:1px solid var(--line)
-    }
-    .row{display:grid;grid-template-columns:300px 1fr;gap:18px}
-    .side,.main{display:flex;flex-direction:column;gap:18px}
+    .hero h1{margin:0;font-size:clamp(28px,5vw,58px);letter-spacing:-.04em}
+    .hero p{margin:6px 0 0;color:var(--muted)}
+    .hero-right{display:flex;gap:10px;flex-wrap:wrap}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
     .card{
-      background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;
-      box-shadow:0 24px 80px rgba(0,0,0,.28)
+      grid-column:span 12;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
     }
-    .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .big{font-size:34px;font-weight:800;margin-top:8px}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .span-3{grid-column:span 3}
+    .span-4{grid-column:span 4}
+    .span-5{grid-column:span 5}
+    .span-6{grid-column:span 6}
+    .span-7{grid-column:span 7}
+    .span-8{grid-column:span 8}
+    .span-12{grid-column:span 12}
+    @media (max-width:1100px){
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+      .hero{flex-direction:column;align-items:flex-start}
+    }
+    .label{
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
+      font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px
+    }
+    .title{font-size:20px;font-weight:700;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:14px;margin:0}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .col{display:flex;flex-direction:column;gap:10px}
     input,select,textarea{
-      width:100%;border:none;border-radius:14px;padding:12px 14px;background:#101c2a;
-      color:var(--text);border:1px solid var(--line);font:inherit;margin-bottom:10px
+      width:100%;padding:15px 16px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);background:#0a1420;color:var(--text);
+      outline:none;font-size:16px
     }
-    textarea{min-height:90px;resize:vertical}
-    table{width:100%;border-collapse:collapse}
-    th,td{
-      text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);
-      font-size:13px;vertical-align:top
+    textarea{min-height:120px;resize:vertical}
+    input::placeholder,textarea::placeholder{color:#8da0b8}
+    button{
+      border:0;border-radius:18px;padding:14px 18px;font-weight:800;font-size:16px;
+      cursor:pointer;color:#071018;
+      background:linear-gradient(135deg,var(--a1),var(--a2));
+      box-shadow:0 12px 30px rgba(56,217,255,.18);
+      transition:.18s transform ease,.18s opacity ease
     }
-    .chat{
-      max-height:360px;overflow:auto;display:flex;flex-direction:column;gap:10px;
-      padding-right:4px
+    button:hover{transform:translateY(-1px)}
+    button.ghost{
+      color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--line);box-shadow:none
     }
-    .b{
-      padding:12px 14px;border-radius:16px;max-width:82%;white-space:pre-wrap
+    button.good{background:linear-gradient(135deg,#53f2b4,#1dd1a1)}
+    button.warn{background:linear-gradient(135deg,#ffd166,#ffc857)}
+    button.danger{background:linear-gradient(135deg,#ff8f8f,#ff6b6b)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+    .stat{
+      padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line)
     }
-    .u{
-      align-self:flex-end;background:linear-gradient(135deg,var(--a1),var(--a2));
-      color:#07111a;font-weight:800
-    }
-    .a{
-      align-self:flex-start;background:#101c2a;border:1px solid var(--line)
-    }
-    .good{color:var(--ok)}
-    .warn{color:var(--warn)}
-    .danger{color:var(--danger)}
-    pre{
-      white-space:pre-wrap;background:#0a1320;border-radius:16px;padding:12px;overflow:auto
-    }
-    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .stat .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.15em}
+    .stat .v{font-size:34px;font-weight:900;margin-top:8px;letter-spacing:-.03em}
     .pill{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      border:1px solid var(--line);background:#101c2a;font-size:12px;color:var(--muted)
+      display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:13px;color:var(--muted)
     }
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-    @media(max-width:1100px){.row{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+    .ok{color:var(--ok)} .warnc{color:var(--warn)} .dangerc{color:var(--danger)}
+    .table{
+      width:100%;border-collapse:collapse;font-size:14px
+    }
+    .table th,.table td{
+      padding:12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top
+    }
+    .table th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .console{
+      min-height:240px;max-height:520px;overflow:auto;
+      background:#06111a;border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;padding:14px;white-space:pre-wrap;word-break:break-word;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.5
+    }
+    .split{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    @media (max-width:1100px){.split{grid-template-columns:1fr}}
+    .tag{
+      display:inline-flex;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700;
+      border:1px solid var(--line);background:rgba(255,255,255,.04);margin:2px 6px 2px 0
+    }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div>
-      <div class="title">CONSIA Panel Premium</div>
-      <div class="sub">Consola única · navegación consolidada · realtime continuo · billing pro · backup y auditoría</div>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>CONSIA Panel Pro</h1>
+        <p>Consola premium unificada · billing real · grants owner-only · accounting · backup · auditoría</p>
+      </div>
+      <div class="hero-right">
+        <button id="btnRefreshAll">Actualizar todo</button>
+        <button class="ghost" id="btnLogout">Salir</button>
+      </div>
     </div>
-    <div class="nav">
-      <button onclick="loadAll()">Actualizar todo</button>
-      <button class="ghost" onclick="logout()">Salir</button>
+
+    <div class="grid">
+      <section class="card span-5">
+        <div class="label"><span>Auth</span><span id="authState" class="pill">Sin sesión</span></div>
+        <div class="col">
+          <input id="email" type="email" placeholder="owner@consia.world" value="owner@consia.world" />
+          <input id="password" type="password" placeholder="password" value="CONSIA_OWNER_2026_OK" />
+          <div class="row">
+            <button id="btnLogin">Login</button>
+            <button class="ghost" id="btnWhoami">Who am I</button>
+            <button class="ghost" id="btnHealth">Health</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-7">
+        <div class="label"><span>Estado global</span><span class="pill mono" id="apiBasePill">https://api.consia.world</span></div>
+        <div class="stats">
+          <div class="stat"><div class="k">Tenants</div><div class="v" id="kTenants">—</div></div>
+          <div class="stat"><div class="k">Users</div><div class="v" id="kUsers">—</div></div>
+          <div class="stat"><div class="k">Paid</div><div class="v" id="kPaid">—</div></div>
+          <div class="stat"><div class="k">MRR</div><div class="v" id="kMrr">—</div></div>
+        </div>
+      </section>
+
+      <section class="card span-4">
+        <div class="label"><span>Owner grants</span></div>
+        <div class="col">
+          <button class="good" id="btnCompSync">Owner comp sync</button>
+          <button class="ghost" id="btnGrants">Ver grants</button>
+          <button class="ghost" id="btnCleanup">Cleanup grants</button>
+        </div>
+      </section>
+
+      <section class="card span-4">
+        <div class="label"><span>Billing / Plans</span></div>
+        <div class="col">
+          <button id="btnPlans">Ver planes</button>
+          <input id="checkoutTenant" placeholder="tenant checkout" value="cliente_demo" />
+          <input id="checkoutEmail" placeholder="customer email" value="cliente@demo.com" />
+          <div class="row">
+            <button class="warn" id="btnCheckout">Checkout</button>
+            <button class="ghost" id="btnPortal">Portal</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-4">
+        <div class="label"><span>Tenants / plan</span></div>
+        <div class="col">
+          <input id="tenantName" placeholder="key tenant" value="cliente_demo" />
+          <input id="tenantPretty" placeholder="name / brand" value="Cliente Demo" />
+          <select id="tenantPlan">
+            <option value="free">free</option>
+            <option value="pro">pro</option>
+            <option value="business" selected>business</option>
+            <option value="enterprise">enterprise</option>
+          </select>
+          <div class="row">
+            <button class="ghost" id="btnCreateTenant">Crear tenant</button>
+            <button id="btnAssignPlan">Asignar plan</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-12">
+        <div class="label"><span>Resumen tenants</span><span id="tenantBadges"></span></div>
+        <div style="overflow:auto">
+          <table class="table" id="tenantsTable">
+            <thead>
+              <tr>
+                <th>Tenant</th>
+                <th>Plan</th>
+                <th>Billing</th>
+                <th>Exento</th>
+                <th>Comp</th>
+                <th>Mensual</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card span-6">
+        <div class="label"><span>Accounting</span></div>
+        <div class="col">
+          <input id="accTenant" placeholder="tenant contable" value="vairo_asociados" />
+          <input id="accClientName" placeholder="cliente / empresa" value="Cliente Contable Demo" />
+          <div class="row">
+            <button id="btnAccClient">Crear cliente</button>
+            <button class="ghost" id="btnAccDashboard">Dashboard contable</button>
+          </div>
+          <select id="docSource">
+            <option value="photo">photo</option>
+            <option value="audio">audio</option>
+            <option value="file">file</option>
+          </select>
+          <textarea id="docText" placeholder="texto / factura / observaciones">Factura demo cargada desde panel.</textarea>
+          <button class="ghost" id="btnAccDoc">Crear documento</button>
+        </div>
+      </section>
+
+      <section class="card span-6">
+        <div class="label"><span>Realtime / Backup / Auditoría</span></div>
+        <div class="col">
+          <input id="rtTenant" placeholder="tenant realtime" value="vipwork" />
+          <input id="rtTitle" placeholder="titulo sesión" value="Sesión premium panel" />
+          <textarea id="rtMessage" placeholder="mensaje realtime">Hola CONSIA, activá modo premium continuo.</textarea>
+          <div class="row">
+            <button id="btnRealtimeStart">Iniciar sesión</button>
+            <button class="ghost" id="btnRealtimeList">Ver sesiones</button>
+          </div>
+          <div class="row">
+            <button class="ghost" id="btnBackup">Export backup</button>
+            <button class="ghost" id="btnAudit">Ver auditoría</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-12">
+        <div class="label"><span>Console</span><span id="lastAction" class="pill">Ready</span></div>
+        <div id="console" class="console">{ "ok": true, "panel": "ready" }</div>
+      </section>
     </div>
   </div>
 
-  <div class="row">
-    <div class="side">
-      <div class="card">
-        <div class="k">Auth</div>
-        <div class="pill"><span class="dot"></span><span id="authState">Sin sesión</span></div>
-        <input id="email" placeholder="owner@consia.world" />
-        <input id="password" placeholder="password" type="password" />
-        <button class="action" onclick="login()">Login</button>
-        <button class="action ghost" onclick="me()">Who am I</button>
-      </div>
+  <script>
+    const API = "https://api.consia.world";
+    const LS_TOKEN = "consia_owner_token_v1";
+    const LS_RT_SESSION = "consia_rt_session_v1";
 
-      <div class="card">
-        <div class="k">Tenant / Plan</div>
-        <input id="tenantKey" placeholder="vipwork" value="vipwork" />
-        <select id="planKey">
-          <option value="free">free</option>
-          <option value="pro">pro</option>
-          <option value="business" selected>business</option>
-          <option value="enterprise">enterprise</option>
-        </select>
-        <button class="action" onclick="assignPlan()">Asignar plan</button>
-      </div>
+    const $ = (id) => document.getElementById(id);
 
-      <div class="card">
-        <div class="k">Realtime premium</div>
-        <input id="rtTenant" placeholder="tenant" value="vipwork" />
-        <input id="rtTitle" placeholder="Título sesión" value="Sesión premium" />
-        <button class="action" onclick="startSession()">Iniciar sesión</button>
-        <input id="rtSessionId" placeholder="session id" />
-        <textarea id="rtMessage" placeholder="Mensaje"></textarea>
-        <div class="toolbar">
-          <button class="action" onclick="sendRealtime()">Enviar mensaje</button>
-          <button class="action ghost" onclick="loadSessions()">Ver sesiones</button>
-        </div>
-      </div>
+    const state = {
+      token: localStorage.getItem(LS_TOKEN) || "",
+      lastRealtimeSession: localStorage.getItem(LS_RT_SESSION) || ""
+    };
 
-      <div class="card">
-        <div class="k">Backup / Auditoría</div>
-        <div class="toolbar">
-          <button class="action" onclick="exportBackup()">Export backup</button>
-          <button class="action ghost" onclick="loadAudit()">Ver auditoría</button>
-        </div>
-      </div>
-    </div>
+    function setConsole(data, action = "OK") {
+      $("console").textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      $("lastAction").textContent = action;
+    }
 
-    <div class="main">
-      <div class="grid">
-        <div class="card"><div class="k">Tenants</div><div class="big" id="mTenants">0</div></div>
-        <div class="card"><div class="k">Users</div><div class="big" id="mUsers">0</div></div>
-        <div class="card"><div class="k">Leads</div><div class="big" id="mLeads">0</div></div>
-        <div class="card"><div class="k">MRR</div><div class="big" id="mrr">0</div></div>
-      </div>
+    function setAuthPill() {
+      $("authState").textContent = state.token ? "Sesión activa" : "Sin sesión";
+      $("authState").className = "pill " + (state.token ? "ok" : "");
+    }
 
-      <div class="card">
-        <div class="k">Resumen global</div>
-        <pre id="summaryBox">Sin datos</pre>
-      </div>
+    function authHeaders(json = false) {
+      const h = {};
+      if (state.token) h["Authorization"] = `Bearer ${state.token}`;
+      if (json) h["Content-Type"] = "application/json";
+      return h;
+    }
 
-      <div class="card">
-        <div class="k">Revenue</div>
-        <table id="revTable">
-          <thead>
-            <tr>
-              <th>Tenant</th>
-              <th>Plan</th>
-              <th>Status</th>
-              <th>MRR</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+    async function api(path, options = {}) {
+      const res = await fetch(`${API}${path}`, options);
+      const data = await res.json().catch(() => ({ ok:false, error:"invalid_json" }));
+      if (!res.ok) throw data;
+      return data;
+    }
 
-      <div class="card">
-        <div class="k">Realtime premium</div>
-        <div class="chat" id="chat"></div>
-      </div>
+    async function refreshSummary() {
+      const summary = await api("/v1/platform/global/summary", {
+        headers: authHeaders()
+      });
 
-      <div class="card">
-        <div class="k">Auditoría / Backup</div>
-        <pre id="auditBox">Sin datos</pre>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-const API='https://api.consia.world';
-let TOKEN=localStorage.getItem('CONSIA_OWNER_TOKEN')||'';
-let CURRENT_SESSION='';
+      const revenue = await api("/v1/platform/global/revenue", {
+        headers: authHeaders()
+      });
 
-function headers(extra={}){
-  const h={'Content-Type':'application/json',...extra};
-  if(TOKEN) h.Authorization='Bearer '+TOKEN;
-  return h;
-}
+      $("kTenants").textContent = summary.summary?.tenants ?? "—";
+      $("kUsers").textContent = summary.summary?.users ?? "—";
+      $("kPaid").textContent = summary.summary?.paid_tenants ?? "—";
+      $("kMrr").textContent = revenue.mrr_total ?? "—";
 
-function setAuthState(){
-  document.getElementById('authState').textContent = TOKEN ? 'Sesión activa' : 'Sin sesión';
-}
+      const tbody = $("tenantsTable").querySelector("tbody");
+      tbody.innerHTML = "";
+      const badges = [];
+      (summary.tenant_status || []).forEach(t => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(t.tenant)}</strong><div class="sub">${escapeHtml(t.brand_name || "")}</div></td>
+          <td>${escapeHtml(t.plan_key || "")}</td>
+          <td>${escapeHtml(t.billing_status || "")}</td>
+          <td>${t.billing_exempt ? "sí" : "no"}</td>
+          <td>${t.complimentary_access ? "sí" : "no"}</td>
+          <td>${t.monthly_price ?? 0}</td>
+        `;
+        tbody.appendChild(tr);
+        badges.push(`<span class="tag">${escapeHtml(t.tenant)} · ${escapeHtml(t.plan_key || "—")}</span>`);
+      });
+      $("tenantBadges").innerHTML = badges.join("");
+      return { summary, revenue };
+    }
 
-function setOut(id,data){
-  document.getElementById(id).textContent=
-    typeof data==='string'?data:JSON.stringify(data,null,2);
-}
+    async function login() {
+      const data = await api("/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: $("email").value.trim(),
+          password: $("password").value
+        })
+      });
+      state.token = data.token || "";
+      localStorage.setItem(LS_TOKEN, state.token);
+      setAuthPill();
+      setConsole(data, "LOGIN OK");
+      return data;
+    }
 
-function row(html){
-  document.querySelector('#revTable tbody').insertAdjacentHTML('beforeend',html);
-}
+    async function whoami() {
+      const data = await api("/v1/auth/me", { headers: authHeaders() });
+      setConsole(data, "WHOAMI");
+      return data;
+    }
 
-function addChat(role,text){
-  const el=document.createElement('div');
-  el.className='b '+(role==='user'?'u':'a');
-  el.textContent=text;
-  document.getElementById('chat').appendChild(el);
-  document.getElementById('chat').scrollTop=999999;
-}
-async function api(path, opts={}){
-  const r=await fetch(API+path,{...opts,headers:headers(opts.headers||{})});
-  return r.json();
-}
+    async function health() {
+      const data = await api("/health");
+      setConsole(data, "HEALTH");
+      return data;
+    }
 
-async function login(){
-  const d=await api('/v1/auth/login',{
-    method:'POST',
-    body:JSON.stringify({
-      email:document.getElementById('email').value,
-      password:document.getElementById('password').value
-    })
-  });
-  if(d.token){
-    TOKEN=d.token;
-    localStorage.setItem('CONSIA_OWNER_TOKEN',TOKEN);
-    setAuthState();
-  }
-  setOut('summaryBox',d);
-  await loadAll();
-}
+    async function compSync() {
+      const data = await api("/v1/owner/comp/sync", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({})
+      });
+      setConsole(data, "OWNER COMP SYNC");
+      await refreshSummary();
+    }
 
-async function me(){
-  const d=await api('/v1/auth/me');
-  setOut('summaryBox',d);
-}
+    async function getGrants() {
+      const data = await api("/v1/owner/grants", {
+        headers: authHeaders()
+      });
+      setConsole(data, "GRANTS");
+    }
 
-async function loadAll(){
-  const s=await api('/v1/platform/global/summary');
-  const r=await api('/v1/platform/global/revenue');
+    async function cleanupGrants() {
+      const data = await api("/v1/owner/grants/cleanup", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({})
+      });
+      setConsole(data, "CLEANUP GRANTS");
+    }
 
-  document.getElementById('mTenants').textContent=s.summary?.tenants||0;
-  document.getElementById('mUsers').textContent=s.summary?.users||0;
-  document.getElementById('mLeads').textContent=s.summary?.leads||0;
-  document.getElementById('mrr').textContent=r.mrr_total||0;
+    async function getPlans() {
+      const data = await api("/v1/plans", {
+        headers: authHeaders()
+      });
+      setConsole(data, "PLANS");
+    }
 
-  setOut('summaryBox',s);
+    async function createTenant() {
+      const key = $("tenantName").value.trim();
+      const brand = $("tenantPretty").value.trim() || key;
+      const data = await api("/v1/tenant/create", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          key,
+          name: brand,
+          brand_name: brand,
+          locale: "es-AR",
+          currency: "USD",
+          timezone: "America/Argentina/Buenos_Aires"
+        })
+      });
+      setConsole(data, "TENANT CREATE");
+      await refreshSummary();
+    }
 
-  const tb=document.querySelector('#revTable tbody');
-  tb.innerHTML='';
-  (r.tenants||[]).forEach(x=>{
-    row(`<tr>
-      <td>${x.tenant}</td>
-      <td>${x.plan_key||''}</td>
-      <td>${x.billing_status||''}</td>
-      <td>${x.monthly_recurring_revenue||0}</td>
-    </tr>`);
-  });
-}
+    async function assignPlan() {
+      const data = await api("/v1/tenant/plan/update", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("tenantName").value.trim(),
+          plan_key: $("tenantPlan").value,
+          billing_status: "active"
+        })
+      });
+      setConsole(data, "ASSIGN PLAN");
+      await refreshSummary();
+    }
 
-async function assignPlan(){
-  const d=await api('/v1/tenant/plan/update',{
-    method:'POST',
-    body:JSON.stringify({
-      tenant:document.getElementById('tenantKey').value,
-      plan_key:document.getElementById('planKey').value,
-      billing_status:'active'
-    })
-  });
-  setOut('summaryBox',d);
-  await loadAll();
-}
+    async function checkout() {
+      const data = await api("/v1/billing/checkout/session", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("checkoutTenant").value.trim(),
+          customer_email: $("checkoutEmail").value.trim()
+        })
+      });
+      setConsole(data, "CHECKOUT");
+      if (data.url) window.open(data.url, "_blank");
+    }
 
-async function startSession(){
-  const d=await api('/v1/realtime/session/start',{
-    method:'POST',
-    body:JSON.stringify({
-      tenant:document.getElementById('rtTenant').value,
-      title:document.getElementById('rtTitle').value
-    })
-  });
-  CURRENT_SESSION=d.session?.id||'';
-  document.getElementById('rtSessionId').value=CURRENT_SESSION;
-  setOut('summaryBox',d);
-}
+    async function portal() {
+      const data = await api("/v1/billing/portal", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("checkoutTenant").value.trim()
+        })
+      });
+      setConsole(data, "PORTAL");
+      if (data.url) window.open(data.url, "_blank");
+    }
 
-async function sendRealtime(){
-  const sid=document.getElementById('rtSessionId').value||CURRENT_SESSION;
-  if(!sid) return;
+    async function accClient() {
+      const data = await api("/v1/accounting/client/create", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("accTenant").value.trim(),
+          company_name: $("accClientName").value.trim()
+        })
+      });
+      setConsole(data, "ACCOUNTING CLIENT");
+    }
 
-  const msg=document.getElementById('rtMessage').value;
-  if(!msg.trim()) return;
+    async function accDoc() {
+      const data = await api("/v1/accounting/document/create", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("accTenant").value.trim(),
+          kind: "factura",
+          source_type: $("docSource").value,
+          raw_text: $("docText").value
+        })
+      });
+      setConsole(data, "ACCOUNTING DOC");
+    }
 
-  addChat('user',msg);
+    async function accDashboard() {
+      const tenant = $("accTenant").value.trim();
+      const data = await api(`/v1/accounting/dashboard?tenant=${encodeURIComponent(tenant)}`, {
+        headers: authHeaders()
+      });
+      setConsole(data, "ACCOUNTING DASHBOARD");
+    }
 
-  const d=await api('/v1/realtime/session/message',{
-    method:'POST',
-    body:JSON.stringify({
-      session_id:sid,
-      message:msg
-    })
-  });
+    async function rtStart() {
+      const data = await api("/v1/realtime/session/start", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("rtTenant").value.trim(),
+          title: $("rtTitle").value.trim()
+        })
+      });
+      state.lastRealtimeSession = data.session?.id || "";
+      localStorage.setItem(LS_RT_SESSION, state.lastRealtimeSession);
+      setConsole(data, "REALTIME START");
 
-  addChat('assistant',d.reply||'');
-  document.getElementById('rtMessage').value='';
-}
+      if (state.lastRealtimeSession) {
+        const msg = await api("/v1/realtime/session/message", {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({
+            session_id: state.lastRealtimeSession,
+            message: $("rtMessage").value
+          })
+        });
+        setConsole(msg, "REALTIME MESSAGE");
+      }
+    }
 
-async function loadSessions(){
-  const d=await api('/v1/realtime/session/list');
-  setOut('summaryBox',d);
-}
+    async function rtList() {
+      const data = await api("/v1/realtime/session/list", {
+        headers: authHeaders()
+      });
+      setConsole(data, "REALTIME LIST");
+    }
 
-async function exportBackup(){
-  const d=await api('/v1/backup/export');
-  setOut('auditBox',d);
-}
+    async function backup() {
+      const data = await api("/v1/backup/export", {
+        headers: authHeaders()
+      });
+      setConsole(data, "BACKUP");
+    }
 
-async function loadAudit(){
-  const d=await api('/v1/audit/logs');
-  setOut('auditBox',d);
-}
+    async function audit() {
+      const data = await api("/v1/audit/logs", {
+        headers: authHeaders()
+      });
+      setConsole(data, "AUDIT");
+    }
 
-function logout(){
-  TOKEN='';
-  localStorage.removeItem('CONSIA_OWNER_TOKEN');
-  location.reload();
-}
+    function logout() {
+      state.token = "";
+      localStorage.removeItem(LS_TOKEN);
+      setAuthPill();
+      setConsole({ ok: true, logout: true }, "LOGOUT");
+    }
 
-setAuthState();
-loadAll();
-</script>
+    function escapeHtml(v) {
+      return String(v ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    $("btnLogin").onclick = () => run(login);
+    $("btnWhoami").onclick = () => run(whoami);
+    $("btnHealth").onclick = () => run(health);
+    $("btnRefreshAll").onclick = () => run(async () => {
+      await refreshSummary();
+      const grants = await api("/v1/owner/grants", { headers: authHeaders() });
+      setConsole({
+        ok: true,
+        summary_refreshed: true,
+        grants_total: grants.total ?? 0
+      }, "REFRESH ALL");
+    });
+    $("btnLogout").onclick = logout;
+    $("btnCompSync").onclick = () => run(compSync);
+    $("btnGrants").onclick = () => run(getGrants);
+    $("btnCleanup").onclick = () => run(cleanupGrants);
+    $("btnPlans").onclick = () => run(getPlans);
+    $("btnCreateTenant").onclick = () => run(createTenant);
+    $("btnAssignPlan").onclick = () => run(assignPlan);
+    $("btnCheckout").onclick = () => run(checkout);
+    $("btnPortal").onclick = () => run(portal);
+    $("btnAccClient").onclick = () => run(accClient);
+    $("btnAccDoc").onclick = () => run(accDoc);
+    $("btnAccDashboard").onclick = () => run(accDashboard);
+    $("btnRealtimeStart").onclick = () => run(rtStart);
+    $("btnRealtimeList").onclick = () => run(rtList);
+    $("btnBackup").onclick = () => run(backup);
+    $("btnAudit").onclick = () => run(audit);
+
+    async function run(fn) {
+      try {
+        $("lastAction").textContent = "Procesando...";
+        await fn();
+      } catch (e) {
+        setConsole(e, "ERROR");
+      }
+    }
+
+    (async function boot(){
+      setAuthPill();
+      try {
+        await health();
+        if (state.token) {
+          await refreshSummary();
+        }
+      } catch (e) {
+        setConsole(e, "BOOT ERROR");
+      }
+    })();
+  </script>
 </body>
 </html>
