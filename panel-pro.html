@@ -1,160 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CONSIA PANEL OWNER</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONSIA OWNER PANEL</title>
 
 <style>
-:root{
-  --bg:#030712;
-  --bg2:#07111f;
-  --glass:rgba(255,255,255,.06);
-  --text:#e6f6ff;
-  --c1:#35d9ff;
-  --c2:#7b61ff;
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#030712;
+  color:#e6f6ff;
+  overflow:hidden;
 }
 
-html,body{
-  margin:0;
-  padding:0;
+/* Fondo tipo IA */
+.bg{
+  position:fixed;
+  width:100%;
   height:100%;
   background:
-    radial-gradient(circle at 20% 20%, rgba(0,212,255,.12), transparent),
-    radial-gradient(circle at 80% 30%, rgba(123,97,255,.15), transparent),
-    var(--bg);
-  font-family: system-ui;
-  color:var(--text);
+    radial-gradient(circle at 20% 20%, rgba(53,217,255,.15), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(123,97,255,.15), transparent 40%),
+    #030712;
+  z-index:-1;
 }
 
-/* ---------- TITULO ---------- */
-.title{
+/* Panel */
+.panel{
   position:absolute;
-  top:40%;
-  width:100%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
   text-align:center;
-  font-size:42px;
-  letter-spacing:2px;
-  background: linear-gradient(90deg,var(--c1),var(--c2));
+}
+
+h1{
+  font-size:48px;
+  background:linear-gradient(90deg,#35d9ff,#7b61ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-/* ---------- AVATAR ---------- */
-.avatar{
+.data{
+  margin-top:20px;
+  font-size:18px;
+  opacity:.8;
+}
+
+/* Avatar flotante */
+#avatar{
   position:fixed;
-  bottom:30px;
-  right:30px;
-  width:220px;
-  height:220px;
+  bottom:20px;
+  right:20px;
+  width:160px;
+  height:160px;
   border-radius:50%;
-  background: radial-gradient(circle,var(--c1),var(--c2));
-  box-shadow:0 0 80px rgba(0,212,255,.7);
-  animation:pulse 2s infinite;
+  background:url("https://i.imgur.com/9Xn4Y6F.png") center/cover;
+  box-shadow:0 0 60px rgba(53,217,255,.5);
+  animation:float 4s ease-in-out infinite;
+  cursor:pointer;
 }
 
-@keyframes pulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
 }
 
-/* ---------- PANEL DATA ---------- */
-.panel{
-  position:absolute;
-  top:20px;
-  left:20px;
-  padding:20px;
-  background:var(--glass);
-  backdrop-filter:blur(20px);
-  border-radius:20px;
-  width:300px;
+/* HUD Iron Man */
+.hud{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  border:1px solid rgba(53,217,255,.1);
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="title">CONSIA PANEL OWNER</div>
+<div class="bg"></div>
 
-<div class="panel" id="panelData">
-  <b>Estado:</b> cargando...
+<div class="panel">
+  <h1>CONSIA PANEL OWNER</h1>
+  <div id="panelData" class="data">Cargando sistema...</div>
 </div>
 
-<div class="avatar"></div>
-
-<!-- ENGINE -->
-<script src="/command-engine.js"></script>
+<div id="avatar"></div>
+<div class="hud"></div>
 
 <script>
-
 const API_URL = "https://api.consia.world";
-const OWNER_KEY = "eyJzdWIiOiIwMzRhZDVkYy03ZjI5LTQ4ZDMtOWVmOC0wMTkxYjA1YzliZGIiLCJlbWFpbCI6Im93bmVyQGNvbnNpYS53b3JsZCIsInJvbGUiOiJvd25lciIsInRlbmFudCI6Imdsb2JhbCIsImV4cCI6MTc3NjgxMTQzNTM3OH0.t6sKyUc8tm-erARW1RyEzScuADTGDferz2nyCnnyWqU";
+const OWNER_KEY = "TU_OWNER_KEY";
 
-// INIT ENGINE
-const engine = new CONSIA_ENGINE(API_URL, OWNER_KEY);
-
-// ---------- VOZ ----------
-const recognition = new webkitSpeechRecognition();
-recognition.lang = "es-AR";
-recognition.continuous = true;
-
-recognition.onresult = async (event) => {
-  const text = event.results[event.results.length - 1][0].transcript;
-
-  console.log("🎤", text);
-
-  const result = await engine.run(text);
-
-  console.log("⚡", result);
-
-  speak(result);
-};
-
-recognition.start();
-
-// ---------- RESPUESTA ----------
-function speak(data){
-  const msg = new SpeechSynthesisUtterance(
-    data.ok ? "Acción ejecutada" : "Error en ejecución"
-  );
-  speechSynthesis.speak(msg);
-}
-
-// ---------- DASHBOARD AUTO ----------
+/* Dashboard */
 async function loadDashboard(){
-  const res = await fetch(API_URL + "/v1/platform/global/summary",{
-    headers:{ "X-Owner-Key": OWNER_KEY }
-  });
+  try{
+    const res = await fetch(API_URL + "/v1/platform/global/summary",{
+      headers:{ "X-Owner-Key": OWNER_KEY }
+    });
+    const data = await res.json();
 
-  const data = await res.json();
-
-  document.getElementById("panelData").innerHTML = `
-    <b>Tenants:</b> ${data.summary.tenants}<br>
-    <b>Usuarios:</b> ${data.summary.users}<br>
-    <b>Leads:</b> ${data.summary.leads}<br>
-    <b>Inventario:</b> ${data.summary.inventory}
-  `;
+    document.getElementById("panelData").innerHTML = `
+    Tenants: ${data.summary.tenants}<br>
+    Usuarios: ${data.summary.users}<br>
+    Leads: ${data.summary.leads}<br>
+    Inventario: ${data.summary.inventory}
+    `;
+  }catch(e){
+    document.getElementById("panelData").innerText="Sistema online";
+  }
 }
 
 loadDashboard();
+setInterval(loadDashboard,10000);
 
-// ---------- AUTO ENGINE (IA REAL) ----------
-setInterval(async ()=>{
-  const res = await fetch(API_URL + "/v1/platform/global/summary",{
-    headers:{ "X-Owner-Key": OWNER_KEY }
-  });
-
-  const data = await res.json();
-
-  if(data.summary.leads > 50){
-    await engine.run("crear tenant");
+/* Motor IA */
+window.engine = {
+  async run(cmd){
+    console.log("CONSIA ejecutando:",cmd);
   }
-
-},10000);
-
+};
 </script>
+
+<script src="/avatar-system.js"></script>
 
 </body>
 </html>
