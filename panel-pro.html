@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Owner Panel</title>
+  <style>
+    :root{
+      --bg:#050b13;
+      --bg2:#0b1522;
+      --card:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.10);
+      --text:#eef6ff;
+      --muted:#9cb0c9;
+      --c1:#35d9ff;
+      --c2:#7b61ff;
+      --ok:#39f0a2;
+      --warn:#ffd166;
+      --danger:#ff6b6b;
+      --shadow:0 24px 80px rgba(0,0,0,.45);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;width:100%;height:100%;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(53,217,255,.14), transparent 25%),
+        radial-gradient(circle at 80% 18%, rgba(123,97,255,.16), transparent 28%),
+        linear-gradient(180deg, #040913 0%, #07111b 42%, #040913 100%);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
+    }
+    body{
+      overflow:auto;
+    }
+    #bgImage{
+      position:fixed;inset:0;width:100%;height:100%;object-fit:cover;
+      opacity:.18;pointer-events:none;display:none;
+    }
+    .wrap{
+      position:relative;
+      min-height:100vh;
+      padding:20px;
+    }
+    .hero{
+      display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+      padding:18px 20px;border-radius:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      margin-bottom:18px;
+    }
+    .hero h1{
+      margin:0;font-size:clamp(30px,5vw,54px);letter-spacing:-.04em;
+    }
+    .hero p{
+      margin:6px 0 0;color:var(--muted)
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+    }
+    @media (max-width:1100px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      border-radius:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      padding:18px;
+      overflow:hidden;
+    }
+    .avatar-box{
+      position:relative;
+      min-height:700px;
+      display:flex;align-items:center;justify-content:center;
+      background:
+        radial-gradient(circle at center, rgba(53,217,255,.08), transparent 38%),
+        radial-gradient(circle at 55% 40%, rgba(123,97,255,.12), transparent 44%);
+    }
+    .halo{
+      position:absolute;width:min(70vw,700px);height:min(70vw,700px);border-radius:50%;
+      background:
+        radial-gradient(circle, rgba(53,217,255,.16), transparent 52%),
+        radial-gradient(circle at 62% 35%, rgba(123,97,255,.18), transparent 42%);
+      filter:blur(26px);
+      pointer-events:none;
+    }
+    .avatar-frame{
+      position:relative;
+      width:min(72vw,540px);
+      aspect-ratio:1/1.22;
+      border-radius:34px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#091321,#07101a);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:var(--shadow);
+    }
+    .avatar-frame img,
+    .avatar-frame video{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;
+    }
+    .avatar-frame .ph{
+      position:absolute;inset:0;display:grid;place-items:center;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(53,217,255,.16), transparent 24%),
+        radial-gradient(circle at 50% 62%, rgba(123,97,255,.12), transparent 32%),
+        linear-gradient(180deg,#091321,#050b13);
+    }
+    .avatar-frame .ph svg{width:76%;height:76%;opacity:.95}
+    .avatar-status{
+      position:absolute;left:18px;right:18px;bottom:18px;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .side{
+      display:grid;gap:18px;
+    }
+    .label{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;
+    }
+    .title{margin:0 0 8px;font-size:24px;letter-spacing:-.03em}
+    .sub{margin:0;color:var(--muted);line-height:1.55}
+    .metrics{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
+    }
+    .metric{
+      padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
+    }
+    .metric .k{
+      font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase
+    }
+    .metric .v{
+      font-size:30px;font-weight:900;margin-top:8px;letter-spacing:-.03em
+    }
+    .col{display:flex;flex-direction:column;gap:10px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    input,textarea,select{
+      width:100%;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(4,12,22,.92);
+      color:var(--text);
+      font-size:15px;outline:none;
+    }
+    textarea{min-height:96px;resize:vertical}
+    button{
+      appearance:none;border:0;cursor:pointer;
+      color:#04101a;font-weight:800;font-size:15px;
+      padding:14px 18px;border-radius:18px;
+      background:linear-gradient(135deg,var(--c1),var(--c2));
+      box-shadow:0 18px 40px rgba(53,217,255,.18);
+    }
+    button.ghost{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+    button.good{background:linear-gradient(135deg,#54f3b5,#2be2bf)}
+    button.warn{background:linear-gradient(135deg,#ffd166,#ffb84d)}
+    button.danger{background:linear-gradient(135deg,#ff8d8d,#ff6b6b)}
+    .console{
+      min-height:180px;max-height:320px;overflow:auto;
+      background:#06101a;border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;padding:14px;
+      white-space:pre-wrap;word-break:break-word;
+      font-size:12px;line-height:1.55;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    .memory{display:flex;flex-direction:column;gap:10px;max-height:220px;overflow:auto}
+    .mem{
+      padding:12px 14px;border-radius:16px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
+    }
+    .mem small{display:block;color:var(--muted);margin-top:4px}
+    .gate{
+      position:fixed;inset:0;z-index:100;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(1,5,10,.78);backdrop-filter:blur(18px);
+    }
+    .gate.hidden{display:none}
+    .gate-card{
+      width:min(92vw,520px);padding:24px;border-radius:28px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+    }
+    .tiny{font-size:12px;color:var(--muted)}
+    .cfg{
+      position:absolute;top:18px;left:18px;display:flex;gap:8px;flex-wrap:wrap
+    }
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <img id="bgImage" alt="">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="pill">CONSIA OWNER-ONLY</div>
+        <h1>Panel propietario inmersivo</h1>
+        <p>Avatar único · voz · comandos directos · billing · grants · accounting · audit</p>
+      </div>
+      <div class="row">
+        <button class="ghost" id="btnConfig">Config</button>
+        <button class="ghost" id="btnVoice">Voz</button>
+        <button id="btnRefreshAll">Actualizar todo</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="card avatar-box">
+        <div class="cfg hidden" id="cfgBox">
+          <button class="ghost" id="btnBgUpload">Fondo</button>
+          <button class="ghost" id="btnAvatarUpload">Avatar</button>
+          <button class="ghost" id="btnUseUrl">URL</button>
+          <button class="ghost" id="btnResetVisuals">Reset</button>
+          <input type="file" accept="image/*" id="bgFile" class="hidden">
+          <input type="file" accept="image/*,video/*" id="avatarFile" class="hidden">
+        </div>
+
+        <div class="halo"></div>
+
+        <div class="avatar-frame">
+          <video id="avatarVideo" autoplay loop muted playsinline></video>
+          <img id="avatarImage" alt="Avatar owner">
+          <div class="ph" id="avatarPlaceholder">
+            <svg viewBox="0 0 500 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#35D9FF"/>
+                  <stop offset="1" stop-color="#7B61FF"/>
+                </linearGradient>
+              </defs>
+              <path d="M249 87c48 0 86 40 86 89 0 28-12 52-31 69 70 24 119 89 119 166v61H77v-61c0-77 49-142 119-166-19-17-31-41-31-69 0-49 38-89 84-89Z" fill="url(#g1)" opacity=".18"/>
+              <path d="M250 108c36 0 65 30 65 67s-29 67-65 67-65-30-65-67 29-67 65-67Zm0 158c79 0 144 66 144 147v38H106v-38c0-81 65-147 144-147Z" fill="none" stroke="url(#g1)" stroke-width="10"/>
+            </svg>
+          </div>
+          <div class="avatar-status">
+            <span class="pill" id="ownerState">bloqueado</span>
+            <span class="pill" id="voiceState">voz standby</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="side">
+        <section class="card">
+          <div class="label"><span>Comando owner</span><span class="pill" id="summaryPill">—</span></div>
+          <h2 class="title">Ejecución directa</h2>
+          <p class="sub" id="speechText">Esperando orden del owner.</p>
+          <div class="col" style="margin-top:14px">
+            <input id="cmdInput" placeholder="actualizar todo, grants, revenue, audit, backup, checkout, portal..." />
+            <div class="row">
+              <button id="btnRunCmd">Ejecutar</button>
+              <button class="ghost" id="btnWhoami">Who am I</button>
+              <button class="ghost" id="btnHealth">Health</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="label"><span>Resumen</span></div>
+          <div class="metrics">
+            <div class="metric"><div class="k">Tenants</div><div class="v" id="kTenants">—</div></div>
+            <div class="metric"><div class="k">Users</div><div class="v" id="kUsers">—</div></div>
+            <div class="metric"><div class="k">Paid</div><div class="v" id="kPaid">—</div></div>
+            <div class="metric"><div class="k">MRR</div><div class="v" id="kMrr">—</div></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="label"><span>Acciones</span></div>
+          <div class="row">
+            <button class="ghost" id="btnSummary">Summary</button>
+            <button class="ghost" id="btnRevenue">Revenue</button>
+            <button class="ghost" id="btnGrants">Grants</button>
+            <button class="good" id="btnCompSync">Comp Sync</button>
+            <button class="ghost" id="btnAudit">Audit</button>
+            <button class="ghost" id="btnBackup">Backup</button>
+          </div>
+          <div class="col" style="margin-top:14px">
+            <input id="tenantInput" value="cliente_demo" placeholder="tenant">
+            <select id="planInput">
+              <option value="free">free</option>
+              <option value="pro">pro</option>
+              <option value="business" selected>business</option>
+              <option value="enterprise">enterprise</option>
+            </select>
+            <input id="emailInput" value="cliente@demo.com" placeholder="customer email">
+            <div class="row">
+              <button class="ghost" id="btnCreateTenant">Crear tenant</button>
+              <button id="btnAssignPlan">Asignar plan</button>
+            </div>
+            <div class="row">
+              <button class="warn" id="btnCheckout">Checkout</button>
+              <button class="ghost" id="btnPortal">Portal</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="label"><span>Memoria</span><span class="pill" id="memCount">0</span></div>
+          <div class="memory" id="memoryList"></div>
+          <div class="console" id="console">{ "ok": true, "panel": "ready" }</div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <div class="label"><span>Owner gate</span><span class="pill">CONSIA</span></div>
+      <h2 class="title" style="font-size:34px;margin-bottom:8px">Ingreso único del owner</h2>
+      <p class="sub">Solo Martín / owner.</p>
+      <div class="col" style="margin-top:14px">
+        <input id="ownerEmail" type="email" value="owner@consia.world">
+        <input id="ownerPassword" type="password" placeholder="Password owner" value="CONSIA_OWNER_2026_OK">
+        <div class="row">
+          <button id="btnLogin">Ingresar</button>
+          <button class="ghost" id="btnDemo">Visual only</button>
+        </div>
+        <div class="tiny">Owner-only · visual inmersiva · voz · memoria local</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onerror = function(message, source, lineno, colno) {
+      const box = document.getElementById("console");
+      if (box) {
+        box.textContent = "JS ERROR\\n" + message + "\\n" + source + ":" + lineno + ":" + colno;
+      }
+    };
+
+    const API = "https://api.consia.world";
+    const LS = {
+      token: "consia_owner_token_v3",
+      memory: "consia_owner_memory_v3",
+      bg: "consia_owner_bg_v3",
+      avatarImg: "consia_owner_avatar_img_v3",
+      avatarVid: "consia_owner_avatar_vid_v3"
+    };
+
+    const state = {
+      token: localStorage.getItem(LS.token) || "",
+      memory: JSON.parse(localStorage.getItem(LS.memory) || "[]"),
+      mic: null,
+      listening: false
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function authHeaders(json = false) {
+      const h = {};
+      if (state.token) h.Authorization = `Bearer ${state.token}`;
+      if (json) h["Content-Type"] = "application/json";
+      return h;
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(`${API}${path}`, options);
+      const data = await res.json().catch(() => ({ ok:false, error:"invalid_json" }));
+      if (!res.ok) throw data;
+      return data;
+    }
+
+    function writeConsole(data, label = "OK") {
+      $("console").textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      pushMemory(label, typeof data === "string" ? data : JSON.stringify(data));
+    }
+
+    function pushMemory(action, detail) {
+      state.memory.unshift({
+        at: new Date().toISOString(),
+        action,
+        detail: String(detail).slice(0, 800)
+      });
+      state.memory = state.memory.slice(0, 50);
+      localStorage.setItem(LS.memory, JSON.stringify(state.memory));
+      renderMemory();
+    }
+
+    function renderMemory() {
+      $("memCount").textContent = state.memory.length;
+      $("memoryList").innerHTML = state.memory.map(m => `
+        <div class="mem">
+          <strong>${escapeHtml(m.action)}</strong>
+          <small>${escapeHtml(m.at)}</small>
+        </div>
+      `).join("") || `<div class="mem"><strong>Sin movimientos</strong><small>La memoria aparecerá acá.</small></div>`;
+    }
+
+    function escapeHtml(v) {
+      return String(v ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;");
+    }
+
+    function speak(text) {
+      $("speechText").textContent = text;
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "es-AR";
+      u.rate = 1;
+      u.pitch = 1;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderVisuals() {
+      const bg = localStorage.getItem(LS.bg);
+      const img = localStorage.getItem(LS.avatarImg);
+      const vid = localStorage.getItem(LS.avatarVid);
+
+      $("bgImage").style.display = bg ? "block" : "none";
+      if (bg) $("bgImage").src = bg;
+
+      $("avatarImage").style.display = "none";
+      $("avatarVideo").style.display = "none";
+      $("avatarPlaceholder").style.display = "grid";
+
+      if (vid) {
+        $("avatarVideo").src = vid;
+        $("avatarVideo").style.display = "block";
+        $("avatarPlaceholder").style.display = "none";
+      } else if (img) {
+        $("avatarImage").src = img;
+        $("avatarImage").style.display = "block";
+        $("avatarPlaceholder").style.display = "none";
+      }
+    }
+
+    async function login() {
+      const data = await api("/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: $("ownerEmail").value.trim(),
+          password: $("ownerPassword").value
+        })
+      });
+      state.token = data.token || "";
+      localStorage.setItem(LS.token, state.token);
+      $("gate").classList.add("hidden");
+      $("ownerState").textContent = "owner activo";
+      writeConsole(data, "LOGIN OK");
+      speak("Owner validado. Panel activo.");
+      await refreshAll();
+    }
+
+    async function whoami() {
+      const data = await api("/v1/auth/me", { headers: authHeaders() });
+      writeConsole(data, "WHOAMI");
+      return data;
+    }
+
+    async function health() {
+      const data = await api("/health");
+      writeConsole(data, "HEALTH");
+      return data;
+    }
+
+    async function summary() {
+      const data = await api("/v1/platform/global/summary", { headers: authHeaders() });
+      $("kTenants").textContent = data.summary?.tenants ?? "—";
+      $("kUsers").textContent = data.summary?.users ?? "—";
+      $("kPaid").textContent = data.summary?.paid_tenants ?? "—";
+      $("summaryPill").textContent = `${data.summary?.tenants ?? 0} tenants`;
+      writeConsole(data, "SUMMARY");
+      return data;
+    }
+
+    async function revenue() {
+      const data = await api("/v1/platform/global/revenue", { headers: authHeaders() });
+      $("kMrr").textContent = data.mrr_total ?? "—";
+      writeConsole(data, "REVENUE");
+      return data;
+    }
+
+    async function grants() {
+      const data = await api("/v1/owner/grants", { headers: authHeaders() });
+      writeConsole(data, "GRANTS");
+      return data;
+    }
+
+    async function compSync() {
+      const data = await api("/v1/owner/comp/sync", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({})
+      });
+      writeConsole(data, "COMP SYNC");
+      speak("Comp sync ejecutado.");
+      await refreshAll();
+      return data;
+    }
+
+    async function audit() {
+      const data = await api("/v1/audit/logs", { headers: authHeaders() });
+      writeConsole(data, "AUDIT");
+      return data;
+    }
+
+    async function backup() {
+      const data = await api("/v1/backup/export", { headers: authHeaders() });
+      writeConsole(data, "BACKUP");
+      return data;
+    }
+
+    async function createTenant() {
+      const key = $("tenantInput").value.trim();
+      const data = await api("/v1/tenant/create", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          key,
+          name: key,
+          brand_name: key,
+          locale: "es-AR",
+          currency: "USD",
+          timezone: "America/Argentina/Buenos_Aires"
+        })
+      });
+      writeConsole(data, "TENANT CREATE");
+      return data;
+    }
+
+    async function assignPlan() {
+      const data = await api("/v1/tenant/plan/update", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("tenantInput").value.trim(),
+          plan_key: $("planInput").value,
+          billing_status: "active"
+        })
+      });
+      writeConsole(data, "PLAN UPDATE");
+      await refreshAll();
+      return data;
+    }
+
+    async function checkout() {
+      const data = await api("/v1/billing/checkout/session", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("tenantInput").value.trim(),
+          customer_email: $("emailInput").value.trim()
+        })
+      });
+      writeConsole(data, "CHECKOUT");
+      if (data.url) window.open(data.url, "_blank");
+      return data;
+    }
+
+    async function portal() {
+      const data = await api("/v1/billing/portal", {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          tenant: $("tenantInput").value.trim()
+        })
+      });
+      writeConsole(data, "PORTAL");
+      if (data.url) window.open(data.url, "_blank");
+      return data;
+    }
+
+    async function refreshAll() {
+      await summary();
+      await revenue();
+      await grants().catch(() => null);
+    }
+
+    async function runCommand(raw) {
+      const cmd = String(raw || "").trim().toLowerCase();
+      if (!cmd) return;
+
+      if (cmd.includes("actualizar")) return refreshAll();
+      if (cmd.includes("who")) return whoami();
+      if (cmd.includes("health")) return health();
+      if (cmd.includes("grant")) return grants();
+      if (cmd.includes("sync")) return compSync();
+      if (cmd.includes("revenue")) return revenue();
+      if (cmd.includes("summary") || cmd.includes("resumen")) return summary();
+      if (cmd.includes("audit")) return audit();
+      if (cmd.includes("backup")) return backup();
+      if (cmd.includes("checkout")) return checkout();
+      if (cmd.includes("portal")) return portal();
+      if (cmd.includes("crear tenant")) return createTenant();
+      if (cmd.includes("asignar plan")) return assignPlan();
+
+      speak(`Orden recibida: ${raw}`);
+      writeConsole({ ok:true, cmd: raw }, "CMD");
+    }
+
+    function setupVoice() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        $("voiceState").textContent = "voz no disponible";
+        return;
+      }
+
+      const rec = new SR();
+      rec.lang = "es-AR";
+      rec.continuous = false;
+      rec.interimResults = false;
+
+      rec.onstart = () => {
+        state.listening = true;
+        $("voiceState").textContent = "escuchando";
+      };
+
+      rec.onend = () => {
+        state.listening = false;
+        $("voiceState").textContent = "voz standby";
+      };
+
+      rec.onresult = async (e) => {
+        const text = e.results?.[0]?.[0]?.transcript || "";
+        $("cmdInput").value = text;
+        await runCommand(text);
+      };
+
+      rec.onerror = (e) => {
+        writeConsole({ ok:false, voice_error:e.error }, "VOICE ERROR");
+      };
+
+      state.mic = rec;
+    }
+
+    function bindVisualConfig() {
+      $("btnConfig").onclick = () => $("cfgBox").classList.toggle("hidden");
+      $("btnBgUpload").onclick = () => $("bgFile").click();
+      $("btnAvatarUpload").onclick = () => $("avatarFile").click();
+
+      $("bgFile").onchange = (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = () => {
+          localStorage.setItem(LS.bg, r.result);
+          renderVisuals();
+        };
+        r.readAsDataURL(f);
+      };
+
+      $("avatarFile").onchange = (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = () => {
+          if (f.type.startsWith("video/")) {
+            localStorage.removeItem(LS.avatarImg);
+            localStorage.setItem(LS.avatarVid, r.result);
+          } else {
+            localStorage.removeItem(LS.avatarVid);
+            localStorage.setItem(LS.avatarImg, r.result);
+          }
+          renderVisuals();
+        };
+        r.readAsDataURL(f);
+      };
+
+      $("btnUseUrl").onclick = () => {
+        const url = prompt("Pegá URL directa de video o imagen:");
+        if (!url) return;
+        if (/\\.(mp4|webm|mov)$/i.test(url)) {
+          localStorage.removeItem(LS.avatarImg);
+          localStorage.setItem(LS.avatarVid, url);
+        } else {
+          localStorage.removeItem(LS.avatarVid);
+          localStorage.setItem(LS.avatarImg, url);
+        }
+        renderVisuals();
+      };
+
+      $("btnResetVisuals").onclick = () => {
+        localStorage.removeItem(LS.bg);
+        localStorage.removeItem(LS.avatarImg);
+        localStorage.removeItem(LS.avatarVid);
+        renderVisuals();
+      };
+    }
+
+    $("btnLogin").onclick = () => wrap(login);
+    $("btnDemo").onclick = () => {
+      $("gate").classList.add("hidden");
+      $("ownerState").textContent = "visual only";
+      speak("Modo visual activo.");
+    };
+    $("btnWhoami").onclick = () => wrap(whoami);
+    $("btnHealth").onclick = () => wrap(health);
+    $("btnSummary").onclick = () => wrap(summary);
+    $("btnRevenue").onclick = () => wrap(revenue);
+    $("btnGrants").onclick = () => wrap(grants);
+    $("btnCompSync").onclick = () => wrap(compSync);
+    $("btnAudit").onclick = () => wrap(audit);
+    $("btnBackup").onclick = () => wrap(backup);
+    $("btnCreateTenant").onclick = () => wrap(createTenant);
+    $("btnAssignPlan").onclick = () => wrap(assignPlan);
+    $("btnCheckout").onclick = () => wrap(checkout);
+    $("btnPortal").onclick = () => wrap(portal);
+    $("btnRunCmd").onclick = () => wrap(() => runCommand($("cmdInput").value));
+    $("btnRefreshAll").onclick = () => wrap(refreshAll);
+    $("btnVoice").onclick = () => {
+      if (!state.mic) return;
+      if (state.listening) state.mic.stop(); else state.mic.start();
+    };
+    $("cmdInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") wrap(() => runCommand($("cmdInput").value));
+    });
+
+    async function wrap(fn) {
+      try { await fn(); }
+      catch (e) { writeConsole(e, "ERROR"); speak("Hubo un error."); }
+    }
+
+    renderMemory();
+    renderVisuals();
+    setupVoice();
+    bindVisualConfig();
+    writeConsole({ ok:true, panel:"boot" }, "BOOT");
+
+    if (state.token) {
+      $("gate").classList.add("hidden");
+      $("ownerState").textContent = "owner session";
+      refreshAll().catch(() => null);
+    }
+  </script>
+</body>
+</html>
