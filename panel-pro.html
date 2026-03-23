@@ -925,3 +925,36 @@
   </script>
 </body>
 </html>
+<script>
+const API_URL = "https://api.consia.world";
+const OWNER_KEY = "TU_OWNER_KEY";
+
+const engine = new CONSIA_ENGINE(API_URL, OWNER_KEY);
+
+// VOICE
+const recognition = new webkitSpeechRecognition();
+recognition.lang = "es-AR";
+recognition.continuous = true;
+
+recognition.onresult = async (event) => {
+  const text = event.results[event.results.length - 1][0].transcript;
+
+  console.log("🎤", text);
+
+  const result = await engine.run(text);
+
+  console.log("⚡", result);
+
+  speak(result);
+};
+
+recognition.start();
+
+// VOICE RESPONSE
+function speak(data){
+  const msg = new SpeechSynthesisUtterance(
+    data.ok ? "Acción ejecutada correctamente" : "Error"
+  );
+  speechSynthesis.speak(msg);
+}
+</script>
