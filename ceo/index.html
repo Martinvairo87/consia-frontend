@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CONSIA CEO</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0b1730;
+      --panel:rgba(10,22,44,.74);
+      --line:rgba(102,170,255,.18);
+      --text:#eef4ff;
+      --muted:#9ab0d3;
+      --cyan:#7dd3fc;
+      --blue:#60a5fa;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow:0 14px 44px rgba(0,0,0,.35);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(34,211,238,.15), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(96,165,250,.18), transparent 50%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+    }
+    .wrap{max-width:1400px;margin:0 auto;padding:22px}
+    .top{
+      display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:20px
+    }
+    .brand{
+      display:flex;align-items:center;gap:14px
+    }
+    .logo{
+      width:54px;height:54px;border-radius:18px;
+      background:linear-gradient(135deg,rgba(125,211,252,.24),rgba(96,165,250,.14));
+      border:1px solid var(--line);box-shadow:var(--shadow)
+    }
+    .title h1{margin:0;font-size:28px;letter-spacing:.5px}
+    .title p{margin:4px 0 0;color:var(--muted)}
+    .actions{display:flex;gap:10px;align-items:center}
+    button,.token-btn{
+      appearance:none;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      color:var(--text);padding:12px 16px;border-radius:16px;cursor:pointer
+    }
+    .cta{
+      background:linear-gradient(135deg,#2563eb,#38bdf8);
+      border:none;font-weight:700
+    }
+    .grid{
+      display:grid;grid-template-columns:repeat(12,1fr);gap:16px
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      backdrop-filter: blur(10px);
+    }
+    .span-3{grid-column:span 3}
+    .span-4{grid-column:span 4}
+    .span-6{grid-column:span 6}
+    .span-8{grid-column:span 8}
+    .span-12{grid-column:span 12}
+    .label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .kpi{font-size:42px;font-weight:800;margin:0}
+    .sub{color:var(--muted);margin-top:6px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);font-size:13px
+    }
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.ok{background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.danger{background:var(--danger)}
+    .bars{display:grid;gap:10px;margin-top:10px}
+    .bar{display:grid;grid-template-columns:120px 1fr 50px;gap:10px;align-items:center}
+    .track{height:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line)}
+    .fill{height:100%;background:linear-gradient(90deg,#2563eb,#22d3ee)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:14px}
+    th{color:var(--muted);font-weight:600}
+    .score{
+      padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;
+      display:inline-block
+    }
+    .s-hot{background:rgba(239,68,68,.18);color:#fecaca}
+    .s-mid{background:rgba(245,158,11,.18);color:#fde68a}
+    .s-ok{background:rgba(34,197,94,.18);color:#bbf7d0}
+    .empty{color:var(--muted);padding:18px 0}
+    .footer-note{color:var(--muted);font-size:12px;margin-top:10px}
+    .token-box{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px
+    }
+    .token-panel{
+      width:min(520px,100%);background:#081120;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)
+    }
+    .token-panel h3{margin:0 0 8px}
+    .token-panel p{margin:0 0 14px;color:var(--muted)}
+    .token-panel input{
+      width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);
+      background:#0c1830;color:var(--text);outline:none
+    }
+    .token-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+    @media (max-width:1100px){
+      .span-3,.span-4,.span-6,.span-8{grid-column:span 12}
+      .bar{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">
+          <h1>CONSIA CEO</h1>
+          <p>Panel owner / leads / embudo / estado operativo</p>
+        </div>
+      </div>
+      <div class="actions">
+        <div id="healthChip" class="chip"><span class="dot warn"></span><span>Verificando API...</span></div>
+        <button class="token-btn" id="tokenBtn">Token owner</button>
+        <button id="ownerTestBtn">Test owner</button>
+        <button class="cta" id="refreshBtn">Actualizar</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="card span-3">
+        <div class="label">Leads totales</div>
+        <div class="kpi" id="kpiTotal">—</div>
+        <div class="sub">Base total</div>
+      </section>
+
+      <section class="card span-3">
+        <div class="label">Calientes</div>
+        <div class="kpi" id="kpiHot">—</div>
+        <div class="sub">Score 70+</div>
+      </section>
+
+      <section class="card span-3">
+        <div class="label">Visitas</div>
+        <div class="kpi" id="kpiVisit">—</div>
+        <div class="sub">Etapa visita</div>
+      </section>
+
+      <section class="card span-3">
+        <div class="label">Cierres</div>
+        <div class="kpi" id="kpiClose">—</div>
+        <div class="sub">Etapa cierre</div>
+      </section>
+
+      <section class="card span-4">
+        <div class="row">
+          <div>
+            <div class="label">Funnel</div>
+            <div class="sub">Embudo comercial en tiempo real</div>
+          </div>
+        </div>
+        <div class="bars" id="funnelBars"></div>
+      </section>
+
+      <section class="card span-8">
+        <div class="row">
+          <div>
+            <div class="label">Empresas</div>
+            <div class="sub">Distribución por unidad</div>
+          </div>
+        </div>
+        <div class="bars" id="companyBars"></div>
+      </section>
+
+      <section class="card span-12">
+        <div class="row">
+          <div>
+            <div class="label">Leads calientes</div>
+            <div class="sub">Prioridad máxima</div>
+          </div>
+        </div>
+        <div id="hotWrap"></div>
+      </section>
+
+      <section class="card span-12">
+        <div class="row">
+          <div>
+            <div class="label">Últimos leads</div>
+            <div class="sub">Actividad reciente</div>
+          </div>
+        </div>
+        <div id="lastWrap"></div>
+        <div class="footer-note">API base: <span id="apiBaseLabel"></span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="token-box" id="tokenBox">
+    <div class="token-panel">
+      <h3>Token owner</h3>
+      <p>Si configuraste <code>AUTH_SECRET</code> en Cloudflare, pegalo acá una vez. Queda guardado solo en este navegador.</p>
+      <input id="tokenInput" type="password" placeholder="Pegá tu token owner" />
+      <div class="token-actions">
+        <button id="clearTokenBtn">Borrar</button>
+        <button class="cta" id="saveTokenBtn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://api.consia.world";
+    const TOKEN_KEY = "consia_owner_token";
+
+    const el = (id) => document.getElementById(id);
+
+    el("apiBaseLabel").textContent = API_BASE;
+
+    function ownerToken() {
+      return localStorage.getItem(TOKEN_KEY) || "";
+    }
+
+    function authHeaders() {
+      const token = ownerToken();
+      return token ? { "x-owner-token": token } : {};
+    }
+
+    function setHealth(ok, text) {
+      const chip = el("healthChip");
+      chip.innerHTML = `<span class="dot ${ok ? "ok" : "danger"}"></span><span>${text}</span>`;
+    }
+
+    function renderBars(container, dataObj) {
+      const values = Object.values(dataObj || {});
+      const max = Math.max(1, ...values);
+      const entries = Object.entries(dataObj || {});
+      if (!entries.length) {
+        container.innerHTML = `<div class="empty">Sin datos todavía.</div>`;
+        return;
+      }
+      container.innerHTML = entries.map(([name, value]) => {
+        const pct = Math.max(4, Math.round((value / max) * 100));
+        return `
+          <div class="bar">
+            <div>${name}</div>
+            <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+            <div>${value}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function scoreClass(score) {
+      if (score >= 70) return "s-hot";
+      if (score >= 40) return "s-mid";
+      return "s-ok";
+    }
+
+    function renderTable(container, rows) {
+      if (!rows || !rows.length) {
+        container.innerHTML = `<div class="empty">Sin datos todavía.</div>`;
+        return;
+      }
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Nombre</th>
+              <th>Contacto</th>
+              <th>Canal</th>
+              <th>Intento</th>
+              <th>Etapa</th>
+              <th>Zona</th>
+              <th>Budget</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${new Date(r.last_at || r.created_at || Date.now()).toLocaleString()}</td>
+                <td>${r.profileName || "-"}</td>
+                <td>${r.from || "-"}</td>
+                <td>${r.channel || "-"}</td>
+                <td>${r.intent || "-"}</td>
+                <td>${r.stage || "-"}</td>
+                <td>${r.zone || "-"}</td>
+                <td>${r.budget || "-"}</td>
+                <td><span class="score ${scoreClass(r.score || 0)}">${r.score || 0}</span></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function api(path, opts = {}) {
+      const res = await fetch(API_BASE + path, {
+        ...opts,
+        headers: {
+          ...(opts.headers || {}),
+          ...authHeaders()
+        }
+      });
+      return res;
+    }
+
+    async function loadHealth() {
+      try {
+        const res = await fetch(API_BASE + "/v1/health");
+        if (!res.ok) throw new Error("health failed");
+        const data = await res.json();
+        setHealth(true, `${data.service} ${data.status}`);
+      } catch {
+        setHealth(false, "API offline");
+      }
+    }
+
+    async function loadDashboard() {
+      try {
+        const res = await api("/v1/dashboard/summary");
+        if (res.status === 401) {
+          el("tokenBox").style.display = "flex";
+          return;
+        }
+        const data = await res.json();
+
+        el("kpiTotal").textContent = data.kpis?.total ?? 0;
+        el("kpiHot").textContent = data.kpis?.calientes ?? 0;
+        el("kpiVisit").textContent = data.kpis?.visitas ?? 0;
+        el("kpiClose").textContent = data.kpis?.cierres ?? 0;
+
+        renderBars(el("funnelBars"), data.funnel || {});
+        renderBars(el("companyBars"), data.companies || {});
+        renderTable(el("hotWrap"), data.hot_leads || []);
+        renderTable(el("lastWrap"), data.last_leads || []);
+      } catch (e) {
+        el("hotWrap").innerHTML = `<div class="empty">Error cargando dashboard.</div>`;
+        el("lastWrap").innerHTML = `<div class="empty">Error cargando leads.</div>`;
+      }
+    }
+
+    async function ownerTest() {
+      try {
+        const res = await api("/v1/owner/test", { method: "POST" });
+        if (res.status === 401) {
+          el("tokenBox").style.display = "flex";
+          return;
+        }
+        const data = await res.json();
+        alert(data.ok ? "Test owner enviado." : "No se pudo enviar.");
+      } catch {
+        alert("Error ejecutando test owner.");
+      }
+    }
+
+    el("refreshBtn").addEventListener("click", async () => {
+      await loadHealth();
+      await loadDashboard();
+    });
+
+    el("ownerTestBtn").addEventListener("click", ownerTest);
+
+    el("tokenBtn").addEventListener("click", () => {
+      el("tokenInput").value = ownerToken();
+      el("tokenBox").style.display = "flex";
+    });
+
+    el("saveTokenBtn").addEventListener("click", async () => {
+      localStorage.setItem(TOKEN_KEY, el("tokenInput").value.trim());
+      el("tokenBox").style.display = "none";
+      await loadDashboard();
+    });
+
+    el("clearTokenBtn").addEventListener("click", async () => {
+      localStorage.removeItem(TOKEN_KEY);
+      el("tokenInput").value = "";
+      el("tokenBox").style.display = "none";
+      await loadDashboard();
+    });
+
+    el("tokenBox").addEventListener("click", (e) => {
+      if (e.target.id === "tokenBox") el("tokenBox").style.display = "none";
+    });
+
+    loadHealth();
+    loadDashboard();
+    setInterval(loadHealth, 20000);
+  </script>
+</body>
+</html>
