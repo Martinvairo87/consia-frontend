@@ -1,937 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONSIA OWNER AUTO</title>
-  <style>
-    :root{
-      --bg:#030712;
-      --bg2:#07111f;
-      --glass:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.10);
-      --text:#eef6ff;
-      --muted:#9cb0c9;
-      --c1:#35d9ff;
-      --c2:#7b61ff;
-      --c3:#39f0a2;
-      --danger:#ff6b6b;
-      --warn:#ffd166;
-      --shadow:0 30px 80px rgba(0,0,0,.45);
-      --radius:24px;
-      --tiltX:0deg;
-      --tiltY:0deg;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CONSIA PANEL OWNER</title>
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;width:100%;height:100%;
-      background:
-        radial-gradient(circle at 12% 18%, rgba(53,217,255,.12), transparent 24%),
-        radial-gradient(circle at 82% 16%, rgba(123,97,255,.14), transparent 24%),
-        radial-gradient(circle at 50% 72%, rgba(57,240,162,.08), transparent 26%),
-        linear-gradient(180deg, #040813 0%, #07111b 40%, #030712 100%);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif;
-      overflow:hidden;
-    }
+<style>
+:root{
+  --bg:#030712;
+  --bg2:#07111f;
+  --glass:rgba(255,255,255,.06);
+  --text:#e6f6ff;
+  --c1:#35d9ff;
+  --c2:#7b61ff;
+}
 
-    body::before{
-      content:"";
-      position:fixed;inset:0;
-      background:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size:44px 44px;
-      mask-image: radial-gradient(circle at center, black 35%, transparent 78%);
-      pointer-events:none;
-      opacity:.25;
-    }
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,212,255,.12), transparent),
+    radial-gradient(circle at 80% 30%, rgba(123,97,255,.15), transparent),
+    var(--bg);
+  font-family: system-ui;
+  color:var(--text);
+}
 
-    #bgImage{
-      position:fixed;inset:0;width:100%;height:100%;object-fit:cover;
-      opacity:.22;pointer-events:none;filter:blur(0px) saturate(1.1) contrast(1.05);
-      transform:scale(1.02);
-    }
+/* ---------- TITULO ---------- */
+.title{
+  position:absolute;
+  top:40%;
+  width:100%;
+  text-align:center;
+  font-size:42px;
+  letter-spacing:2px;
+  background: linear-gradient(90deg,var(--c1),var(--c2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
-    .app{
-      position:relative;
-      width:100%;height:100%;
-      perspective:1600px;
-      overflow:hidden;
-    }
+/* ---------- AVATAR ---------- */
+.avatar{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background: radial-gradient(circle,var(--c1),var(--c2));
+  box-shadow:0 0 80px rgba(0,212,255,.7);
+  animation:pulse 2s infinite;
+}
 
-    .titlebar{
-      position:absolute;left:20px;right:20px;top:18px;z-index:20;
-      display:flex;justify-content:space-between;align-items:center;gap:12px;
-    }
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
 
-    .brand{
-      display:flex;align-items:center;gap:14px;
-      padding:14px 18px;border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      backdrop-filter:blur(16px);
-      box-shadow:var(--shadow);
-    }
+/* ---------- PANEL DATA ---------- */
+.panel{
+  position:absolute;
+  top:20px;
+  left:20px;
+  padding:20px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
+  width:300px;
+}
 
-    .brand .dot{
-      width:14px;height:14px;border-radius:50%;
-      background:linear-gradient(135deg,var(--c1),var(--c2));
-      box-shadow:0 0 30px rgba(53,217,255,.55);
-    }
-
-    .brand strong{
-      font-size:15px;letter-spacing:.18em;text-transform:uppercase;
-    }
-
-    .brand small{
-      display:block;color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-top:3px
-    }
-
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-
-    button{
-      appearance:none;border:0;cursor:pointer;
-      color:#04101a;font-weight:800;font-size:15px;
-      padding:14px 18px;border-radius:18px;
-      background:linear-gradient(135deg,var(--c1),var(--c2));
-      box-shadow:0 18px 40px rgba(53,217,255,.18);
-      transition:.16s transform ease,.16s opacity ease,.16s filter ease;
-    }
-    button:hover{transform:translateY(-1px);filter:brightness(1.04)}
-    button:active{transform:translateY(1px) scale(.99)}
-    button.ghost{
-      color:var(--text);
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      box-shadow:none;
-    }
-    button.good{background:linear-gradient(135deg,#54f3b5,#2be2bf)}
-    button.warn{background:linear-gradient(135deg,#ffd166,#ffb84d)}
-    button.danger{background:linear-gradient(135deg,#ff8d8d,#ff6b6b)}
-
-    .stage{
-      position:absolute;inset:0;
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      align-items:center;
-      padding:96px 28px 28px;
-      gap:24px;
-    }
-
-    @media (max-width:1100px){
-      .stage{
-        grid-template-columns:1fr;
-        padding-top:92px;
-        overflow:auto;
-      }
-      html,body{overflow:auto}
-      .app{height:auto;min-height:100vh}
-    }
-
-    .avatar-side{
-      position:relative;height:100%;
-      min-height:620px;
-      display:flex;align-items:center;justify-content:center;
-      transform-style:preserve-3d;
-    }
-
-    .halo{
-      position:absolute;width:720px;height:720px;border-radius:50%;
-      background:
-        radial-gradient(circle, rgba(53,217,255,.14), transparent 50%),
-        radial-gradient(circle at 65% 35%, rgba(123,97,255,.16), transparent 48%),
-        radial-gradient(circle at 35% 70%, rgba(57,240,162,.12), transparent 38%);
-      filter:blur(30px);
-      animation:pulse 8s ease-in-out infinite;
-      pointer-events:none;
-    }
-
-    @keyframes pulse{
-      0%,100%{transform:scale(1);opacity:.82}
-      50%{transform:scale(1.06);opacity:1}
-    }
-
-    .avatar-core{
-      position:relative;
-      width:min(72vw,560px);
-      aspect-ratio:1/1.24;
-      border-radius:38px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
-        radial-gradient(circle at center, rgba(53,217,255,.12), transparent 55%);
-      backdrop-filter:blur(20px);
-      box-shadow:var(--shadow);
-      transform:
-        rotateX(var(--tiltX))
-        rotateY(var(--tiltY))
-        translateZ(30px);
-    }
-
-    .avatar-video,.avatar-image{
-      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-      background:#09131e;
-      display:none;
-    }
-
-    .avatar-placeholder{
-      position:absolute;inset:0;display:grid;place-items:center;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(53,217,255,.18), transparent 26%),
-        radial-gradient(circle at 50% 64%, rgba(123,97,255,.12), transparent 32%),
-        linear-gradient(180deg,#08111d,#050b13);
-    }
-
-    .avatar-placeholder svg{
-      width:76%;height:76%;opacity:.95;
-      filter:drop-shadow(0 0 26px rgba(53,217,255,.14));
-    }
-
-    .stage-label{
-      position:absolute;left:18px;right:18px;bottom:18px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 14px;border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-      backdrop-filter:blur(16px);
-    }
-
-    .status-live::before{
-      content:"";
-      width:10px;height:10px;border-radius:50%;
-      background:var(--c3);
-      box-shadow:0 0 18px rgba(57,240,162,.65);
-    }
-
-    .orbital{
-      position:absolute;inset:10% 8%;
-      pointer-events:none;
-      border-radius:36px;
-      border:1px solid rgba(255,255,255,.06);
-      transform:translateZ(-10px);
-    }
-
-    .panel-side{
-      position:relative;height:100%;
-      min-height:620px;
-      transform-style:preserve-3d;
-    }
-
-    .card{
-      position:absolute;
-      width:min(32vw,420px);
-      min-height:140px;
-      padding:18px;
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-      transform-style:preserve-3d;
-      transition:.22s transform ease;
-    }
-    .card:hover{transform:translateY(-4px) scale(1.01)}
-    .c-main{top:0;right:2%;width:min(36vw,520px);min-height:170px}
-    .c-summary{top:205px;right:8%;width:min(34vw,430px)}
-    .c-actions{top:380px;right:0;width:min(31vw,390px)}
-    .c-memory{bottom:0;right:4%;width:min(36vw,500px);min-height:230px}
-    .c-control{left:0;bottom:2%;width:min(34vw,430px);min-height:270px}
-
-    @media (max-width:1100px){
-      .card{position:relative;width:100%;top:auto;right:auto;left:auto;bottom:auto;margin-bottom:14px}
-      .panel-side{min-height:auto}
-    }
-
-    .label{
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
-      margin-bottom:12px;
-    }
-
-    .title{margin:0 0 8px;font-size:clamp(22px,4vw,42px);letter-spacing:-.04em}
-    .sub{color:var(--muted);font-size:14px;line-height:1.55;margin:0}
-
-    .metric-grid{
-      display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
-    }
-    .metric{
-      padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
-    }
-    .metric .k{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
-    .metric .v{font-size:30px;font-weight:900;margin-top:8px;letter-spacing:-.03em}
-
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .col{display:flex;flex-direction:column;gap:10px}
-
-    input, textarea, select{
-      width:100%;
-      padding:14px 15px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(4,12,22,.92);
-      color:var(--text);
-      font-size:15px;
-      outline:none;
-    }
-    textarea{min-height:86px;resize:vertical}
-    input::placeholder,textarea::placeholder{color:#8ea1ba}
-
-    .cmd-line{
-      display:flex;gap:10px;align-items:center;
-      margin-top:14px;
-    }
-    .cmd-line input{
-      flex:1;
-      height:54px;
-      border-radius:999px;
-      padding-inline:18px;
-    }
-    .cmd-line button{
-      height:54px;border-radius:999px;padding-inline:18px
-    }
-
-    .memory{
-      max-height:230px;overflow:auto;
-      padding:10px 2px 0;
-      display:flex;flex-direction:column;gap:10px;
-    }
-    .mem-item{
-      padding:12px 14px;border-radius:16px;
-      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-      font-size:13px;color:var(--text)
-    }
-    .mem-item small{display:block;color:var(--muted);margin-top:4px}
-
-    .console{
-      margin-top:12px;
-      min-height:150px;max-height:220px;overflow:auto;
-      background:#06101a;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      font-size:12px;line-height:1.55;
-      white-space:pre-wrap;word-break:break-word;
-      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-    }
-
-    .gate{
-      position:fixed;inset:0;z-index:100;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(1,5,10,.72);backdrop-filter:blur(18px);
-    }
-    .gate-card{
-      width:min(92vw,520px);
-      border-radius:28px;
-      padding:24px;
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      box-shadow:var(--shadow);
-    }
-    .gate.hidden{display:none}
-    .tiny{font-size:12px;color:var(--muted)}
-
-    .micro{
-      width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
-      padding:0;font-size:20px
-    }
-    .micro.active{
-      background:linear-gradient(135deg,#54f3b5,#2be2bf);
-      box-shadow:0 0 0 10px rgba(57,240,162,.08), 0 0 30px rgba(57,240,162,.28);
-    }
-
-    .cfg{
-      position:absolute;left:18px;top:18px;z-index:11;
-      display:flex;gap:8px;flex-wrap:wrap;
-    }
-    .hidden{display:none!important}
-  </style>
+</style>
 </head>
+
 <body>
-  <img id="bgImage" alt="" class="hidden" />
-  <div class="app">
-    <div class="titlebar">
-      <div class="brand">
-        <div class="dot"></div>
-        <div>
-          <strong>CONSIA OWNER</strong>
-          <small>owner-only · auto control · voice</small>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="ghost" id="btnVoice">Voz</button>
-        <button class="ghost" id="btnConfig">Config</button>
-        <button id="btnRefreshAll">Actualizar todo</button>
-      </div>
-    </div>
 
-    <div class="stage">
-      <section class="avatar-side">
-        <div class="halo"></div>
-        <div class="orbital"></div>
+<div class="title">CONSIA PANEL OWNER</div>
 
-        <div class="cfg hidden" id="cfgBox">
-          <button class="ghost" id="btnBgUpload">Fondo</button>
-          <button class="ghost" id="btnAvatarUpload">Avatar</button>
-          <button class="ghost" id="btnUseVideoUrl">Avatar URL</button>
-          <button class="ghost" id="btnResetVisuals">Reset</button>
-          <input id="bgFile" type="file" accept="image/*" class="hidden" />
-          <input id="avatarFile" type="file" accept="image/*,video/*" class="hidden" />
-        </div>
+<div class="panel" id="panelData">
+  <b>Estado:</b> cargando...
+</div>
 
-        <div class="avatar-core" id="avatarCore">
-          <video id="avatarVideo" class="avatar-video" autoplay loop muted playsinline></video>
-          <img id="avatarImage" class="avatar-image" alt="Owner Avatar" />
-          <div class="avatar-placeholder" id="avatarPlaceholder">
-            <svg viewBox="0 0 500 620" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop stop-color="#35D9FF"/>
-                  <stop offset="1" stop-color="#7B61FF"/>
-                </linearGradient>
-              </defs>
-              <path d="M249 87c48 0 86 40 86 89 0 28-12 52-31 69 70 24 119 89 119 166v61H77v-61c0-77 49-142 119-166-19-17-31-41-31-69 0-49 38-89 84-89Z" fill="url(#g1)" opacity=".18"/>
-              <path d="M250 108c36 0 65 30 65 67s-29 67-65 67-65-30-65-67 29-67 65-67Zm0 158c79 0 144 66 144 147v38H106v-38c0-81 65-147 144-147Z" fill="none" stroke="url(#g1)" stroke-width="10"/>
-              <circle cx="250" cy="310" r="184" stroke="#35D9FF" stroke-opacity=".18" stroke-width="2"/>
-              <circle cx="250" cy="310" r="206" stroke="#7B61FF" stroke-opacity=".14" stroke-width="2"/>
-            </svg>
-          </div>
+<div class="avatar"></div>
 
-          <div class="stage-label">
-            <span class="pill status-live" id="avatarState">Avatar owner activo</span>
-            <span class="pill" id="voiceState">Voz standby</span>
-          </div>
-        </div>
-      </section>
+<!-- ENGINE -->
+<script src="/command-engine.js"></script>
 
-      <section class="panel-side">
-        <div class="card c-main">
-          <div class="label"><span>Interfaz owner-only</span><span class="pill" id="ownerPill">bloqueado</span></div>
-          <h2 class="title">Control automático</h2>
-          <p class="sub" id="avatarSpeech">Esperando orden del owner.</p>
-
-          <div class="cmd-line">
-            <input id="cmdInput" placeholder="Orden directa: actualizar todo, revenue, grants, backup, audit, checkout, portal..." />
-            <button id="btnRunCmd">Ejecutar</button>
-            <button class="micro ghost" id="btnMic">🎙</button>
-          </div>
-        </div>
-
-        <div class="card c-summary">
-          <div class="label"><span>Resumen global</span><span class="pill" id="summaryPill">—</span></div>
-          <div class="metric-grid">
-            <div class="metric"><div class="k">Tenants</div><div class="v" id="kTenants">—</div></div>
-            <div class="metric"><div class="k">Users</div><div class="v" id="kUsers">—</div></div>
-            <div class="metric"><div class="k">Paid</div><div class="v" id="kPaid">—</div></div>
-            <div class="metric"><div class="k">MRR</div><div class="v" id="kMrr">—</div></div>
-          </div>
-        </div>
-
-        <div class="card c-actions">
-          <div class="label"><span>Acciones rápidas</span></div>
-          <div class="row">
-            <button class="ghost" id="btnWhoami">Who am I</button>
-            <button class="ghost" id="btnHealth">Health</button>
-            <button class="ghost" id="btnGrants">Grants</button>
-            <button class="good" id="btnCompSync">Comp Sync</button>
-            <button class="ghost" id="btnRevenue">Revenue</button>
-            <button class="ghost" id="btnSummary">Summary</button>
-            <button class="ghost" id="btnAudit">Audit</button>
-            <button class="ghost" id="btnBackup">Backup</button>
-          </div>
-        </div>
-
-        <div class="card c-control">
-          <div class="label"><span>Control directo</span></div>
-          <div class="col">
-            <input id="tenantInput" value="cliente_demo" placeholder="tenant" />
-            <select id="planInput">
-              <option value="free">free</option>
-              <option value="pro">pro</option>
-              <option value="business" selected>business</option>
-              <option value="enterprise">enterprise</option>
-            </select>
-            <input id="emailInput" value="cliente@demo.com" placeholder="customer email" />
-            <div class="row">
-              <button id="btnCreateTenant" class="ghost">Crear tenant</button>
-              <button id="btnAssignPlan">Asignar plan</button>
-            </div>
-            <div class="row">
-              <button id="btnCheckout" class="warn">Checkout</button>
-              <button id="btnPortal" class="ghost">Portal</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card c-memory">
-          <div class="label"><span>Memoria owner</span><span class="pill" id="memCount">0</span></div>
-          <div class="memory" id="memoryList"></div>
-          <div class="console" id="console">{ "ok": true, "panel": "ready" }</div>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <div class="gate" id="gate">
-    <div class="gate-card">
-      <div class="label"><span>Owner gate</span><span class="pill">CONSIA</span></div>
-      <h2 class="title" style="font-size:34px;margin-bottom:8px">Acceso owner</h2>
-      <p class="sub">Login directo.</p>
-      <div class="col" style="margin-top:16px">
-        <input id="ownerEmail" value="owner@consia.world" type="email" />
-        <input id="ownerPassword" type="password" placeholder="Password owner" value="CONSIA_OWNER_2026_OK" />
-        <div class="row">
-          <button id="btnLogin">Ingresar</button>
-          <button class="ghost" id="btnDemoMode">Visual only</button>
-        </div>
-        <div class="tiny">Owner-only · memoria local · voz · comandos directos</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API = "https://api.consia.world";
-    const OWNER_EMAIL = "owner@consia.world";
-    const LS = {
-      token: "consia_owner_token_v4",
-      memory: "consia_owner_memory_v4",
-      bg: "consia_owner_bg_v4",
-      avatarImage: "consia_owner_avatar_image_v4",
-      avatarVideo: "consia_owner_avatar_video_v4"
-    };
-
-    const state = {
-      token: localStorage.getItem(LS.token) || "",
-      memory: JSON.parse(localStorage.getItem(LS.memory) || "[]"),
-      mic: null,
-      isListening: false
-    };
-
-    const $ = (id) => document.getElementById(id);
-
-    function authHeaders(json = false){
-      const h = {};
-      if (state.token) h.Authorization = `Bearer ${state.token}`;
-      if (json) h["Content-Type"] = "application/json";
-      return h;
-    }
-
-    async function api(path, options = {}){
-      const res = await fetch(`${API}${path}`, options);
-      const data = await res.json().catch(() => ({ ok:false, error:"invalid_json" }));
-      if (!res.ok) throw data;
-      return data;
-    }
-
-    function speak(text){
-      $("avatarSpeech").textContent = text;
-      if (!("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "es-AR";
-      u.rate = 1;
-      u.pitch = 1;
-      window.speechSynthesis.speak(u);
-    }
-
-    function setConsole(data, label = "OK"){
-      $("console").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
-      pushMemory(label, typeof data === "string" ? data : JSON.stringify(data));
-    }
-
-    function pushMemory(action, detail){
-      const item = { at: new Date().toISOString(), action, detail: String(detail).slice(0, 800) };
-      state.memory.unshift(item);
-      state.memory = state.memory.slice(0, 50);
-      localStorage.setItem(LS.memory, JSON.stringify(state.memory));
-      renderMemory();
-    }
-
-    function renderMemory(){
-      $("memCount").textContent = state.memory.length;
-      $("memoryList").innerHTML = state.memory.map(m => `
-        <div class="mem-item">
-          <strong>${escapeHtml(m.action)}</strong>
-          <small>${escapeHtml(m.at)}</small>
-        </div>
-      `).join("") || `<div class="mem-item"><strong>Sin movimientos</strong><small>La memoria del owner aparece acá.</small></div>`;
-    }
-
-    function renderVisuals(){
-      const bg = localStorage.getItem(LS.bg) || "";
-      const img = localStorage.getItem(LS.avatarImage) || "";
-      const vid = localStorage.getItem(LS.avatarVideo) || "";
-
-      $("bgImage").classList.toggle("hidden", !bg);
-      if (bg) $("bgImage").src = bg;
-
-      $("avatarImage").style.display = "none";
-      $("avatarVideo").style.display = "none";
-      $("avatarPlaceholder").style.display = "grid";
-
-      if (vid){
-        $("avatarVideo").src = vid;
-        $("avatarVideo").style.display = "block";
-        $("avatarPlaceholder").style.display = "none";
-      } else if (img){
-        $("avatarImage").src = img;
-        $("avatarImage").style.display = "block";
-        $("avatarPlaceholder").style.display = "none";
-      }
-    }
-
-    function escapeHtml(v){
-      return String(v ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;");
-    }
-
-    async function login(){
-      const data = await api("/v1/auth/login", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({
-          email: $("ownerEmail").value.trim(),
-          password: $("ownerPassword").value
-        })
-      });
-
-      if ((data.user?.email || "").toLowerCase() !== OWNER_EMAIL) throw { ok:false, error:"not_owner" };
-
-      state.token = data.token || "";
-      localStorage.setItem(LS.token, state.token);
-
-      $("gate").classList.add("hidden");
-      $("ownerPill").textContent = "owner activo";
-      speak("Owner validado. Panel automático operativo.");
-      setConsole(data, "LOGIN OK");
-      await refreshAll();
-    }
-
-    async function whoami(){
-      const data = await api("/v1/auth/me", { headers: authHeaders() });
-      setConsole(data, "WHOAMI");
-      speak("Identidad owner validada.");
-      return data;
-    }
-
-    async function health(){
-      const data = await api("/health");
-      setConsole(data, "HEALTH");
-      speak("Core online.");
-      return data;
-    }
-
-    async function summary(){
-      const data = await api("/v1/platform/global/summary", { headers: authHeaders() });
-      $("kTenants").textContent = data.summary?.tenants ?? "—";
-      $("kUsers").textContent = data.summary?.users ?? "—";
-      $("kPaid").textContent = data.summary?.paid_tenants ?? "—";
-      $("summaryPill").textContent = `${data.summary?.tenants ?? 0} tenants`;
-      setConsole(data, "SUMMARY");
-      return data;
-    }
-
-    async function revenue(){
-      const data = await api("/v1/platform/global/revenue", { headers: authHeaders() });
-      $("kMrr").textContent = data.mrr_total ?? "—";
-      setConsole(data, "REVENUE");
-      return data;
-    }
-
-    async function grants(){
-      const data = await api("/v1/owner/grants", { headers: authHeaders() });
-      setConsole(data, "GRANTS");
-      return data;
-    }
-
-    async function audit(){
-      const data = await api("/v1/audit/logs", { headers: authHeaders() });
-      setConsole(data, "AUDIT");
-      return data;
-    }
-
-    async function backup(){
-      const data = await api("/v1/backup/export", { headers: authHeaders() });
-      setConsole(data, "BACKUP");
-      return data;
-    }
-
-    async function compSync(){
-      const data = await api("/v1/owner/comp/sync", {
-        method:"POST",
-        headers: authHeaders(true),
-        body: JSON.stringify({})
-      });
-      setConsole(data, "COMP SYNC");
-      speak("Sincronización owner completada.");
-      await refreshAll();
-      return data;
-    }
-
-    async function createTenant(){
-      const key = $("tenantInput").value.trim();
-      const data = await api("/v1/tenant/create", {
-        method:"POST",
-        headers: authHeaders(true),
-        body: JSON.stringify({
-          key,
-          name: key,
-          brand_name: key,
-          locale: "es-AR",
-          currency: "USD",
-          timezone: "America/Argentina/Buenos_Aires"
-        })
-      });
-      setConsole(data, "CREATE TENANT");
-      speak(`Tenant ${key} creado.`);
-      return data;
-    }
-
-    async function assignPlan(){
-      const data = await api("/v1/tenant/plan/update", {
-        method:"POST",
-        headers: authHeaders(true),
-        body: JSON.stringify({
-          tenant: $("tenantInput").value.trim(),
-          plan_key: $("planInput").value,
-          billing_status: "active"
-        })
-      });
-      setConsole(data, "ASSIGN PLAN");
-      speak("Plan asignado.");
-      await refreshAll();
-      return data;
-    }
-
-    async function checkout(){
-      const data = await api("/v1/billing/checkout/session", {
-        method:"POST",
-        headers: authHeaders(true),
-        body: JSON.stringify({
-          tenant: $("tenantInput").value.trim(),
-          customer_email: $("emailInput").value.trim()
-        })
-      });
-      setConsole(data, "CHECKOUT");
-      if (data.url) window.open(data.url, "_blank");
-      speak("Checkout generado.");
-      return data;
-    }
-
-    async function portal(){
-      const data = await api("/v1/billing/portal", {
-        method:"POST",
-        headers: authHeaders(true),
-        body: JSON.stringify({
-          tenant: $("tenantInput").value.trim()
-        })
-      });
-      setConsole(data, "PORTAL");
-      if (data.url) window.open(data.url, "_blank");
-      speak("Portal abierto.");
-      return data;
-    }
-
-    async function refreshAll(){
-      await summary();
-      await revenue();
-      await grants().catch(()=>null);
-    }
-
-    async function runCommand(raw){
-      const cmd = String(raw || "").trim().toLowerCase();
-      if (!cmd) return;
-
-      if (cmd.includes("actualizar")) return refreshAll();
-      if (cmd.includes("who")) return whoami();
-      if (cmd.includes("health")) return health();
-      if (cmd.includes("grant")) return grants();
-      if (cmd.includes("sync")) return compSync();
-      if (cmd.includes("revenue")) return revenue();
-      if (cmd.includes("summary") || cmd.includes("resumen")) return summary();
-      if (cmd.includes("audit")) return audit();
-      if (cmd.includes("backup")) return backup();
-      if (cmd.includes("checkout")) return checkout();
-      if (cmd.includes("portal")) return portal();
-      if (cmd.includes("crear tenant")) return createTenant();
-      if (cmd.includes("asignar plan")) return assignPlan();
-
-      speak(`Orden registrada: ${raw}`);
-      setConsole({ ok:true, cmd: raw }, "CMD");
-    }
-
-    function setupMic(){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) {
-        $("voiceState").textContent = "voz no disponible";
-        return;
-      }
-
-      const rec = new SR();
-      rec.lang = "es-AR";
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      rec.continuous = false;
-
-      rec.onstart = () => {
-        state.isListening = true;
-        $("btnMic").classList.add("active");
-        $("voiceState").textContent = "escuchando";
-      };
-
-      rec.onend = () => {
-        state.isListening = false;
-        $("btnMic").classList.remove("active");
-        $("voiceState").textContent = "voz standby";
-      };
-
-      rec.onresult = async (e) => {
-        const text = e.results?.[0]?.[0]?.transcript || "";
-        $("cmdInput").value = text;
-        await runCommand(text);
-      };
-
-      rec.onerror = (e) => setConsole({ ok:false, mic_error:e.error }, "VOICE ERROR");
-
-      state.mic = rec;
-    }
-
-    function pointer3D(){
-      document.addEventListener("pointermove", (e) => {
-        const x = (e.clientX / window.innerWidth - .5) * 2;
-        const y = (e.clientY / window.innerHeight - .5) * 2;
-        document.documentElement.style.setProperty("--tiltY", `${x * 8}deg`);
-        document.documentElement.style.setProperty("--tiltX", `${-y * 8}deg`);
-      });
-    }
-
-    function bindVisualConfig(){
-      $("btnConfig").onclick = () => $("cfgBox").classList.toggle("hidden");
-      $("btnBgUpload").onclick = () => $("bgFile").click();
-      $("btnAvatarUpload").onclick = () => $("avatarFile").click();
-
-      $("bgFile").onchange = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          localStorage.setItem(LS.bg, reader.result);
-          renderVisuals();
-          speak("Fondo actualizado.");
-        };
-        reader.readAsDataURL(file);
-      };
-
-      $("avatarFile").onchange = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (file.type.startsWith("video/")) {
-            localStorage.removeItem(LS.avatarImage);
-            localStorage.setItem(LS.avatarVideo, reader.result);
-          } else {
-            localStorage.removeItem(LS.avatarVideo);
-            localStorage.setItem(LS.avatarImage, reader.result);
-          }
-          renderVisuals();
-          speak("Avatar actualizado.");
-        };
-        reader.readAsDataURL(file);
-      };
-
-      $("btnUseVideoUrl").onclick = () => {
-        const url = prompt("Pegá URL directa de avatar video o imagen:");
-        if (!url) return;
-        if (/\.(mp4|webm|mov)$/i.test(url)) {
-          localStorage.removeItem(LS.avatarImage);
-          localStorage.setItem(LS.avatarVideo, url);
-        } else {
-          localStorage.removeItem(LS.avatarVideo);
-          localStorage.setItem(LS.avatarImage, url);
-        }
-        renderVisuals();
-        speak("Avatar cargado por URL.");
-      };
-
-      $("btnResetVisuals").onclick = () => {
-        localStorage.removeItem(LS.bg);
-        localStorage.removeItem(LS.avatarImage);
-        localStorage.removeItem(LS.avatarVideo);
-        renderVisuals();
-        speak("Visuales reseteados.");
-      };
-    }
-
-    $("btnLogin").onclick = () => wrap(login);
-    $("btnDemoMode").onclick = () => {
-      $("gate").classList.add("hidden");
-      $("ownerPill").textContent = "visual only";
-      speak("Modo visual activo.");
-    };
-    $("btnWhoami").onclick = () => wrap(whoami);
-    $("btnHealth").onclick = () => wrap(health);
-    $("btnGrants").onclick = () => wrap(grants);
-    $("btnCompSync").onclick = () => wrap(compSync);
-    $("btnRevenue").onclick = () => wrap(revenue);
-    $("btnSummary").onclick = () => wrap(summary);
-    $("btnAudit").onclick = () => wrap(audit);
-    $("btnBackup").onclick = () => wrap(backup);
-    $("btnCreateTenant").onclick = () => wrap(createTenant);
-    $("btnAssignPlan").onclick = () => wrap(assignPlan);
-    $("btnCheckout").onclick = () => wrap(checkout);
-    $("btnPortal").onclick = () => wrap(portal);
-    $("btnRunCmd").onclick = () => wrap(() => runCommand($("cmdInput").value));
-    $("btnRefreshAll").onclick = () => wrap(refreshAll);
-    $("btnVoice").onclick = () => {
-      if (!state.mic) return;
-      if (state.isListening) state.mic.stop(); else state.mic.start();
-    };
-    $("btnMic").onclick = () => {
-      if (!state.mic) return;
-      if (state.isListening) state.mic.stop(); else state.mic.start();
-    };
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && document.activeElement === $("cmdInput")) wrap(() => runCommand($("cmdInput").value));
-    });
-
-    async function wrap(fn){
-      try { await fn(); }
-      catch (e) { setConsole(e, "ERROR"); speak("Hubo un error."); }
-    }
-
-    renderMemory();
-    renderVisuals();
-    setConsole({ ok:true, owner_panel:"boot" }, "BOOT");
-    setupMic();
-    pointer3D();
-    bindVisualConfig();
-
-    if (state.token) {
-      $("gate").classList.add("hidden");
-      $("ownerPill").textContent = "owner session";
-      refreshAll().catch(()=>null);
-    }
-  </script>
-</body>
-</html>
 <script>
-const API_URL = "https://api.consia.world";
-const OWNER_KEY = "TU_OWNER_KEY";
 
+const API_URL = "https://api.consia.world";
+const OWNER_KEY = "PEGAR_OWNER_KEY";
+
+// INIT ENGINE
 const engine = new CONSIA_ENGINE(API_URL, OWNER_KEY);
 
-// VOICE
+// ---------- VOZ ----------
 const recognition = new webkitSpeechRecognition();
 recognition.lang = "es-AR";
 recognition.continuous = true;
@@ -950,11 +114,47 @@ recognition.onresult = async (event) => {
 
 recognition.start();
 
-// VOICE RESPONSE
+// ---------- RESPUESTA ----------
 function speak(data){
   const msg = new SpeechSynthesisUtterance(
-    data.ok ? "Acción ejecutada correctamente" : "Error"
+    data.ok ? "Acción ejecutada" : "Error en ejecución"
   );
   speechSynthesis.speak(msg);
 }
+
+// ---------- DASHBOARD AUTO ----------
+async function loadDashboard(){
+  const res = await fetch(API_URL + "/v1/platform/global/summary",{
+    headers:{ "X-Owner-Key": OWNER_KEY }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("panelData").innerHTML = `
+    <b>Tenants:</b> ${data.summary.tenants}<br>
+    <b>Usuarios:</b> ${data.summary.users}<br>
+    <b>Leads:</b> ${data.summary.leads}<br>
+    <b>Inventario:</b> ${data.summary.inventory}
+  `;
+}
+
+loadDashboard();
+
+// ---------- AUTO ENGINE (IA REAL) ----------
+setInterval(async ()=>{
+  const res = await fetch(API_URL + "/v1/platform/global/summary",{
+    headers:{ "X-Owner-Key": OWNER_KEY }
+  });
+
+  const data = await res.json();
+
+  if(data.summary.leads > 50){
+    await engine.run("crear tenant");
+  }
+
+},10000);
+
 </script>
+
+</body>
+</html>
