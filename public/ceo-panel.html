@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA Panel CEO</title>
+  <meta name="theme-color" content="#08101e" />
+  <style>
+    :root{
+      --bg:#07101d;
+      --bg2:#0b1427;
+      --card:rgba(15,23,42,.6);
+      --line:rgba(160,180,220,.15);
+      --txt:#eff5ff;
+      --muted:#a7b8d6;
+      --ok:#18d26b;
+      --warn:#ffb020;
+      --danger:#ff6278;
+      --shadow:0 20px 90px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--txt);
+      background:
+        radial-gradient(1000px 700px at 15% -10%, rgba(84,132,255,.20), transparent 55%),
+        radial-gradient(900px 600px at 85% 0%, rgba(0,214,255,.12), transparent 42%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Roboto,Arial,sans-serif;
+    }
+    .shell{max-width:1600px;margin:0 auto;padding:18px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;
+      border-radius:20px;background:rgba(6,10,24,.58);backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:var(--shadow)
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.14em}
+    .logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12)}
+    .controls{display:flex;gap:10px;flex-wrap:wrap}
+    .btn,.input{
+      border:1px solid var(--line);border-radius:14px;padding:11px 14px;color:var(--txt);background:rgba(255,255,255,.04);font:inherit
+    }
+    .btn{cursor:pointer;font-weight:800}
+    .btn.primary{background:linear-gradient(135deg,rgba(90,135,255,.28),rgba(125,230,255,.12));border-color:rgba(145,190,255,.28)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:18px}
+    .card{
+      border-radius:26px;background:var(--card);backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden
+    }
+    .section{padding:20px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.16em;font-weight:900}
+    h1,h2,h3{margin:0}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+    .metric{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .metric small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+    .metric strong{font-size:32px}
+    .ok{color:var(--ok)}.warn{color:var(--warn)}.danger{color:var(--danger)}
+    .list{display:grid;gap:12px;margin-top:14px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .row span{color:var(--muted)}
+    .console{min-height:260px;padding:16px;border-radius:18px;background:#070c1a;border:1px solid var(--line);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;line-height:1.55;color:#d9e7ff}
+    .actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+    .area{width:100%;min-height:140px;border-radius:18px;border:1px solid var(--line);background:#091022;color:var(--txt);padding:16px;font:inherit;resize:vertical}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .tab{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;font-weight:800}
+    .tab.active{background:rgba(94,140,255,.18);border-color:rgba(145,190,255,.3)}
+    .company-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+    .company{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .company strong{display:block;margin-bottom:6px}
+    .company span{color:var(--muted);font-size:14px;line-height:1.45}
+    @media (max-width:1240px){.metric-grid,.company-grid,.actions{grid-template-columns:repeat(2,1fr)}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}}
+    @media (max-width:760px){.metric-grid,.company-grid,.actions{grid-template-columns:1fr}.controls{display:grid;width:100%}.input{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">CEO</div>
+        <div>
+          <div style="font-size:12px;color:var(--muted)">CONSIA</div>
+          <div>PANEL CEO</div>
+        </div>
+      </div>
+      <div class="controls">
+        <input class="input" id="ownerTokenInput" placeholder="X-Owner-Key opcional" style="min-width:240px" />
+        <button class="btn" id="homeBtn">Inicio</button>
+        <button class="btn primary" id="refreshBtn">Refresh total</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="card span-12 section">
+        <div class="k">Overview</div>
+        <h1 style="margin-top:8px">Centro ejecutivo de CONSIA</h1>
+        <div class="metric-grid">
+          <div class="metric"><small>API</small><strong id="apiLabel">—</strong></div>
+          <div class="metric"><small>Health</small><strong id="healthStatus" class="ok">LIVE</strong></div>
+          <div class="metric"><small>Status</small><strong id="statusStatus">—</strong></div>
+          <div class="metric"><small>Owner</small><strong id="ownerMode">OFF</strong></div>
+        </div>
+      </section>
+
+      <section class="card span-8 section">
+        <div class="k">Monitoreo</div>
+        <h2 style="margin-top:8px">Métricas y resumen</h2>
+        <div class="tabs" id="companyTabs">
+          <button class="tab active" data-company="consia">CONSIA</button>
+          <button class="tab" data-company="manglar">Manglar</button>
+          <button class="tab" data-company="realwork">Real Work</button>
+          <button class="tab" data-company="vipwork">VIP Work</button>
+          <button class="tab" data-company="bambino">Bambino</button>
+          <button class="tab" data-company="vairo">Vairo</button>
+        </div>
+        <div class="list" id="summaryList">
+          <div class="row"><strong>Esperando</strong><span>Sin datos todavía</span></div>
+        </div>
+        <div class="company-grid">
+          <div class="company"><strong>Manglar</strong><span>Construcciones, marketing y desarrollos.</span></div>
+          <div class="company"><strong>Real Work</strong><span>Leads, propiedades, automatización.</span></div>
+          <div class="company"><strong>VIP Work</strong><span>RRHH, personal eventual, outsourcing.</span></div>
+          <div class="company"><strong>Bambino</strong><span>Retail, campañas y ventas.</span></div>
+          <div class="company"><strong>Vairo</strong><span>Gestión contable y clientes.</span></div>
+        </div>
+      </section>
+
+      <section class="card span-4 section">
+        <div class="k">Acciones</div>
+        <h2 style="margin-top:8px">Quick actions</h2>
+        <div class="actions">
+          <button class="btn primary" id="healthBtn">/v1/health</button>
+          <button class="btn" id="statusBtn">/v1/status</button>
+          <button class="btn" id="summaryBtn">dashboard summary</button>
+          <button class="btn" id="ownerBtn">owner dashboard</button>
+        </div>
+        <textarea class="area" id="ownerActionInput" placeholder="Orden owner / prompt ejecutivo…"></textarea>
+        <div class="actions">
+          <button class="btn primary" id="runChatBtn">Ejecutar /v1/chat</button>
+          <button class="btn" id="runAgentBtn">Ejecutar /v1/agents/run</button>
+        </div>
+      </section>
+
+      <section class="card span-6 section">
+        <div class="k">Respuesta</div>
+        <h2 style="margin-top:8px">Output</h2>
+        <div class="console" id="outputConsole">Sin output todavía.</div>
+      </section>
+
+      <section class="card span-6 section">
+        <div class="k">Log</div>
+        <h2 style="margin-top:8px">Live console</h2>
+        <div class="console" id="liveConsole">[CONSIA/CEO] Boot…</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const apiBase = (() => {
+        const p = new URLSearchParams(location.search);
+        const q = p.get('api');
+        if (q) return q.replace(/\/$/, '');
+        const saved = localStorage.getItem('CONSIA_API_BASE');
+        if (saved) return saved.replace(/\/$/, '');
+        return location.hostname.includes('consia.world') || location.hostname.includes('pages.dev') ? 'https://api.consia.world' : location.origin.replace(/\/$/, '');
+      })();
+      localStorage.setItem('CONSIA_API_BASE', apiBase);
+      $('apiLabel').textContent = apiBase;
+
+      const log = (msg) => {
+        const t = new Date().toLocaleTimeString('es-AR');
+        $('liveConsole').textContent = `[${t}] ${msg}\n${$('liveConsole').textContent}`.trim();
+      };
+      const getHeaders = () => {
+        const token = $('ownerTokenInput').value.trim();
+        $('ownerMode').textContent = token ? 'ON' : 'OFF';
+        return token ? { 'X-Owner-Key': token } : {};
+      };
+      const fetchJson = async (paths, options = {}) => {
+        const list = Array.isArray(paths) ? paths : [paths];
+        let lastErr = null;
+        for (const path of list) {
+          try {
+            const headers = { ...(options.headers || {}), ...getHeaders() };
+            const res = await fetch(`${apiBase}${path}`, { ...options, headers });
+            const txt = await res.text();
+            let data;
+            try { data = JSON.parse(txt); } catch { data = { raw: txt }; }
+            if (!res.ok) throw new Error(`${path} → ${res.status} ${txt.slice(0,180)}`);
+            return { ok:true, path, data };
+          } catch (e) { lastErr = e; }
+        }
+        return { ok:false, error:String(lastErr?.message || lastErr || 'unknown_error') };
+      };
+      const paintOutput = (r) => {
+        $('outputConsole').textContent = r.ok ? JSON.stringify(r.data, null, 2) : `ERROR\n${r.error}`;
+      };
+      const refreshHealth = async () => {
+        const r = await fetchJson(['/v1/health','/health','/']);
+        paintOutput(r);
+        $('healthStatus').textContent = r.ok ? 'LIVE' : 'ERROR';
+        $('healthStatus').className = r.ok ? 'ok' : 'danger';
+        log(r.ok ? `Health OK ${r.path}` : `Health error ${r.error}`);
+        return r;
+      };
+      const refreshStatus = async () => {
+        const r = await fetchJson(['/v1/status','/status','/v1/memory/status']);
+        if (r.ok) {
+          const d = r.data || {};
+          $('statusStatus').textContent = (d.status || d.mode || d.system || 'OK').toString().slice(0,14).toUpperCase();
+        } else {
+          $('statusStatus').textContent = 'ERROR';
+        }
+        log(r.ok ? `Status OK ${r.path}` : `Status error ${r.error}`);
+        return r;
+      };
+      const refreshSummary = async () => {
+        const company = document.querySelector('.tab.active')?.dataset.company || 'consia';
+        const r = await fetchJson([
+          `/v1/dashboard/summary?company=${encodeURIComponent(company)}`,
+          `/v1/dashboard/status?company=${encodeURIComponent(company)}`,
+          '/v1/dashboard/summary',
+          '/v1/owner/dashboard'
+        ]);
+        if (!r.ok) {
+          $('summaryList').innerHTML = `<div class="row"><strong>Error</strong><span>${r.error}</span></div>`;
+          log(`Summary error ${r.error}`);
+          return r;
+        }
+        const d = r.data || {};
+        const pairs = Object.entries({
+          company,
+          service: d.service || d.system || d.name,
+          status: d.status,
+          version: d.version,
+          mode: d.mode,
+          leads: d.leads,
+          files: d.files,
+          memory: d.memory,
+          agents: d.agents,
+          chats: d.chats,
+          requests: d.requests,
+          uptime: d.uptime
+        }).filter(([,v]) => v !== undefined && v !== null && v !== '');
+        $('summaryList').innerHTML = (pairs.length ? pairs : [['summary', JSON.stringify(d).slice(0,80)]]).slice(0,10).map(([k,v]) => `<div class="row"><strong>${k}</strong><span>${typeof v === 'object' ? JSON.stringify(v) : v}</span></div>`).join('');
+        paintOutput(r);
+        log(`Summary OK ${r.path}`);
+        return r;
+      };
+      const runAction = async (paths) => {
+        const prompt = $('ownerActionInput').value.trim();
+        const body = JSON.stringify({ message: prompt, prompt, input: prompt, text: prompt, company: document.querySelector('.tab.active')?.dataset.company || 'consia' });
+        const r = await fetchJson(paths, { method:'POST', headers:{ 'Content-Type':'application/json' }, body });
+        paintOutput(r);
+        log(r.ok ? `POST OK ${r.path}` : `POST error ${r.error}`);
+      };
+
+      document.querySelectorAll('.tab').forEach(btn => btn.onclick = async () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        await refreshSummary();
+      });
+
+      $('homeBtn').onclick = () => location.href = './index.html';
+      $('refreshBtn').onclick = async () => { await Promise.allSettled([refreshHealth(), refreshStatus(), refreshSummary()]); };
+      $('healthBtn').onclick = refreshHealth;
+      $('statusBtn').onclick = refreshStatus;
+      $('summaryBtn').onclick = refreshSummary;
+      $('ownerBtn').onclick = async () => { const r = await fetchJson(['/v1/owner/dashboard','/v1/dashboard/summary']); paintOutput(r); log(r.ok ? `Owner OK ${r.path}` : `Owner error ${r.error}`); };
+      $('runChatBtn').onclick = () => runAction(['/v1/chat','/chat']);
+      $('runAgentBtn').onclick = () => runAction(['/v1/agents/run','/v1/swarm/execute']);
+      $('ownerTokenInput').addEventListener('input', getHeaders);
+
+      Promise.allSettled([refreshHealth(), refreshStatus(), refreshSummary()]);
+    })();
+  </script>
+</body>
+</html>
