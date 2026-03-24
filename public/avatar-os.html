@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CONSIA AVATAR</title>
+
+<style>
+body {
+  margin:0;
+  background:black;
+  color:white;
+  font-family:Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+
+video {
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 0 40px #00ffff55;
+}
+
+button {
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  background:#00ffff;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>CONSIA AVATAR LIVE</h2>
+
+<video id="cam" autoplay playsinline></video>
+
+<button onclick="start()">ACTIVAR AVATAR</button>
+
+<script>
+const API = "https://api.consia.world";
+
+async function start(){
+  const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+  document.getElementById("cam").srcObject = stream;
+
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "es-AR";
+
+  recognition.onresult = async (e)=>{
+    const text = e.results[0][0].transcript;
+
+    const res = await fetch(API + "/v1/chat",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({message:text})
+    });
+
+    const data = await res.json();
+
+    speak(data.reply || "OK");
+  };
+
+  recognition.start();
+}
+
+function speak(text){
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "es-AR";
+  speechSynthesis.speak(utter);
+}
+</script>
+
+</body>
+</html>
