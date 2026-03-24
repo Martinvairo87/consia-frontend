@@ -4,7 +4,7 @@
   const script = document.currentScript;
   const SITE = (script?.dataset?.site || "consia").trim().toLowerCase();
   const API_BASE = (script?.dataset?.api || "https://api.consia.world").replace(/\/$/, "");
-  const AVATAR_URL_BASE = (script?.dataset?.avatar || "https://consia.world/avatar.html").replace(/\/$/, "");
+  const AVATAR_URL_BASE = (script?.dataset?.avatar || "https://consia.world/avatar-premium.html").replace(/\/$/, "");
   const POSITION = (script?.dataset?.position || "right").trim().toLowerCase();
   const MODE = (script?.dataset?.mode || "hybrid").trim().toLowerCase(); // chat | avatar | hybrid
   const AUTO_OPEN = String(script?.dataset?.autoOpen || "false").toLowerCase() === "true";
@@ -544,12 +544,9 @@
         const actions = Array.isArray(m.actions) && m.actions.length
           ? `
             <div class="consia-actions">
-              ${m.actions
-                .map(
-                  (a) =>
-                    `<button class="consia-action" type="button" data-prompt="${escapeHtml(a.prompt)}">${escapeHtml(a.label)}</button>`
-                )
-                .join("")}
+              ${m.actions.map(
+                (a) => `<button class="consia-action" type="button" data-prompt="${escapeHtml(a.prompt)}">${escapeHtml(a.label)}</button>`
+              ).join("")}
             </div>
           `
           : "";
