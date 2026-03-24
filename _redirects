@@ -1,2 +1,6 @@
-/panel /panel-pro.html 302
-/ /panel-pro.html 302
+# Permitir archivos reales
+/consia-widget.js  /consia-widget.js  200
+/avatar.html       /avatar.html       200
+
+# fallback SPA SOLO para rutas internas
+/* /index.html 200
