@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA AVATAR PREMIUM</title>
+  <meta name="theme-color" content="#060b16" />
+  <style>
+    :root{
+      --bg:#05070c;
+      --bg2:#0a1020;
+      --panel:rgba(10,16,28,.88);
+      --line:rgba(120,146,255,.18);
+      --line2:rgba(120,146,255,.35);
+      --text:#eef3ff;
+      --muted:#93a0c2;
+      --accent:#7aa2ff;
+      --accent2:#67e8f9;
+      --ok:#73f0b0;
+      --danger:#ff8ca2;
+      --warn:#ffd36c;
+      --shadow:0 24px 64px rgba(0,0,0,.42);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top left, rgba(122,162,255,.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(103,232,249,.10), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(159,123,255,.12), transparent 26%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    .shell{
+      max-width:1460px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .top{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .hero,.panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,0)),
+        var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+
+    .hero{
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-30px;
+      top:-40px;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(122,162,255,.34), transparent 64%);
+      filter:blur(18px);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(122,162,255,.08);
+      border:1px solid rgba(122,162,255,.22);
+      color:#d8e6ff;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:16px 0 10px;
+      font-size:clamp(34px,5vw,58px);
+      line-height:.94;
+      letter-spacing:-.045em;
+      max-width:860px;
+    }
+
+    .hero p,.small{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:0;
+    }
+
+    .hero-grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .mini{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    .mini span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:6px;
+    }
+
+    .mini b{
+      display:block;
+      font-size:22px;
+      letter-spacing:-.04em;
+    }
+
+    .panel{padding:20px}
+    .panel h2{
+      margin:0 0 6px;
+      font-size:24px;
+      letter-spacing:-.03em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,minmax(0,1fr));
+      gap:18px;
+    }
+
+    .span-12{grid-column:span 12}
+    .span-8{grid-column:span 8}
+    .span-6{grid-column:span 6}
+    .span-4{grid-column:span 4}
+
+    .fields{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .field,.field-full{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .field-full{grid-column:1 / -1}
+
+    label{
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    input,textarea,select{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+      color:var(--text);
+      padding:14px;
+      outline:none;
+      font:inherit;
+    }
+
+    input:focus,textarea:focus,select:focus{
+      border-color:var(--line2);
+      box-shadow:0 0 0 4px rgba(122,162,255,.12);
+    }
+
+    textarea{
+      min-height:96px;
+      resize:vertical;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:13px 16px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#07101e;
+      font-weight:800;
+      letter-spacing:.02em;
+      cursor:pointer;
+      transition:transform .18s ease,opacity .18s ease;
+    }
+
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+    button.secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    button.ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,.12);
+    }
+
+    .statusbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .ok{color:var(--ok)}
+    .warn{color:var(--warn)}
+    .danger{color:var(--danger)}
+
+    .stage{
+      min-height:580px;
+      display:grid;
+      place-items:center;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.06);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(122,162,255,.10), transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(159,123,255,.08), transparent 45%),
+        rgba(4,7,14,.78);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .orb-wrap{
+      display:grid;
+      place-items:center;
+      gap:18px;
+      text-align:center;
+      width:min(100%,700px);
+      padding:22px;
+    }
+
+    .orb{
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,.92), rgba(255,255,255,.06) 18%, transparent 19%),
+        radial-gradient(circle at 50% 50%, var(--accent), rgba(122,162,255,.15) 36%, rgba(103,232,249,.12) 52%, transparent 72%);
+      box-shadow:
+        0 0 0 1px rgba(122,162,255,.18),
+        0 0 60px rgba(122,162,255,.26),
+        0 0 120px rgba(103,232,249,.16),
+        inset 0 0 40px rgba(255,255,255,.06);
+      animation:pulse 3s ease-in-out infinite;
+      position:relative;
+      transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      letter-spacing:.08em;
+      font-size:20px;
+      color:#dff6ff;
+      text-shadow:0 0 18px rgba(103,232,249,.35);
+    }
+
+    .orb::after{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius:50%;
+      border:1px solid rgba(122,162,255,.18);
+      animation:ring 4s linear infinite;
+    }
+
+    .orb.speaking{
+      transform:scale(1.08);
+      filter:saturate(1.2);
+      box-shadow:
+        0 0 0 1px rgba(122,162,255,.25),
+        0 0 90px rgba(122,162,255,.40),
+        0 0 180px rgba(103,232,249,.24),
+        inset 0 0 80px rgba(255,255,255,.08);
+    }
+
+    .orb.listening{
+      box-shadow:
+        0 0 0 1px rgba(115,240,176,.25),
+        0 0 80px rgba(115,240,176,.25),
+        0 0 160px rgba(122,162,255,.12),
+        inset 0 0 70px rgba(255,255,255,.08);
+    }
+
+    .avatar-title{
+      font-size:24px;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .avatar-sub{
+      color:var(--muted);
+      text-align:center;
+      max-width:560px;
+    }
+
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dfe8ff;
+      font-size:12px;
+    }
+
+    .terminal,.log,.transcript{
+      background:rgba(4,7,14,.82);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:14px;
+      min-height:230px;
+      max-height:430px;
+      overflow:auto;
+    }
+
+    .terminal pre,.transcript pre,.log pre{
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-size:12px;
+      line-height:1.55;
+      color:#dbe6ff;
+    }
+
+    .command{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+      width:min(100%,760px);
+    }
+
+    .command input{
+      flex:1;
+      min-width:220px;
+    }
+
+    audio{display:none}
+
+    @keyframes pulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.02)}
+    }
+
+    @keyframes ring{
+      from{transform:scale(.92);opacity:.75}
+      to{transform:scale(1.18);opacity:0}
+    }
+
+    @media (max-width:1200px){
+      .top{grid-template-columns:1fr}
+      .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .span-8,.span-6,.span-4{grid-column:span 12}
+    }
+
+    @media (max-width:720px){
+      .shell{padding:16px}
+      .fields{grid-template-columns:1fr}
+      .hero-grid{grid-template-columns:1fr}
+      h1{font-size:34px}
+      .orb{width:210px;height:210px;font-size:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="top">
+      <div class="hero">
+        <div class="eyebrow" id="eyebrow">CONSIA · AVATAR PREMIUM · REALTIME</div>
+        <h1 id="heroTitle">Voz en vivo. WebRTC. Presencia premium.</h1>
+        <p id="heroText">Conexión realtime desde CONSIA, micrófono, audio remoto, transcript en vivo y perfil por empresa desde tu stack propio.</p>
+        <div class="hero-grid">
+          <div class="mini"><span>Empresa</span><b id="heroSite">CONSIA</b></div>
+          <div class="mini"><span>Estado</span><b id="heroStatus">READY</b></div>
+          <div class="mini"><span>Modelo</span><b id="heroModel">gpt-realtime</b></div>
+          <div class="mini"><span>Voz</span><b id="heroVoice">marin</b></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Config avatar</h2>
+        <p class="small">Perfil por empresa, sesión efímera desde tu Worker y conexión realtime por WebRTC.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label for="site">Perfil empresa</label>
+            <select id="site">
+              <option value="manglar">Manglar</option>
+              <option value="realwork">Real Work</option>
+              <option value="vipwork">VIP Work</option>
+              <option value="vairo">Vairo</option>
+              <option value="bambino">Bambino</option>
+              <option value="consia">CONSIA</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="tenant">Tenant</label>
+            <input id="tenant" value="consia" />
+          </div>
+
+          <div class="field-full">
+            <label for="apiBase">API Base</label>
+            <input id="apiBase" placeholder="https://api.consia.world" />
+          </div>
+
+          <div class="field">
+            <label for="ownerToken">Owner Token</label>
+            <input id="ownerToken" type="password" placeholder="OWNER_TOKEN" />
+          </div>
+
+          <div class="field">
+            <label for="voice">Voz</label>
+            <select id="voice">
+              <option value="marin">marin</option>
+              <option value="cedar">cedar</option>
+              <option value="alloy">alloy</option>
+            </select>
+          </div>
+
+          <div class="field-full">
+            <label for="instructions">Instrucciones</label>
+            <textarea id="instructions"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="autoSession">Autosesión</label>
+            <select id="autoSession">
+              <option value="true">sí</option>
+              <option value="false">no</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="autoStart">Autoarranque</label>
+            <select id="autoStart">
+              <option value="true">sí</option>
+              <option value="false">no</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px">
+          <button id="saveConfigBtn">Guardar config</button>
+          <button id="statusBtn" class="secondary">Avatar status</button>
+          <button id="sessionBtn" class="secondary">Crear sesión</button>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button id="connectBtn">Conectar avatar</button>
+          <button id="disconnectBtn" class="secondary">Desconectar</button>
+          <button id="clearBtn" class="ghost">Limpiar</button>
+        </div>
+
+        <div class="statusbar">
+          <span class="pill">mic <b id="micState" class="warn">idle</b></span>
+          <span class="pill">rtc <b id="rtcState" class="warn">idle</b></span>
+          <span class="pill">data <b id="dataState" class="warn">idle</b></span>
+          <span class="pill">avatar <b id="avatarState" class="warn">standby</b></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="panel span-8">
+        <h2>Avatar stage</h2>
+        <div class="stage">
+          <div class="orb-wrap">
+            <div id="orb" class="orb">CONSIA</div>
+            <div class="avatar-title" id="avatarTitle">CONSIA AVATAR</div>
+            <div class="avatar-sub" id="avatarSubtitle">Esperando conexión realtime...</div>
+            <div class="chips" id="chips"></div>
+
+            <div class="command">
+              <input id="textCommand" placeholder="Escribí una orden para CONSIA..." />
+              <button id="sendTextBtn">Enviar texto</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel span-4">
+        <h2>Session JSON</h2>
+        <div class="terminal"><pre id="sessionOutput">Sin sesión todavía.</pre></div>
+      </article>
+
+      <article class="panel span-6">
+        <h2>Transcript</h2>
+        <div class="transcript"><pre id="transcriptOutput">Esperando audio...</pre></div>
+      </article>
+
+      <article class="panel span-6">
+        <h2>Eventos</h2>
+        <div class="log"><pre id="eventLog">CONSIA AVATAR PREMIUM UI cargado.</pre></div>
+      </article>
+
+      <article class="panel span-4">
+        <h2>Perfil activo</h2>
+        <div class="terminal"><pre id="profileOutput">Sin perfil cargado.</pre></div>
+      </article>
+
+      <article class="panel span-4">
+        <h2>Estado realtime</h2>
+        <div class="terminal"><pre id="modeOutput">Esperando validación.</pre></div>
+      </article>
+
+      <article class="panel span-4">
+        <h2>Tips</h2>
+        <div class="terminal"><pre id="tipsOutput">1. Pegá Owner Token.
+2. Guardá config.
+3. Avatar status.
+4. Crear sesión.
+5. Conectar avatar.
+6. Permití micrófono.</pre></div>
+      </article>
+    </section>
+
+    <audio id="remoteAudio" autoplay playsinline></audio>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const SITE_PROFILES = {
+      manglar: {
+        tenant: "manglar",
+        voice: "marin",
+        accent: "#7aa2ff",
+        title: "CONSIA · Manglar",
+        heroTitle: "Manglar con voz premium. Guía, inversión y obra en vivo.",
+        heroText: "CONSIA acompaña a cada usuario de Manglar con contexto de proyectos, obras, desarrollos e inmobiliaria.",
+        subtitle: "Proyectos, obras, desarrollos e inversiones.",
+        eyebrow: "CONSIA · MANGLAR · AVATAR PREMIUM",
+        instructions: "Sos CONSIA para Manglar Construcciones. Guiás al usuario sobre obras, desarrollos, proyectos, inversión y Manglar Inmobiliaria. Respondé en español, breve, premium, clara y orientada a conversión.",
+        chips: ["Proyectos", "Desarrollos", "Inversión", "Inmobiliaria", "Asesor premium"]
+      },
+      realwork: {
+        tenant: "realwork",
+        voice: "marin",
+        accent: "#9f7bff",
+        title: "CONSIA · Real Work",
+        heroTitle: "Real Work con voz premium. Matching, guía y captación en vivo.",
+        heroText: "CONSIA acompaña a cada usuario para encontrar propiedades, servicios y oportunidades en tiempo real.",
+        subtitle: "Propiedades, servicios y oportunidades.",
+        eyebrow: "CONSIA · REAL WORK · AVATAR PREMIUM",
+        instructions: "Sos CONSIA para Real Work. Guiás al usuario sobre propiedades, servicios, desarrollos y oportunidades inmobiliarias. Respondé en español, breve, premium y comercial.",
+        chips: ["Propiedades", "Servicios", "Lead capture", "Matching", "Conversión"]
+      },
+      vipwork: {
+        tenant: "vipwork",
+        voice: "cedar",
+        accent: "#73f0b0",
+        title: "CONSIA · VIP Work",
+        heroTitle: "VIP Work con voz premium. Empresas y postulantes guiados en vivo.",
+        heroText: "CONSIA clasifica intención y acompaña consultas de RRHH, staffing, outsourcing y selección.",
+        subtitle: "Empresas, postulantes y RRHH.",
+        eyebrow: "CONSIA · VIP WORK · AVATAR PREMIUM",
+        instructions: "Sos CONSIA para VIP Work. Guiás a empresas y postulantes en RRHH, personal eventual, outsourcing y selección. Respondé en español, breve, profesional y clara.",
+        chips: ["Empresas", "Postulantes", "RRHH", "Selección", "Outsourcing"]
+      },
+      vairo: {
+        tenant: "vairo",
+        voice: "marin",
+        accent: "#ffd36c",
+        title: "CONSIA · Vairo",
+        heroTitle: "Vairo con voz premium. Asesoramiento contable guiado en vivo.",
+        heroText: "CONSIA acompaña consultas profesionales, clasifica necesidades y deriva con contexto.",
+        subtitle: "Estudio contable y asesoramiento.",
+        eyebrow: "CONSIA · VAIRO · AVATAR PREMIUM",
+        instructions: "Sos CONSIA para Vairo y Asociados. Guiás a empresas y personas en temas contables, fiscales y administrativos. Respondé en español, breve, confiable y profesional.",
+        chips: ["Contable", "Fiscal", "Empresas", "Personas", "Derivación"]
+      },
+      bambino: {
+        tenant: "bambino",
+        voice: "alloy",
+        accent: "#ff8ca2",
+        title: "CONSIA · Bambino",
+        heroTitle: "Bambino con voz premium. Recomendación y venta guiada en vivo.",
+        heroText: "CONSIA acompaña búsquedas, recomienda regalos, campañas y productos por edad u ocasión.",
+        subtitle: "Juguetes, promos y recomendaciones.",
+        eyebrow: "CONSIA · BAMBINO · AVATAR PREMIUM",
+        instructions: "Sos CONSIA para Bambino Jugueterías. Guiás al usuario con recomendaciones, promos, productos por edad y ocasiones especiales. Respondé en español, breve, cálida y comercial.",
+        chips: ["Regalos", "Promos", "Edad", "Catálogo", "Venta asistida"]
+      },
+      consia: {
+        tenant: "consia",
+        voice: "marin",
+        accent: "#7aa2ff",
+        title: "CONSIA AVATAR PREMIUM",
+        heroTitle: "CONSIA con voz premium. Presencia realtime total.",
+        heroText: "Conexión realtime desde tu stack propio para hablar, escuchar y asistir en vivo.",
+        subtitle: "Asistente ejecutivo realtime.",
+        eyebrow: "CONSIA · AVATAR PREMIUM · REALTIME",
+        instructions: "Sos CONSIA Avatar, asistente ejecutivo en tiempo real. Respondé en español, claro, breve y con tono premium.",
+        chips: ["Realtime", "WebRTC", "Premium", "Multimarca", "Live"]
+      }
+    };
+
+    let pc = null;
+    let dc = null;
+    let localStream = null;
+    let ephemeralToken = null;
+    let sessionPayload = null;
+    let connected = false;
+    let listening = false;
+    let connecting = false;
+    let transcriptPieces = [];
+
+    function profileFor(site) {
+      return SITE_PROFILES[site] || SITE_PROFILES.consia;
+    }
+
+    function log(message) {
+      const stamp = new Date().toLocaleTimeString("es-AR", { hour12: false });
+      $("eventLog").textContent = `[${stamp}] ${message}\n` + $("eventLog").textContent;
+    }
+
+    function setBadge(id, text, cls) {
+      const el = $(id);
+      el.textContent = text;
+      el.className = cls || "";
+    }
+
+    function setOrbState({ speaking = false, listening: isListening = false } = {}) {
+      const orb = $("orb");
+      orb.classList.toggle("speaking", !!speaking);
+      orb.classList.toggle("listening", !!isListening);
+
+      if (speaking) setBadge("avatarState", "speaking", "ok");
+      else if (isListening) setBadge("avatarState", "listening", "ok");
+      else setBadge("avatarState", connected ? "ready" : "standby", connected ? "ok" : "warn");
+    }
+
+    function appendTranscript(text) {
+      transcriptPieces.push(text);
+      transcriptPieces = transcriptPieces.slice(-700);
+      $("transcriptOutput").textContent = transcriptPieces.join("");
+    }
+
+    function clearTranscript() {
+      transcriptPieces = [];
+      $("transcriptOutput").textContent = "Esperando audio...";
+    }
+
+    function getParams() {
+      const url = new URL(location.href);
+      return {
+        site: (url.searchParams.get("site") || "").trim().toLowerCase(),
+        tenant: (url.searchParams.get("tenant") || "").trim(),
+        api: (url.searchParams.get("api") || "").trim(),
+        voice: (url.searchParams.get("voice") || "").trim(),
+        autoStart: url.searchParams.get("autostart"),
+        autoSession: url.searchParams.get("autosession")
+      };
+    }
+
+    function cfg() {
+      return {
+        site: $("site").value,
+        apiBase: $("apiBase").value.trim().replace(/\/$/, ""),
+        tenant: $("tenant").value.trim() || "consia",
+        ownerToken: $("ownerToken").value.trim(),
+        voice: $("voice").value,
+        instructions: $("instructions").value.trim(),
+        autoSession: $("autoSession").value === "true",
+        autoStart: $("autoStart").value === "true"
+      };
+    }
+
+    function applyProfile(profile) {
+      document.documentElement.style.setProperty("--accent", profile.accent || "#7aa2ff");
+      $("eyebrow").textContent = profile.eyebrow;
+      $("heroTitle").textContent = profile.heroTitle;
+      $("heroText").textContent = profile.heroText;
+      $("heroSite").textContent = profile.title.replace("CONSIA · ", "").replace("CONSIA ", "").toUpperCase();
+      $("heroVoice").textContent = profile.voice;
+      $("avatarTitle").textContent = profile.title;
+      $("avatarSubtitle").textContent = `Perfil listo: ${profile.subtitle}`;
+      $("instructions").value = profile.instructions;
+      $("voice").value = profile.voice;
+      $("tenant").value = profile.tenant;
+      $("profileOutput").textContent = JSON.stringify(profile, null, 2);
+      $("chips").innerHTML = (profile.chips || []).map((c) => `<span class="chip">${c}</span>`).join("");
+      $("modeOutput").textContent =
+        `site=${$("site").value}\n` +
+        `tenant=${$("tenant").value}\n` +
+        `voice=${$("voice").value}\n` +
+        `api=${$("apiBase").value}`;
+    }
+
+    function saveConfig() {
+      const c = cfg();
+      localStorage.setItem("consia.avatarpremium.site", c.site);
+      localStorage.setItem("consia.avatarpremium.apiBase", c.apiBase);
+      localStorage.setItem("consia.avatarpremium.tenant", c.tenant);
+      localStorage.setItem("consia.avatarpremium.ownerToken", c.ownerToken);
+      localStorage.setItem("consia.avatarpremium.voice", c.voice);
+      localStorage.setItem("consia.avatarpremium.instructions", c.instructions);
+      localStorage.setItem("consia.avatarpremium.autoSession", String(c.autoSession));
+      localStorage.setItem("consia.avatarpremium.autoStart", String(c.autoStart));
+      log("Config premium guardada.");
+    }
+
+    function loadConfig() {
+      const params = getParams();
+      const site = params.site || localStorage.getItem("consia.avatarpremium.site") || "consia";
+      const p = profileFor(site);
+
+      $("site").value = site;
+      $("apiBase").value = params.api || localStorage.getItem("consia.avatarpremium.apiBase") || "https://api.consia.world";
+      $("tenant").value = params.tenant || localStorage.getItem("consia.avatarpremium.tenant") || p.tenant || "consia";
+      $("ownerToken").value = localStorage.getItem("consia.avatarpremium.ownerToken") || "";
+      $("voice").value = params.voice || localStorage.getItem("consia.avatarpremium.voice") || p.voice || "marin";
+      $("instructions").value = localStorage.getItem("consia.avatarpremium.instructions") || p.instructions;
+      $("autoSession").value = ((params.autoSession ?? localStorage.getItem("consia.avatarpremium.autoSession") ?? "true") === "true") ? "true" : "false";
+      $("autoStart").value = ((params.autoStart ?? localStorage.getItem("consia.avatarpremium.autoStart") ?? "true") === "true") ? "true" : "false";
+
+      applyProfile({
+        ...p,
+        tenant: $("tenant").value,
+        voice: $("voice").value
+      });
+    }
+
+    async function api(path, options = {}) {
+      const c = cfg();
+      const headers = new Headers(options.headers || {});
+      if (!headers.has("content-type")) headers.set("content-type", "application/json");
+      if (c.ownerToken) headers.set("x-owner-token", c.ownerToken);
+
+      const res = await fetch(`${c.apiBase}${path}`, {
+        method: options.method || "GET",
+        headers,
+        body: options.body ? JSON.stringify(options.body) : undefined
+      });
+
+      const raw = await res.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { data = raw; }
+
+      if (path.includes("/session") || path.includes("/status")) {
+        $("sessionOutput").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      }
+
+      if (!res.ok) throw new Error(typeof data === "string" ? data : JSON.stringify(data));
+      return data;
+    }
+
+    async function checkStatus() {
+      const data = await api("/v1/avatar/status");
+      $("heroStatus").textContent = data.ok ? "ACTIVE" : "ERROR";
+      $("heroModel").textContent = data.model || data.realtime_model || "gpt-realtime";
+      $("heroVoice").textContent = data.voice || data.realtime_voice || cfg().voice;
+      $("avatarSubtitle").textContent = "Backend avatar activo. Listo para crear sesión realtime.";
+      log("Avatar status OK.");
+      return data;
+    }
+
+    async function createSession() {
+      const c = cfg();
+      const data = await api("/v1/avatar/session", {
+        method: "POST",
+        body: {
+          tenant: c.tenant,
+          voice: c.voice,
+          instructions: c.instructions
+        }
+      });
+
+      sessionPayload = data;
+      ephemeralToken =
+        data?.client_secret?.value ||
+        data?.client_secret ||
+        data?.session?.value ||
+        data?.session?.client_secret?.value ||
+        null;
+
+      if (!ephemeralToken) throw new Error("no_ephemeral_token_found");
+
+      $("heroModel").textContent = data.model || "gpt-realtime";
+      $("heroVoice").textContent = data.voice || c.voice;
+      $("avatarSubtitle").textContent = "Sesión efímera creada. Lista para conectar por WebRTC.";
+      log("Sesión realtime creada.");
+      return data;
+    }
+
+    function handleRealtimeEvent(raw) {
+      let data;
+      try { data = JSON.parse(raw); } catch { return; }
+
+      const type = data?.type || "unknown";
+      log(`event: ${type}`);
+
+      if (type === "input_audio_buffer.speech_started") {
+        listening = true;
+        setOrbState({ listening: true });
+      }
+
+      if (type === "input_audio_buffer.speech_stopped") {
+        listening = false;
+        setOrbState({ speaking: false, listening: false });
+      }
+
+      if (type === "response.created") {
+        setOrbState({ speaking: true });
+      }
+
+      if (type === "response.done") {
+        setOrbState({ speaking: false, listening });
+      }
+
+      if (type === "response.audio_transcript.delta" && data.delta) {
+        appendTranscript(data.delta);
+      }
+
+      if (type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
+        appendTranscript(`\n[vos] ${data.transcript}\n`);
+      }
+
+      if (type === "response.output_text.delta" && data.delta) {
+        appendTranscript(data.delta);
+      }
+
+      if (type === "error") {
+        log(`realtime error: ${JSON.stringify(data)}`);
+      }
+    }
+
+    async function connectAvatar() {
+      if (connecting || connected) return;
+      connecting = true;
+
+      try {
+        if (!ephemeralToken) await createSession();
+
+        setBadge("rtcState", "starting", "warn");
+        setBadge("micState", "requesting", "warn");
+        $("avatarSubtitle").textContent = "Solicitando micrófono y preparando conexión...";
+        log("Solicitando micrófono.");
+
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setBadge("micState", "active", "ok");
+        setOrbState({ listening: true });
+
+        pc = new RTCPeerConnection();
+
+        pc.ontrack = (event) => {
+          $("remoteAudio").srcObject = event.streams[0];
+          log("Audio remoto conectado.");
+        };
+
+        pc.onconnectionstatechange = () => {
+          const s = pc.connectionState;
+          setBadge("rtcState", s, s === "connected" ? "ok" : (s === "failed" || s === "disconnected" || s === "closed" ? "danger" : "warn"));
+
+          if (s === "connected") {
+            connected = true;
+            $("avatarSubtitle").textContent = "Avatar conectado. Hablá normalmente.";
+            $("heroStatus").textContent = "LIVE";
+            log("WebRTC conectado.");
+          }
+
+          if (s === "failed" || s === "disconnected" || s === "closed") {
+            connected = false;
+            setOrbState({ speaking: false, listening: false });
+          }
+        };
+
+        localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
+
+        dc = pc.createDataChannel("oai-events");
+
+        dc.onopen = () => {
+          setBadge("dataState", "open", "ok");
+          log("Data channel abierto.");
+        };
+
+        dc.onclose = () => {
+          setBadge("dataState", "closed", "warn");
+          log("Data channel cerrado.");
+        };
+
+        dc.onerror = () => {
+          setBadge("dataState", "error", "danger");
+          log("Error en data channel.");
+        };
+
+        dc.onmessage = (event) => handleRealtimeEvent(event.data);
+
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+
+        const model = sessionPayload?.model || sessionPayload?.session?.session?.model || "gpt-realtime";
+        const sdpRes = await fetch(`https://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${ephemeralToken}`,
+            "Content-Type": "application/sdp"
+          },
+          body: offer.sdp
+        });
+
+        const answer = await sdpRes.text();
+        if (!sdpRes.ok) throw new Error(answer || "realtime_sdp_error");
+
+        await pc.setRemoteDescription({ type: "answer", sdp: answer });
+      } catch (error) {
+        $("heroStatus").textContent = "ERROR";
+        $("avatarSubtitle").textContent = `Error: ${error.message}`;
+        setBadge("rtcState", "error", "danger");
+        setOrbState({ speaking: false, listening: false });
+        log(`Error conectando avatar: ${error.message}`);
+      } finally {
+        connecting = false;
+      }
+    }
+
+    async function disconnectAvatar() {
+      try {
+        if (dc) { try { dc.close(); } catch {} dc = null; }
+        if (pc) { try { pc.close(); } catch {} pc = null; }
+        if (localStream) {
+          localStream.getTracks().forEach((t) => t.stop());
+          localStream = null;
+        }
+      } finally {
+        connected = false;
+        listening = false;
+        ephemeralToken = null;
+        sessionPayload = null;
+        setBadge("micState", "idle", "warn");
+        setBadge("rtcState", "idle", "warn");
+        setBadge("dataState", "idle", "warn");
+        setOrbState({ speaking: false, listening: false });
+        $("avatarSubtitle").textContent = "Desconectado.";
+        $("heroStatus").textContent = "READY";
+        log("Avatar desconectado.");
+      }
+    }
+
+    function clearUI() {
+      $("sessionOutput").textContent = "Sin sesión todavía.";
+      $("eventLog").textContent = "CONSIA AVATAR PREMIUM UI cargado.";
+      $("avatarSubtitle").textContent = "Esperando conexión realtime...";
+      $("textCommand").value = "";
+      clearTranscript();
+      setBadge("micState", "idle", "warn");
+      setBadge("rtcState", "idle", "warn");
+      setBadge("dataState", "idle", "warn");
+      setOrbState({ speaking: false, listening: false });
+    }
+
+    function sendTextCommand() {
+      const text = $("textCommand").value.trim();
+      if (!text) return;
+
+      if (!dc || dc.readyState !== "open") {
+        log("No hay data channel abierto.");
+        return;
+      }
+
+      try {
+        dc.send(JSON.stringify({
+          type: "conversation.item.create",
+          item: {
+            type: "message",
+            role: "user",
+            content: [{ type: "input_text", text }]
+          }
+        }));
+
+        dc.send(JSON.stringify({
+          type: "response.create",
+          response: {
+            modalities: ["audio", "text"]
+          }
+        }));
+
+        appendTranscript(`\n[texto] ${text}\n`);
+        $("textCommand").value = "";
+        log("Comando de texto enviado.");
+      } catch (error) {
+        log(`Error enviando texto: ${error.message}`);
+      }
+    }
+
+    $("saveConfigBtn").addEventListener("click", saveConfig);
+    $("statusBtn").addEventListener("click", async () => {
+      try { await checkStatus(); } catch (e) { log(`Error status: ${e.message}`); }
+    });
+    $("sessionBtn").addEventListener("click", async () => {
+      try { await createSession(); } catch (e) { log(`Error creando sesión: ${e.message}`); }
+    });
+    $("connectBtn").addEventListener("click", async () => { await connectAvatar(); });
+    $("disconnectBtn").addEventListener("click", async () => { await disconnectAvatar(); });
+    $("clearBtn").addEventListener("click", clearUI);
+    $("sendTextBtn").addEventListener("click", sendTextCommand);
+    $("textCommand").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendTextCommand();
+    });
+
+    $("site").addEventListener("change", () => {
+      const p = profileFor($("site").value);
+      applyProfile(p);
+      saveConfig();
+      log(`Perfil cambiado a ${$("site").value}.`);
+    });
+
+    window.addEventListener("beforeunload", () => {
+      disconnectAvatar();
+    });
+
+    window.addEventListener("load", async () => {
+      loadConfig();
+      clearUI();
+
+      try {
+        await checkStatus();
+      } catch (error) {
+        log(`No se pudo conectar al inicio: ${error.message}`);
+      }
+
+      const c = cfg();
+
+      if (c.autoSession) {
+        try { await createSession(); } catch (error) { log(`No se pudo crear sesión automática: ${error.message}`); }
+      }
+
+      if (c.autoStart) {
+        setTimeout(async () => {
+          try { await connectAvatar(); } catch (error) { log(`No se pudo autoarrancar: ${error.message}`); }
+        }, 900);
+      }
+    });
+  </script>
+</body>
+</html>
