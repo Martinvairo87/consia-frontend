@@ -3,654 +3,395 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONSIA AVATAR LIVE</title>
-  <meta name="theme-color" content="#05070c" />
+  <title>CONSIA WORLD</title>
+  <meta name="theme-color" content="#0a0f1f" />
   <style>
     :root{
-      --bg:#05070c;
-      --bg2:#0a1020;
-      --panel:rgba(10,16,28,.88);
-      --line:rgba(120,146,255,.18);
-      --line2:rgba(120,146,255,.35);
-      --text:#eef3ff;
-      --muted:#93a0c2;
-      --accent:#7aa2ff;
-      --accent2:#9f7bff;
-      --ok:#73f0b0;
-      --danger:#ff8ca2;
-      --warn:#ffd36c;
-      --shadow:0 24px 64px rgba(0,0,0,.4);
+      --bg:#060816;
+      --bg2:#0b1023;
+      --card:rgba(15,23,42,.58);
+      --line:rgba(148,163,184,.18);
+      --txt:#eef4ff;
+      --muted:#a7b5d1;
+      --ok:#18d26b;
+      --warn:#ffb020;
+      --danger:#ff5d73;
+      --shadow:0 20px 80px rgba(0,0,0,.45);
+      --blur:blur(20px);
       --radius:24px;
     }
     *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;min-height:100%;
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--txt);
       background:
-        radial-gradient(circle at top left, rgba(122,162,255,.16), transparent 28%),
-        radial-gradient(circle at top right, rgba(159,123,255,.16), transparent 24%),
+        radial-gradient(1200px 700px at 15% -10%, rgba(90,130,255,.22), transparent 55%),
+        radial-gradient(900px 600px at 85% 0%, rgba(0,220,255,.12), transparent 45%),
+        radial-gradient(700px 500px at 50% 100%, rgba(125,60,255,.12), transparent 45%),
         linear-gradient(180deg,var(--bg),var(--bg2));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
     }
-    .shell{max-width:1400px;margin:0 auto;padding:24px}
-    .top{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:18px;
-      margin-bottom:18px;
+    .shell{max-width:1440px;margin:0 auto;padding:22px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      position:sticky;top:0;z-index:20;
+      padding:14px 18px;margin-bottom:22px;
+      background:rgba(6,8,22,.52);backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:20px;
+      box-shadow:var(--shadow)
     }
-    .hero,.panel{
-      background:linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,0)), var(--panel);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.12em}
+    .logo{
+      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 10px 40px rgba(0,0,0,.35)
     }
-    .hero{padding:28px;position:relative;overflow:hidden}
-    .hero:after{
-      content:"";
-      position:absolute;right:-30px;top:-40px;width:320px;height:320px;border-radius:50%;
-      background:radial-gradient(circle, rgba(122,162,255,.24), transparent 64%);
-      filter:blur(18px);
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .pill,.btn{
+      border:1px solid var(--line);color:var(--txt);background:rgba(255,255,255,.04);
+      padding:12px 14px;border-radius:14px;cursor:pointer;text-decoration:none;font-weight:700;
+      transition:.2s transform,.2s background,.2s border-color
     }
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 12px;border-radius:999px;
-      background:rgba(122,162,255,.08);
-      border:1px solid rgba(122,162,255,.22);
-      color:#d8e6ff;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    .pill:hover,.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22)}
+    .hero{
+      display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:stretch;
+      margin-bottom:22px
     }
-    h1{
-      margin:16px 0 10px;
-      font-size:clamp(32px,5vw,56px);
-      line-height:.94;letter-spacing:-.045em;
-      max-width:760px;
+    .card{
+      background:var(--card);backdrop-filter:var(--blur);border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden
     }
-    .hero p,.small{color:var(--muted);line-height:1.6}
-    .hero p{max-width:720px;margin:0}
-    .hero-grid{
-      margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+    .card::before{
+      content:"";position:absolute;inset:auto -10% 80% auto;width:260px;height:260px;border-radius:999px;
+      background:radial-gradient(circle, rgba(255,255,255,.18), transparent 60%);filter:blur(10px);pointer-events:none
     }
-    .mini{
-      padding:14px;border-radius:18px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);
+    .hero-main{padding:34px}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;color:#d7e5ff;font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    h1{font-size:clamp(38px,5vw,74px);line-height:.95;margin:18px 0 14px;letter-spacing:-.04em}
+    .gradient{
+      background:linear-gradient(90deg,#ffffff 0%,#b8d4ff 35%,#7cdcff 68%,#d1b2ff 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent
     }
-    .mini span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-    .mini b{display:block;font-size:24px;letter-spacing:-.04em}
-    .panel{padding:20px}
-    .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
-    .span-12{grid-column:span 12}
-    .span-7{grid-column:span 7}
-    .span-5{grid-column:span 5}
-    .span-6{grid-column:span 6}
-    .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .field,.field-full{display:flex;flex-direction:column;gap:8px}
-    .field-full{grid-column:1 / -1}
-    label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-    input,textarea,select{
-      width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.035);color:var(--text);
-      padding:14px;outline:none;font:inherit;
+    .lead{font-size:18px;line-height:1.6;color:var(--muted);max-width:900px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+    .btn.primary{background:linear-gradient(135deg,rgba(94,140,255,.28),rgba(40,214,255,.18));border-color:rgba(140,190,255,.35)}
+    .hero-side{padding:22px;display:grid;grid-template-rows:auto 1fr;gap:18px}
+    .status-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .metric{
+      padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)
     }
-    input:focus,textarea:focus,select:focus{
-      border-color:var(--line2);
-      box-shadow:0 0 0 4px rgba(122,162,255,.12);
+    .metric small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+    .metric strong{font-size:28px;display:block}
+    .status-dot{display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:8px;vertical-align:middle;background:var(--ok);box-shadow:0 0 18px rgba(24,210,107,.7)}
+    .hero-terminal{
+      min-height:260px;padding:18px;border-radius:22px;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.55;color:#d9e5ff;overflow:auto
     }
-    textarea{min-height:110px;resize:vertical}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    button{
-      border:0;border-radius:16px;padding:13px 16px;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff;font-weight:700;letter-spacing:.02em;cursor:pointer;
-      transition:transform .18s ease, opacity .18s ease;
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px;margin-bottom:22px}
+    .span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .section{padding:22px}
+    .section h2{margin:0 0 8px;font-size:24px;letter-spacing:-.03em}
+    .section p{margin:0;color:var(--muted);line-height:1.6}
+    .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+    .mini-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .list{display:grid;gap:12px;margin-top:18px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .row span{color:var(--muted)}
+    .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .app{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+    .app .k{font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:.12em}
+    .app strong{font-size:21px}
+    .app a{margin-top:auto;text-decoration:none}
+    .console{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+    .codebox{
+      min-height:220px;padding:16px;border-radius:18px;border:1px solid var(--line);background:#070c1c;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#d8e8ff;white-space:pre-wrap
     }
-    button:hover{transform:translateY(-1px)}
-    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
-    button.secondary{
-      background:rgba(255,255,255,.06);
-      color:var(--text);border:1px solid rgba(255,255,255,.08)
+    .footer{padding:10px 0 30px;color:var(--muted);text-align:center}
+    .tag{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .company-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
+    .company{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .company strong{display:block;margin-bottom:6px}
+    .company span{color:var(--muted);font-size:14px;line-height:1.45}
+    @media (max-width:1180px){
+      .hero{grid-template-columns:1fr}
+      .apps{grid-template-columns:repeat(2,1fr)}
+      .company-grid{grid-template-columns:repeat(2,1fr)}
+      .span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
     }
-    button.ghost{
-      background:transparent;color:var(--muted);border:1px dashed rgba(255,255,255,.12)
-    }
-    .statusbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;font-size:11px;
-      letter-spacing:.08em;text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.08)
-    }
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .danger{color:var(--danger)}
-    .stage{
-      min-height:420px;
-      display:grid;place-items:center;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.06);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(122,162,255,.10), transparent 30%),
-        radial-gradient(circle at 50% 50%, rgba(159,123,255,.08), transparent 45%),
-        rgba(4,7,14,.78);
-      position:relative;
-      overflow:hidden;
-    }
-    .orb-wrap{
-      display:grid;place-items:center;gap:18px;
-    }
-    .orb{
-      width:220px;height:220px;border-radius:50%;
-      background:
-        radial-gradient(circle at 35% 35%, rgba(255,255,255,.9), rgba(255,255,255,.06) 18%, transparent 19%),
-        radial-gradient(circle at 50% 50%, rgba(122,162,255,.95), rgba(122,162,255,.15) 36%, rgba(159,123,255,.08) 52%, transparent 72%);
-      box-shadow:
-        0 0 0 1px rgba(122,162,255,.18),
-        0 0 60px rgba(122,162,255,.26),
-        0 0 120px rgba(159,123,255,.16),
-        inset 0 0 40px rgba(255,255,255,.06);
-      animation: pulse 3s ease-in-out infinite;
-      position:relative;
-      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
-    }
-    .orb.speaking{
-      transform:scale(1.06);
-      filter:saturate(1.15);
-      box-shadow:
-        0 0 0 1px rgba(122,162,255,.25),
-        0 0 80px rgba(122,162,255,.38),
-        0 0 160px rgba(159,123,255,.22),
-        inset 0 0 70px rgba(255,255,255,.08);
-    }
-    .orb::after{
-      content:"";
-      position:absolute;inset:-16px;border-radius:50%;
-      border:1px solid rgba(122,162,255,.18);
-      animation: ring 4s linear infinite;
-    }
-    .avatar-title{
-      font-size:20px;font-weight:700;letter-spacing:-.03em
-    }
-    .avatar-sub{
-      color:var(--muted);text-align:center;max-width:420px
-    }
-    .terminal,.log,.transcript{
-      background:rgba(4,7,14,.82);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:18px;
-      padding:14px;min-height:220px;max-height:420px;overflow:auto;
-    }
-    .terminal pre,.transcript pre,.log pre{
-      margin:0;white-space:pre-wrap;word-break:break-word;
-      font-size:12px;line-height:1.5;color:#dbe6ff;
-    }
-    video,audio{display:none}
-    .line{
-      padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)
-    }
-    .line:last-child{border-bottom:none}
-    @keyframes pulse{
-      0%,100%{transform:scale(1)}
-      50%{transform:scale(1.02)}
-    }
-    @keyframes ring{
-      from{transform:scale(.92);opacity:.75}
-      to{transform:scale(1.18);opacity:0}
-    }
-    @media (max-width:1200px){
-      .top{grid-template-columns:1fr}
-      .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .span-7,.span-6,.span-5{grid-column:span 12}
-    }
-    @media (max-width:720px){
-      .shell{padding:16px}
-      .fields{grid-template-columns:1fr}
-      .hero-grid{grid-template-columns:1fr}
-      h1{font-size:34px}
-      .orb{width:180px;height:180px}
+    @media (max-width:760px){
+      .shell{padding:14px}
+      .topbar{padding:12px}
+      .hero-main,.hero-side,.section{padding:18px}
+      .status-grid,.mini-grid,.apps,.console,.company-grid{grid-template-columns:1fr}
+      .nav{display:none}
+      .hero-terminal{min-height:220px}
+      h1{font-size:42px}
     }
   </style>
 </head>
 <body>
   <div class="shell">
-    <section class="top">
-      <div class="hero">
-        <div class="eyebrow">CONSIA · AVATAR LIVE · REALTIME</div>
-        <h1>Voz en vivo. WebRTC. Presencia premium.</h1>
-        <p>Conexión realtime desde CONSIA, micrófono, reproducción remota y transcript en tiempo real sobre tu stack propio.</p>
-        <div class="hero-grid">
-          <div class="mini"><span>Estado</span><b id="heroStatus">READY</b></div>
-          <div class="mini"><span>Modelo</span><b id="heroModel">gpt-realtime</b></div>
-          <div class="mini"><span>Voz</span><b id="heroVoice">marin</b></div>
-          <div class="mini"><span>Transporte</span><b id="heroTransport">WEBRTC</b></div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">C</div>
+        <div>
+          <div style="font-size:14px;color:var(--muted);font-weight:700;letter-spacing:.18em">CONSIA</div>
+          <div style="font-size:18px">WORLD / COMMAND CENTER</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="pill" href="#overview">Overview</a>
+        <a class="pill" href="./avatar-premium.html">Avatar</a>
+        <a class="pill" href="./ceo-panel.html">Panel CEO</a>
+        <button class="pill" id="refreshAllBtn">Refresh</button>
+      </nav>
+    </header>
+
+    <section class="hero" id="overview">
+      <div class="card hero-main">
+        <span class="eyebrow">CONSIA ACTIVE · FRONTEND FINAL</span>
+        <h1><span class="gradient">Sistema operativo de ejecución</span><br/>para empresas, avatar y control CEO.</h1>
+        <p class="lead">
+          Este frontend queda listo para operar como entrada principal de CONSIA, con acceso directo al avatar premium,
+          al panel CEO y a las rutas principales del backend. Detecta automáticamente la API, consulta estado en vivo
+          y deja un centro único para Manglar, Real Work, VIP Work, Bambino y Vairo &amp; Asociados.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="./avatar-premium.html">Abrir Avatar Premium</a>
+          <a class="btn" href="./ceo-panel.html">Abrir Panel CEO</a>
+          <button class="btn" id="runHealthBtn">Probar API</button>
         </div>
       </div>
 
-      <div class="panel">
-        <h2>Config avatar</h2>
-        <p class="small">Esta pantalla crea la sesión efímera desde tu Worker y abre la llamada realtime desde el navegador.</p>
-        <div class="fields">
-          <div class="field-full">
-            <label for="apiBase">API Base</label>
-            <input id="apiBase" placeholder="https://api.consia.world" />
+      <div class="card hero-side">
+        <div class="status-grid">
+          <div class="metric">
+            <small>API base</small>
+            <strong id="apiBaseLabel">detectando…</strong>
           </div>
-          <div class="field">
-            <label for="tenant">Tenant</label>
-            <input id="tenant" value="consia" />
+          <div class="metric">
+            <small>Estado</small>
+            <strong><span class="status-dot"></span><span id="serviceStatus">LIVE</span></strong>
           </div>
-          <div class="field">
-            <label for="ownerToken">Owner Token</label>
-            <input id="ownerToken" type="password" placeholder="OWNER_TOKEN" />
+          <div class="metric">
+            <small>Frontend</small>
+            <strong>FINAL</strong>
           </div>
-          <div class="field">
-            <label for="voice">Voz</label>
-            <select id="voice">
-              <option value="marin">marin</option>
-              <option value="cedar">cedar</option>
-              <option value="alloy">alloy</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="instructions">Instrucciones</label>
-            <input id="instructions" value="Sos CONSIA Avatar, asistente ejecutivo en tiempo real. Respondé en español, claro, breve y con tono premium." />
+          <div class="metric">
+            <small>Modo</small>
+            <strong>CEO + AVATAR</strong>
           </div>
         </div>
-        <div class="row" style="margin-top:14px">
-          <button id="saveConfigBtn">Guardar config</button>
-          <button id="statusBtn" class="secondary">Avatar status</button>
-          <button id="sessionBtn" class="secondary">Crear sesión</button>
+        <div class="hero-terminal" id="heroTerminal">Inicializando CONSIA…</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card span-7 section">
+        <h2>Acceso rápido</h2>
+        <p>Centro operativo con navegación directa a los módulos críticos.</p>
+        <div class="apps">
+          <div class="app">
+            <div class="k">Avatar</div>
+            <strong>CONSIA Avatar Premium</strong>
+            <span style="color:var(--muted)">Micrófono, voz, cámara, chat y respuesta hablada.</span>
+            <a class="btn primary" href="./avatar-premium.html">Entrar</a>
+          </div>
+          <div class="app">
+            <div class="k">CEO</div>
+            <strong>Panel Ejecutivo</strong>
+            <span style="color:var(--muted)">Métricas, salud del sistema, acciones owner y monitoreo.</span>
+            <a class="btn primary" href="./ceo-panel.html">Entrar</a>
+          </div>
+          <div class="app">
+            <div class="k">Widget</div>
+            <strong>Widget embebible</strong>
+            <span style="color:var(--muted)">Lanzador flotante para cualquier sitio o landing.</span>
+            <button class="btn primary" id="copyWidgetBtn">Copiar script</button>
+          </div>
         </div>
-        <div class="row" style="margin-top:12px">
-          <button id="connectBtn">Conectar avatar</button>
-          <button id="disconnectBtn" class="secondary">Desconectar</button>
-          <button id="clearBtn" class="ghost">Limpiar</button>
-        </div>
-        <div class="statusbar">
-          <span class="pill">mic <b id="micState" class="warn">idle</b></span>
-          <span class="pill">rtc <b id="rtcState" class="warn">idle</b></span>
-          <span class="pill">data <b id="dataState" class="warn">idle</b></span>
-          <span class="pill">avatar <b id="avatarState" class="warn">standby</b></span>
+      </div>
+
+      <div class="card span-5 section">
+        <h2>Empresas conectadas</h2>
+        <p>Vista madre para orquestar todas las verticales.</p>
+        <div class="company-grid">
+          <div class="company"><strong>Manglar</strong><span>Construcciones y desarrollos.</span></div>
+          <div class="company"><strong>Real Work</strong><span>Marketplace inmobiliario.</span></div>
+          <div class="company"><strong>VIP Work</strong><span>RRHH y eventuales.</span></div>
+          <div class="company"><strong>Bambino</strong><span>Juguetería y comercio.</span></div>
+          <div class="company"><strong>Vairo</strong><span>Estudio contable.</span></div>
         </div>
       </div>
     </section>
 
     <section class="grid">
-      <article class="panel span-7">
-        <h2>Avatar stage</h2>
-        <div class="stage">
-          <div class="orb-wrap">
-            <div id="orb" class="orb"></div>
-            <div class="avatar-title">CONSIA AVATAR</div>
-            <div id="avatarSubtitle" class="avatar-sub">Esperando conexión realtime...</div>
-          </div>
+      <div class="card span-4 section">
+        <h2>Estado del sistema</h2>
+        <p>Consulta directa a health y status.</p>
+        <div class="mini-grid">
+          <div class="mini-card"><div class="tag">Health</div><div id="healthBox" style="margin-top:10px;font-size:15px;color:var(--muted)">Esperando…</div></div>
+          <div class="mini-card"><div class="tag">Status</div><div id="statusBox" style="margin-top:10px;font-size:15px;color:var(--muted)">Esperando…</div></div>
         </div>
-      </article>
-
-      <article class="panel span-5">
-        <h2>Session JSON</h2>
-        <div class="terminal"><pre id="sessionOutput">Sin sesión todavía.</pre></div>
-      </article>
-
-      <article class="panel span-6">
-        <h2>Transcript</h2>
-        <div class="transcript"><pre id="transcriptOutput">Esperando audio...</pre></div>
-      </article>
-
-      <article class="panel span-6">
-        <h2>Eventos</h2>
-        <div class="log"><pre id="eventLog">CONSIA AVATAR UI cargado.</pre></div>
-      </article>
+      </div>
+      <div class="card span-4 section">
+        <h2>Dashboard summary</h2>
+        <p>Si el endpoint existe, se carga solo. Si no existe, no rompe nada.</p>
+        <div class="list" id="summaryList">
+          <div class="row"><strong>Resumen</strong><span>Sin datos todavía</span></div>
+        </div>
+      </div>
+      <div class="card span-4 section">
+        <h2>Chat rápido</h2>
+        <p>Prueba frontal al endpoint de chat.</p>
+        <div class="list">
+          <div class="row"><strong>Prompt</strong><span>Escribí y ejecutá</span></div>
+          <textarea id="quickPrompt" placeholder="Escribí una orden para CONSIA…" style="width:100%;min-height:120px;margin-top:14px;border-radius:18px;border:1px solid var(--line);background:#091022;color:var(--txt);padding:16px;font:inherit;resize:vertical"></textarea>
+          <button class="btn primary" id="runQuickChatBtn">Ejecutar chat</button>
+          <div class="codebox" id="quickChatOutput">Sin respuesta todavía.</div>
+        </div>
+      </div>
     </section>
 
-    <audio id="remoteAudio" autoplay></audio>
+    <section class="card section">
+      <h2>Console</h2>
+      <p>Registro en vivo para validar el frontend sin tocar código.</p>
+      <div class="console">
+        <div class="codebox" id="liveLog">[CONSIA] Boot…</div>
+        <div class="codebox" id="widgetScriptBox">&lt;script src="https://consia.world/consia-widget.js" data-site="manglar" async&gt;&lt;/script&gt;</div>
+      </div>
+    </section>
+
+    <div class="footer">CONSIA WORLD · FRONTEND FINAL · CEO + AVATAR</div>
   </div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
-
-    let pc = null;
-    let dc = null;
-    let localStream = null;
-    let ephemeralToken = null;
-    let sessionPayload = null;
-    let connected = false;
-
-    const state = {
-      transcript: [],
-      speaking: false,
-      connecting: false,
-    };
-
-    function cfg() {
-      return {
-        apiBase: $("apiBase").value.trim().replace(/\/$/, ""),
-        tenant: $("tenant").value.trim() || "consia",
-        ownerToken: $("ownerToken").value.trim(),
-        voice: $("voice").value,
-        instructions: $("instructions").value.trim(),
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const log = (msg) => {
+        const now = new Date().toLocaleTimeString('es-AR');
+        const line = `[${now}] ${msg}`;
+        $('liveLog').textContent = `${line}\n${$('liveLog').textContent}`.trim();
+        $('heroTerminal').textContent = `${line}\n${$('heroTerminal').textContent}`.trim();
       };
-    }
 
-    function saveConfig() {
-      const c = cfg();
-      localStorage.setItem("avatar.apiBase", c.apiBase);
-      localStorage.setItem("avatar.tenant", c.tenant);
-      localStorage.setItem("avatar.ownerToken", c.ownerToken);
-      localStorage.setItem("avatar.voice", c.voice);
-      localStorage.setItem("avatar.instructions", c.instructions);
-      log("Config avatar guardada.");
-    }
+      const deriveApiBase = () => {
+        const p = new URLSearchParams(location.search);
+        const q = p.get('api');
+        if (q) return q.replace(/\/$/, '');
+        const saved = localStorage.getItem('CONSIA_API_BASE');
+        if (saved) return saved.replace(/\/$/, '');
+        if (location.hostname === 'consia.world') return 'https://api.consia.world';
+        if (location.hostname === 'www.consia.world') return 'https://api.consia.world';
+        if (location.hostname.includes('pages.dev')) return 'https://api.consia.world';
+        if (location.hostname.startsWith('api.')) return location.origin.replace(/\/$/, '');
+        return `${location.origin.replace(/\/$/, '')}`;
+      };
 
-    function loadConfig() {
-      $("apiBase").value = localStorage.getItem("avatar.apiBase") || "https://api.consia.world";
-      $("tenant").value = localStorage.getItem("avatar.tenant") || "consia";
-      $("ownerToken").value = localStorage.getItem("avatar.ownerToken") || "";
-      $("voice").value = localStorage.getItem("avatar.voice") || "marin";
-      $("instructions").value =
-        localStorage.getItem("avatar.instructions") ||
-        "Sos CONSIA Avatar, asistente ejecutivo en tiempo real. Respondé en español, claro, breve y con tono premium.";
-    }
+      const API = deriveApiBase();
+      localStorage.setItem('CONSIA_API_BASE', API);
+      $('apiBaseLabel').textContent = API;
+      log(`API detectada: ${API}`);
 
-    function log(message) {
-      const stamp = new Date().toLocaleTimeString("es-AR", { hour12: false });
-      $("eventLog").textContent = `[${stamp}] ${message}\n` + $("eventLog").textContent;
-    }
-
-    function setBadge(id, text, cls) {
-      const el = $(id);
-      el.textContent = text;
-      el.className = cls || "";
-    }
-
-    function setAvatarSpeaking(flag) {
-      state.speaking = !!flag;
-      $("orb").classList.toggle("speaking", !!flag);
-      $("avatarState").textContent = flag ? "speaking" : "ready";
-      $("avatarState").className = flag ? "ok" : "warn";
-    }
-
-    async function api(path, options = {}) {
-      const c = cfg();
-      const headers = new Headers(options.headers || {});
-      headers.set("content-type", "application/json");
-      if (c.ownerToken) headers.set("x-owner-token", c.ownerToken);
-
-      const response = await fetch(`${c.apiBase}${path}`, {
-        method: options.method || "GET",
-        headers,
-        body: options.body ? JSON.stringify(options.body) : undefined,
-      });
-
-      const raw = await response.text();
-      let data;
-      try { data = JSON.parse(raw); } catch { data = raw; }
-
-      $("sessionOutput").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
-
-      if (!response.ok) {
-        throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-      }
-
-      return data;
-    }
-
-    async function checkStatus() {
-      const data = await api("/v1/avatar/status", { method: "GET" });
-      $("heroStatus").textContent = data.ok ? "ACTIVE" : "ERROR";
-      $("heroModel").textContent = data.model || "gpt-realtime";
-      $("heroVoice").textContent = data.voice || cfg().voice;
-      $("avatarSubtitle").textContent = "Backend avatar activo. Listo para crear sesión realtime.";
-      log("Avatar status OK.");
-      return data;
-    }
-
-    async function createSession() {
-      const c = cfg();
-      const data = await api("/v1/avatar/session", {
-        method: "POST",
-        body: {
-          tenant: c.tenant,
-          voice: c.voice,
-          instructions: c.instructions,
-        },
-      });
-
-      sessionPayload = data;
-      ephemeralToken =
-        data?.client_secret?.value ||
-        data?.client_secret ||
-        data?.session?.value ||
-        data?.session?.client_secret?.value ||
-        null;
-
-      if (!ephemeralToken) {
-        throw new Error("no_ephemeral_token_found");
-      }
-
-      log("Sesión realtime creada.");
-      $("heroModel").textContent = data.model || "gpt-realtime";
-      $("heroVoice").textContent = data.voice || c.voice;
-      $("avatarSubtitle").textContent = "Sesión efímera creada. Listo para conectar por WebRTC.";
-      return data;
-    }
-
-    async function connectAvatar() {
-      if (state.connecting || connected) return;
-      state.connecting = true;
-
-      try {
-        if (!ephemeralToken) {
-          await createSession();
+      const fetchJson = async (paths, options = {}) => {
+        const arr = Array.isArray(paths) ? paths : [paths];
+        let lastErr = null;
+        for (const path of arr) {
+          try {
+            const res = await fetch(`${API}${path}`, options);
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); } catch { data = { raw: text }; }
+            if (!res.ok) throw new Error(`${path} → ${res.status} ${text.slice(0,180)}`);
+            return { ok: true, path, data };
+          } catch (err) { lastErr = err; }
         }
+        return { ok: false, error: lastErr ? String(lastErr.message || lastErr) : 'unknown_error' };
+      };
 
-        setBadge("rtcState", "starting", "warn");
-        setBadge("micState", "requesting", "warn");
-        $("avatarSubtitle").textContent = "Solicitando micrófono y preparando conexión...";
-        log("Solicitando micrófono.");
-
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        setBadge("micState", "active", "ok");
-
-        pc = new RTCPeerConnection();
-        const remoteAudio = $("remoteAudio");
-
-        pc.ontrack = (event) => {
-          remoteAudio.srcObject = event.streams[0];
-          log("Audio remoto conectado.");
-        };
-
-        pc.onconnectionstatechange = () => {
-          const s = pc.connectionState;
-          setBadge("rtcState", s, s === "connected" ? "ok" : (s === "failed" || s === "disconnected" ? "danger" : "warn"));
-          if (s === "connected") {
-            connected = true;
-            $("avatarSubtitle").textContent = "Avatar conectado. Hablá normalmente.";
-            log("WebRTC conectado.");
-          }
-          if (s === "failed" || s === "closed" || s === "disconnected") {
-            connected = false;
-            setAvatarSpeaking(false);
-          }
-        };
-
-        const track = localStream.getAudioTracks()[0];
-        pc.addTrack(track, localStream);
-
-        dc = pc.createDataChannel("oai-events");
-        dc.onopen = () => {
-          setBadge("dataState", "open", "ok");
-          log("Data channel abierto.");
-        };
-        dc.onclose = () => {
-          setBadge("dataState", "closed", "warn");
-          log("Data channel cerrado.");
-        };
-        dc.onerror = (e) => {
-          setBadge("dataState", "error", "danger");
-          log("Error data channel.");
-        };
-        dc.onmessage = (event) => {
-          handleRealtimeEvent(event.data);
-        };
-
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-
-        const sdpResponse = await fetch(`https://api.openai.com/v1/realtime?model=${encodeURIComponent(sessionPayload.model || "gpt-realtime")}`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${ephemeralToken}`,
-            "Content-Type": "application/sdp"
-          },
-          body: offer.sdp
-        });
-
-        const answer = await sdpResponse.text();
-        if (!sdpResponse.ok) {
-          throw new Error(answer || "realtime_sdp_error");
+      const updateHealth = async () => {
+        log('Consultando health…');
+        const r = await fetchJson(['/v1/health','/health','/']);
+        if (r.ok) {
+          const d = r.data;
+          $('healthBox').textContent = JSON.stringify(d, null, 2).slice(0, 240);
+          $('serviceStatus').textContent = (d.status || d.system || d.service || 'ONLINE').toString().toUpperCase();
+          log(`Health OK desde ${r.path}`);
+        } else {
+          $('healthBox').textContent = r.error;
+          $('serviceStatus').textContent = 'NO LINK';
+          log(`Health error: ${r.error}`);
         }
+      };
 
-        await pc.setRemoteDescription({
-          type: "answer",
-          sdp: answer
-        });
-
-        setBadge("rtcState", "connected", "ok");
-        $("avatarSubtitle").textContent = "Avatar conectado. Hablá normalmente.";
-      } catch (error) {
-        log(`Error conectando avatar: ${error.message}`);
-        $("avatarSubtitle").textContent = `Error: ${error.message}`;
-        setBadge("rtcState", "error", "danger");
-      } finally {
-        state.connecting = false;
-      }
-    }
-
-    function handleRealtimeEvent(raw) {
-      let data = null;
-      try { data = JSON.parse(raw); } catch { return; }
-
-      const type = data?.type || "unknown";
-
-      if (
-        type.includes("audio") ||
-        type.includes("speech_started") ||
-        type.includes("speech_stopped") ||
-        type.includes("response.audio")
-      ) {
-        log(`Evento realtime: ${type}`);
-      }
-
-      if (
-        type === "input_audio_buffer.speech_started" ||
-        type === "response.created"
-      ) {
-        setAvatarSpeaking(true);
-      }
-
-      if (
-        type === "input_audio_buffer.speech_stopped" ||
-        type === "response.done"
-      ) {
-        setAvatarSpeaking(false);
-      }
-
-      if (type === "response.audio_transcript.delta" && data.delta) {
-        appendTranscript(data.delta, "assistant");
-      }
-
-      if (type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
-        appendTranscript(`\n[vos] ${data.transcript}\n`, "user");
-      }
-
-      if (type === "error") {
-        log(`Realtime error: ${JSON.stringify(data)}`);
-      }
-    }
-
-    function appendTranscript(text, role) {
-      const prefix = role === "user" ? "" : "";
-      state.transcript.push(prefix + text);
-      $("transcriptOutput").textContent = state.transcript.join("");
-    }
-
-    async function disconnectAvatar() {
-      try {
-        if (dc) {
-          try { dc.close(); } catch {}
-          dc = null;
+      const updateStatus = async () => {
+        log('Consultando status…');
+        const r = await fetchJson(['/v1/status','/status','/v1/memory/status']);
+        if (r.ok) {
+          const d = r.data;
+          $('statusBox').textContent = JSON.stringify(d, null, 2).slice(0, 240);
+          log(`Status OK desde ${r.path}`);
+        } else {
+          $('statusBox').textContent = r.error;
+          log(`Status error: ${r.error}`);
         }
-        if (pc) {
-          try { pc.close(); } catch {}
-          pc = null;
+      };
+
+      const updateSummary = async () => {
+        log('Consultando dashboard summary…');
+        const r = await fetchJson(['/v1/dashboard/summary','/v1/dashboard/status','/v1/owner/dashboard']);
+        if (!r.ok) {
+          $('summaryList').innerHTML = `<div class="row"><strong>Summary</strong><span>${r.error}</span></div>`;
+          log(`Summary no disponible: ${r.error}`);
+          return;
         }
-        if (localStream) {
-          localStream.getTracks().forEach((t) => t.stop());
-          localStream = null;
-        }
-      } finally {
-        connected = false;
-        ephemeralToken = null;
-        sessionPayload = null;
-        setAvatarSpeaking(false);
-        setBadge("micState", "idle", "warn");
-        setBadge("rtcState", "idle", "warn");
-        setBadge("dataState", "idle", "warn");
-        $("avatarSubtitle").textContent = "Desconectado.";
-        log("Avatar desconectado.");
-      }
-    }
+        const d = r.data || {};
+        const items = [];
+        const flat = {
+          service: d.service || d.system || d.name,
+          status: d.status,
+          version: d.version,
+          mode: d.mode,
+          uptime: d.uptime,
+          requests: d.requests,
+          chats: d.chats,
+          leads: d.leads,
+          files: d.files,
+          memory: d.memory,
+        };
+        Object.entries(flat).forEach(([k,v]) => { if (v !== undefined && v !== null && v !== '') items.push([k,v]); });
+        if (!items.length) items.push(['summary', JSON.stringify(d).slice(0,80)]);
+        $('summaryList').innerHTML = items.slice(0,8).map(([k,v]) => `<div class="row"><strong>${k}</strong><span>${typeof v === 'object' ? JSON.stringify(v) : v}</span></div>`).join('');
+        log(`Summary OK desde ${r.path}`);
+      };
 
-    function clearUI() {
-      $("sessionOutput").textContent = "Sin sesión todavía.";
-      $("transcriptOutput").textContent = "Esperando audio...";
-      $("eventLog").textContent = "CONSIA AVATAR UI cargado.";
-      $("avatarSubtitle").textContent = "Esperando conexión realtime...";
-      setAvatarSpeaking(false);
-      setBadge("micState", "idle", "warn");
-      setBadge("rtcState", "idle", "warn");
-      setBadge("dataState", "idle", "warn");
-    }
+      const runQuickChat = async () => {
+        const prompt = $('quickPrompt').value.trim();
+        if (!prompt) return;
+        $('quickChatOutput').textContent = 'Ejecutando…';
+        log(`Chat rápido → ${prompt.slice(0,60)}`);
+        const body = JSON.stringify({ message: prompt, prompt, input: prompt, text: prompt });
+        const r = await fetchJson(['/v1/chat','/chat','/v1/agents/run'], { method:'POST', headers:{ 'Content-Type':'application/json' }, body });
+        $('quickChatOutput').textContent = r.ok ? JSON.stringify(r.data, null, 2) : `ERROR\n${r.error}`;
+        log(r.ok ? `Chat OK desde ${r.path}` : `Chat error: ${r.error}`);
+      };
 
-    $("saveConfigBtn").addEventListener("click", () => {
-      saveConfig();
-    });
+      $('runHealthBtn').onclick = updateHealth;
+      $('refreshAllBtn').onclick = async () => {
+        await Promise.allSettled([updateHealth(), updateStatus(), updateSummary()]);
+      };
+      $('runQuickChatBtn').onclick = runQuickChat;
+      $('copyWidgetBtn').onclick = async () => {
+        const code = `<script src="https://consia.world/consia-widget.js" data-site="manglar" async></script>`;
+        try { await navigator.clipboard.writeText(code); log('Script del widget copiado.'); }
+        catch { log('No se pudo copiar automáticamente.'); }
+      };
 
-    $("statusBtn").addEventListener("click", async () => {
-      await checkStatus();
-    });
-
-    $("sessionBtn").addEventListener("click", async () => {
-      try {
-        await createSession();
-      } catch (error) {
-        log(`Error creando sesión: ${error.message}`);
-      }
-    });
-
-    $("connectBtn").addEventListener("click", async () => {
-      await connectAvatar();
-    });
-
-    $("disconnectBtn").addEventListener("click", async () => {
-      await disconnectAvatar();
-    });
-
-    $("clearBtn").addEventListener("click", () => {
-      clearUI();
-    });
-
-    window.addEventListener("beforeunload", () => {
-      disconnectAvatar();
-    });
-
-    window.addEventListener("load", async () => {
-      loadConfig();
-      clearUI();
-      try {
-        await checkStatus();
-      } catch (error) {
-        log(`No se pudo conectar al inicio: ${error.message}`);
-      }
-    });
-  <script src="https://consia.world/consia-widget.js" data-site="manglar" async></script>
+      Promise.allSettled([updateHealth(), updateStatus(), updateSummary()]);
+    })();
+  </script>
 </body>
 </html>
