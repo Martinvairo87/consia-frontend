@@ -6,6 +6,11 @@
   const API_BASE = (script?.dataset?.api || "https://api.consia.world").replace(/\/$/, "");
   const AVATAR_URL_BASE = (script?.dataset?.avatar || "https://consia.world/avatar.html").replace(/\/$/, "");
   const POSITION = (script?.dataset?.position || "right").trim().toLowerCase();
+  const MODE = (script?.dataset?.mode || "hybrid").trim().toLowerCase(); // chat | avatar | hybrid
+  const AUTO_OPEN = String(script?.dataset?.autoOpen || "false").toLowerCase() === "true";
+  const OPEN_AVATAR_IN_NEW_TAB =
+    String(script?.dataset?.avatarNewTab || "true").toLowerCase() !== "false";
+
   const STORAGE_KEY = `consia_widget_${SITE}`;
   const SESSION_KEY = `consia_widget_session_${SITE}`;
 
@@ -89,9 +94,12 @@
     open: false,
     loading: false,
     leadOpen: false,
-    conversationId: sessionStorage.getItem(SESSION_KEY) || (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now())),
+    conversationId:
+      sessionStorage.getItem(SESSION_KEY) ||
+      (globalThis.crypto?.randomUUID ? crypto.randomUUID() : `conv_${Date.now()}`),
     messages: [],
-    mounted: false
+    mounted: false,
+    shell: null
   };
 
   sessionStorage.setItem(SESSION_KEY, state.conversationId);
@@ -124,17 +132,41 @@
   function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = safeJsonParse(raw, null);
+
     if (parsed?.conversationId) {
       state.conversationId = parsed.conversationId;
       sessionStorage.setItem(SESSION_KEY, state.conversationId);
     }
+
     if (Array.isArray(parsed?.messages) && parsed.messages.length) {
       state.messages = parsed.messages.slice(-20);
     }
   }
 
+  function buildAvatarUrl() {
+    const url = new URL(AVATAR_URL_BASE);
+    url.searchParams.set("site", SITE);
+    url.searchParams.set("tenant", SITE);
+    url.searchParams.set("api", API_BASE);
+    return url.toString();
+  }
+
+  function openAvatar() {
+    const url = buildAvatarUrl();
+
+    if (OPEN_AVATAR_IN_NEW_TAB) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    window.location.href = url;
+  }
+
   function injectStyles(accent) {
+    if (document.getElementById(`consia-widget-style-${SITE}`)) return;
+
     const style = document.createElement("style");
+    style.id = `consia-widget-style-${SITE}`;
     style.textContent = `
       .consia-widget-shell{all:initial}
       .consia-launcher{
@@ -142,8 +174,8 @@
         ${POSITION === "left" ? "left:20px;" : "right:20px;"}
         bottom:20px;
         z-index:2147483640;
-        width:68px;
-        height:68px;
+        width:72px;
+        height:72px;
         border:none;
         border-radius:999px;
         cursor:pointer;
@@ -167,19 +199,51 @@
         animation:consiaPulse 3s linear infinite;
       }
 
+      .consia-launcher .consia-launcher-core{
+        position:absolute;
+        inset:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        font:700 11px/1 Inter,system-ui,sans-serif;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        text-shadow:0 1px 8px rgba(0,0,0,.4);
+      }
+
+      .consia-badge{
+        position:absolute;
+        top:-4px;
+        ${POSITION === "left" ? "right:-4px;" : "left:-4px;"}
+        min-width:22px;
+        height:22px;
+        padding:0 6px;
+        border-radius:999px;
+        background:linear-gradient(135deg, ${accent}, #9f7bff);
+        color:#fff;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        font:700 11px/1 Inter,system-ui,sans-serif;
+        box-shadow:0 8px 18px rgba(0,0,0,.28);
+      }
+
       .consia-panel{
         position:fixed;
         ${POSITION === "left" ? "left:20px;" : "right:20px;"}
-        bottom:98px;
+        bottom:104px;
         z-index:2147483640;
-        width:min(420px, calc(100vw - 24px));
-        height:min(720px, calc(100vh - 120px));
+        width:min(430px, calc(100vw - 24px));
+        height:min(740px, calc(100vh - 126px));
         display:none;
         flex-direction:column;
         overflow:hidden;
         border-radius:24px;
         border:1px solid rgba(255,255,255,.08);
-        background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)), rgba(10,16,28,.96);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
+          rgba(10,16,28,.97);
         box-shadow:0 24px 64px rgba(0,0,0,.42);
         backdrop-filter:blur(18px);
         font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -350,6 +414,31 @@
         margin-top:6px;
       }
 
+      .consia-avatar-cta{
+        margin-top:10px;
+        padding:12px;
+        border-radius:16px;
+        border:1px solid rgba(255,255,255,.06);
+        background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      }
+      .consia-avatar-cta-title{
+        font-size:12px;
+        text-transform:uppercase;
+        letter-spacing:.08em;
+        color:#93a0c2;
+        margin-bottom:8px;
+      }
+      .consia-avatar-btn{
+        width:100%;
+        border:none;
+        border-radius:14px;
+        padding:12px 14px;
+        cursor:pointer;
+        font-weight:700;
+        color:white;
+        background:linear-gradient(135deg, ${accent}, #9f7bff);
+      }
+
       @keyframes consiaPulse{
         0%{transform:scale(.94);opacity:.72}
         100%{transform:scale(1.20);opacity:0}
@@ -362,7 +451,7 @@
         }
         .consia-panel{
           ${POSITION === "left" ? "left:12px;" : "right:12px;"}
-          bottom:90px;
+          bottom:92px;
           width:calc(100vw - 24px);
           height:calc(100vh - 108px);
         }
@@ -376,7 +465,10 @@
     shell.className = "consia-widget-shell";
 
     shell.innerHTML = `
-      <button class="consia-launcher" aria-label="Abrir CONSIA"></button>
+      <button class="consia-launcher" aria-label="Abrir CONSIA">
+        <span class="consia-launcher-core">IA</span>
+        <span class="consia-badge">1</span>
+      </button>
 
       <section class="consia-panel" aria-live="polite" aria-label="CONSIA Widget">
         <div class="consia-head">
@@ -396,8 +488,12 @@
           </div>
           <div class="consia-loading" style="display:none;">CONSIA está pensando...</div>
 
+          <div class="consia-avatar-cta">
+            <div class="consia-avatar-cta-title">Modo avatar premium</div>
+            <button class="consia-avatar-btn" type="button">Abrir avatar con voz</button>
+          </div>
+
           <div class="consia-mini">
-            <button type="button" data-mini="avatar">Avatar live</button>
             <button type="button" data-mini="lead">Dejar mis datos</button>
             <button type="button" data-mini="clear">Nueva conversación</button>
           </div>
@@ -423,12 +519,19 @@
     const sub = shell.querySelector(".consia-sub");
     const loading = shell.querySelector(".consia-loading");
     const leadBox = shell.querySelector(".consia-lead");
+    const badge = shell.querySelector(".consia-badge");
 
     title.textContent = state.profile.title;
     sub.textContent = state.profile.subtitle;
     panel.classList.toggle("open", state.open);
     loading.style.display = state.loading ? "block" : "none";
     leadBox.classList.toggle("open", state.leadOpen);
+
+    if (state.open) {
+      badge.style.display = "none";
+    } else {
+      badge.style.display = state.messages.length > 1 ? "inline-flex" : "none";
+    }
 
     if (!state.messages.length) {
       body.innerHTML = `<div class="consia-msg bot">${escapeHtml(state.profile.welcome)}</div>`;
@@ -475,14 +578,17 @@
     const response = await fetch(url, options);
     const raw = await response.text();
     let data;
+
     try {
       data = JSON.parse(raw);
     } catch {
       data = raw;
     }
+
     if (!response.ok) {
       throw new Error(typeof data === "string" ? data : JSON.stringify(data));
     }
+
     return data;
   }
 
@@ -585,7 +691,8 @@
   }
 
   function newConversation(shell) {
-    state.conversationId = crypto?.randomUUID ? crypto.randomUUID() : String(Date.now());
+    state.conversationId =
+      globalThis.crypto?.randomUUID ? crypto.randomUUID() : `conv_${Date.now()}`;
     sessionStorage.setItem(SESSION_KEY, state.conversationId);
     state.messages = [
       {
@@ -600,16 +707,19 @@
 
   function bindUI(shell) {
     const launcher = shell.querySelector(".consia-launcher");
-    const panel = shell.querySelector(".consia-panel");
     const close = shell.querySelector(".consia-close");
     const input = shell.querySelector(".consia-input");
     const send = shell.querySelector(".consia-send");
-    const avatarBtn = shell.querySelector('[data-mini="avatar"]');
     const leadBtn = shell.querySelector('[data-mini="lead"]');
     const clearBtn = shell.querySelector('[data-mini="clear"]');
     const leadSend = shell.querySelector(".consia-lead-send");
+    const avatarBtn = shell.querySelector(".consia-avatar-btn");
 
     launcher.addEventListener("click", () => {
+      if (MODE === "avatar") {
+        openAvatar();
+        return;
+      }
       state.open = !state.open;
       render(shell);
     });
@@ -635,8 +745,7 @@
     });
 
     avatarBtn.addEventListener("click", () => {
-      const url = `${AVATAR_URL_BASE}?site=${encodeURIComponent(SITE)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      openAvatar();
     });
 
     leadBtn.addEventListener("click", () => {
@@ -652,7 +761,7 @@
       sendLead(shell);
     });
 
-    panel.addEventListener("click", (e) => {
+    shell.addEventListener("click", (e) => {
       const prompt = e.target?.getAttribute?.("data-prompt");
       if (prompt) {
         input.value = prompt;
@@ -670,6 +779,7 @@
 
     injectStyles(state.profile.accent);
     const shell = createShell();
+    state.shell = shell;
 
     if (!state.messages.length) {
       state.messages = [
@@ -684,6 +794,13 @@
 
     bindUI(shell);
     render(shell);
+
+    if (AUTO_OPEN && MODE !== "avatar") {
+      setTimeout(() => {
+        state.open = true;
+        render(shell);
+      }, 900);
+    }
   }
 
   if (document.readyState === "loading") {
