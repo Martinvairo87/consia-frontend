@@ -74,7 +74,7 @@
       width:320px;
       height:320px;
       border-radius:50%;
-      background:radial-gradient(circle, color-mix(in srgb, var(--accent) 34%, transparent), transparent 64%);
+      background:radial-gradient(circle, rgba(122,162,255,.34), transparent 64%);
       filter:blur(18px);
       pointer-events:none;
     }
@@ -101,8 +101,7 @@
       max-width:860px;
     }
 
-    .hero p,
-    .small{
+    .hero p,.small{
       color:var(--muted);
       line-height:1.6;
     }
@@ -141,10 +140,7 @@
       letter-spacing:-.04em;
     }
 
-    .panel{
-      padding:20px;
-    }
-
+    .panel{padding:20px}
     .panel h2{
       margin:0 0 6px;
       font-size:24px;
@@ -176,9 +172,7 @@
       gap:8px;
     }
 
-    .field-full{
-      grid-column:1 / -1;
-    }
+    .field-full{grid-column:1 / -1}
 
     label{
       font-size:12px;
@@ -387,19 +381,12 @@
       color:#dbe6ff;
     }
 
-    .section-title{
-      font-size:12px;
-      letter-spacing:.08em;
-      color:var(--muted);
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-
     .command{
       display:flex;
       gap:10px;
       margin-top:12px;
       flex-wrap:wrap;
+      width:min(100%,760px);
     }
 
     .command input{
@@ -543,7 +530,7 @@
             <div class="avatar-sub" id="avatarSubtitle">Esperando conexión realtime...</div>
             <div class="chips" id="chips"></div>
 
-            <div class="command" style="width:min(100%,760px)">
+            <div class="command">
               <input id="textCommand" placeholder="Escribí una orden para CONSIA..." />
               <button id="sendTextBtn">Enviar texto</button>
             </div>
@@ -602,8 +589,7 @@
         heroText: "CONSIA acompaña a cada usuario de Manglar con contexto de proyectos, obras, desarrollos e inmobiliaria.",
         subtitle: "Proyectos, obras, desarrollos e inversiones.",
         eyebrow: "CONSIA · MANGLAR · AVATAR LIVE",
-        instructions:
-          "Sos CONSIA para Manglar Construcciones. Guiás al usuario sobre obras, desarrollos, proyectos, inversión y Manglar Inmobiliaria. Respondé en español, breve, premium, clara y orientada a conversión.",
+        instructions: "Sos CONSIA para Manglar Construcciones. Guiás al usuario sobre obras, desarrollos, proyectos, inversión y Manglar Inmobiliaria. Respondé en español, breve, premium, clara y orientada a conversión.",
         chips: ["Proyectos", "Desarrollos", "Inversión", "Inmobiliaria", "Asesor premium"]
       },
       realwork: {
@@ -615,8 +601,7 @@
         heroText: "CONSIA acompaña a cada usuario para encontrar propiedades, servicios y oportunidades en tiempo real.",
         subtitle: "Propiedades, servicios y oportunidades.",
         eyebrow: "CONSIA · REAL WORK · AVATAR LIVE",
-        instructions:
-          "Sos CONSIA para Real Work. Guiás al usuario sobre propiedades, servicios, desarrollos y oportunidades inmobiliarias. Respondé en español, breve, premium y comercial.",
+        instructions: "Sos CONSIA para Real Work. Guiás al usuario sobre propiedades, servicios, desarrollos y oportunidades inmobiliarias. Respondé en español, breve, premium y comercial.",
         chips: ["Propiedades", "Servicios", "Lead capture", "Matching", "Conversión"]
       },
       vipwork: {
@@ -628,8 +613,7 @@
         heroText: "CONSIA clasifica intención y acompaña consultas de RRHH, staffing, outsourcing y selección.",
         subtitle: "Empresas, postulantes y RRHH.",
         eyebrow: "CONSIA · VIP WORK · AVATAR LIVE",
-        instructions:
-          "Sos CONSIA para VIP Work. Guiás a empresas y postulantes en RRHH, personal eventual, outsourcing y selección. Respondé en español, breve, profesional y clara.",
+        instructions: "Sos CONSIA para VIP Work. Guiás a empresas y postulantes en RRHH, personal eventual, outsourcing y selección. Respondé en español, breve, profesional y clara.",
         chips: ["Empresas", "Postulantes", "RRHH", "Selección", "Outsourcing"]
       },
       vairo: {
@@ -641,8 +625,7 @@
         heroText: "CONSIA acompaña consultas profesionales, clasifica necesidades y deriva con contexto.",
         subtitle: "Estudio contable y asesoramiento.",
         eyebrow: "CONSIA · VAIRO · AVATAR LIVE",
-        instructions:
-          "Sos CONSIA para Vairo y Asociados. Guiás a empresas y personas en temas contables, fiscales y administrativos. Respondé en español, breve, confiable y profesional.",
+        instructions: "Sos CONSIA para Vairo y Asociados. Guiás a empresas y personas en temas contables, fiscales y administrativos. Respondé en español, breve, confiable y profesional.",
         chips: ["Contable", "Fiscal", "Empresas", "Personas", "Derivación"]
       },
       bambino: {
@@ -654,8 +637,7 @@
         heroText: "CONSIA acompaña búsquedas, recomienda regalos, campañas y productos por edad u ocasión.",
         subtitle: "Juguetes, promos y recomendaciones.",
         eyebrow: "CONSIA · BAMBINO · AVATAR LIVE",
-        instructions:
-          "Sos CONSIA para Bambino Jugueterías. Guiás al usuario con recomendaciones, promos, productos por edad y ocasiones especiales. Respondé en español, breve, cálida y comercial.",
+        instructions: "Sos CONSIA para Bambino Jugueterías. Guiás al usuario con recomendaciones, promos, productos por edad y ocasiones especiales. Respondé en español, breve, cálida y comercial.",
         chips: ["Regalos", "Promos", "Edad", "Catálogo", "Venta asistida"]
       },
       consia: {
@@ -667,8 +649,7 @@
         heroText: "Conexión realtime desde tu stack propio para hablar, escuchar y asistir en vivo.",
         subtitle: "Asistente ejecutivo realtime.",
         eyebrow: "CONSIA · AVATAR LIVE · REALTIME",
-        instructions:
-          "Sos CONSIA Avatar, asistente ejecutivo en tiempo real. Respondé en español, claro, breve y con tono premium.",
+        instructions: "Sos CONSIA Avatar, asistente ejecutivo en tiempo real. Respondé en español, claro, breve y con tono premium.",
         chips: ["Realtime", "WebRTC", "Premium", "Multimarca", "Live"]
       }
     };
@@ -818,10 +799,7 @@
         $("sessionOutput").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
       }
 
-      if (!res.ok) {
-        throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-      }
-
+      if (!res.ok) throw new Error(typeof data === "string" ? data : JSON.stringify(data));
       return data;
     }
 
@@ -837,7 +815,6 @@
 
     async function createSession() {
       const c = cfg();
-
       const data = await api("/v1/avatar/session", {
         method: "POST",
         body: {
@@ -855,9 +832,7 @@
         data?.session?.client_secret?.value ||
         null;
 
-      if (!ephemeralToken) {
-        throw new Error("no_ephemeral_token_found");
-      }
+      if (!ephemeralToken) throw new Error("no_ephemeral_token_found");
 
       $("heroModel").textContent = data.model || "gpt-realtime";
       $("heroVoice").textContent = data.voice || c.voice;
@@ -945,6 +920,7 @@
           if (s === "connected") {
             connected = true;
             $("avatarSubtitle").textContent = "Avatar conectado. Hablá normalmente.";
+            $("heroStatus").textContent = "LIVE";
             log("WebRTC conectado.");
           }
 
@@ -997,9 +973,6 @@
           type: "answer",
           sdp: answer
         });
-
-        $("heroStatus").textContent = "LIVE";
-        $("avatarSubtitle").textContent = "Avatar conectado. Hablá normalmente.";
       } catch (error) {
         $("heroStatus").textContent = "ERROR";
         $("avatarSubtitle").textContent = `Error: ${error.message}`;
@@ -1017,12 +990,10 @@
           try { dc.close(); } catch {}
           dc = null;
         }
-
         if (pc) {
           try { pc.close(); } catch {}
           pc = null;
         }
-
         if (localStream) {
           localStream.getTracks().forEach((t) => t.stop());
           localStream = null;
@@ -1091,7 +1062,9 @@
     }
 
     $("saveConfigBtn").addEventListener("click", saveConfig);
-    $("statusBtn").addEventListener("click", async () => { await checkStatus(); });
+    $("statusBtn").addEventListener("click", async () => {
+      try { await checkStatus(); } catch (e) { log(`Error status: ${e.message}`); }
+    });
     $("sessionBtn").addEventListener("click", async () => {
       try { await createSession(); } catch (e) { log(`Error creando sesión: ${e.message}`); }
     });
