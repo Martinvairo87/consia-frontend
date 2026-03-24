@@ -1,85 +1,1107 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CONSIA AVATAR</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONSIA AVATAR LIVE</title>
+  <style>
+    :root{
+      --bg:#020611;
+      --panel:rgba(8,12,24,.72);
+      --panel2:rgba(18,26,48,.72);
+      --line:rgba(130,170,255,.16);
+      --text:#edf3ff;
+      --muted:#9bb0d8;
+      --cyan:#73f2ff;
+      --blue:#6fa8ff;
+      --violet:#8b6bff;
+      --ok:#79ffbf;
+      --danger:#ff738a;
+      --shadow:0 24px 70px rgba(0,0,0,.42);
+      --radius:24px;
+    }
 
-<style>
-body {
-  margin:0;
-  background:black;
-  color:white;
-  font-family:Arial;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(115,242,255,.10), transparent 22%),
+        radial-gradient(circle at 82% 15%, rgba(139,107,255,.16), transparent 22%),
+        linear-gradient(180deg, #020611, #071022 68%, #040814);
+      overflow:hidden;
+    }
 
-video {
-  width:320px;
-  height:320px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 40px #00ffff55;
-}
+    .app{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
+      height:100%;
+      padding:18px;
+    }
 
-button {
-  margin-top:20px;
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  background:#00ffff;
-  color:black;
-  font-weight:bold;
-  cursor:pointer;
-}
-</style>
+    .panel,.stage{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+
+    .panel{
+      padding:18px;
+      overflow:auto;
+    }
+
+    .brand{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.04em;
+    }
+
+    .muted{color:var(--muted)}
+
+    .group{
+      padding:14px;
+      margin-bottom:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+    }
+
+    .group h3{
+      margin:0 0 10px;
+      font-size:12px;
+      letter-spacing:.16em;
+      color:#d5e5ff;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    input,select,textarea,button{
+      font:inherit;
+    }
+
+    input[type="text"], input[type="url"], select, textarea, input[type="range"]{
+      width:100%;
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:12px 14px;
+      outline:none;
+    }
+
+    textarea{
+      min-height:92px;
+      resize:vertical;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .btns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    button{
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      cursor:pointer;
+      color:white;
+      background:linear-gradient(135deg, var(--blue), var(--violet));
+      box-shadow:0 12px 28px rgba(111,168,255,.26);
+    }
+
+    button.secondary{
+      background:rgba(255,255,255,.06);
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .upload{
+      display:block;
+      width:100%;
+      text-align:center;
+      padding:12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.14);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    .upload input{display:none}
+
+    .status{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--danger);
+      box-shadow:0 0 12px var(--danger);
+    }
+    .dot.ok{
+      background:var(--ok);
+      box-shadow:0 0 12px var(--ok);
+    }
+
+    .tiny{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    .stage{
+      position:relative;
+      overflow:hidden;
+      padding:18px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+    }
+
+    .stage-bg{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:saturate(1.05) contrast(1.08) brightness(.86);
+      transition:all .25s ease;
+      transform:scale(1.02);
+    }
+
+    .stage-bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255,255,255,.05), transparent 22%),
+        linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.48));
+    }
+
+    .stage-top,.avatar-wrap,.stage-bottom{
+      position:relative;
+      z-index:2;
+    }
+
+    .stage-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+
+    .stage-title h2{
+      margin:0;
+      font-size:36px;
+      letter-spacing:.01em;
+    }
+
+    .stage-title p{
+      margin:6px 0 0;
+      color:var(--muted);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(5,10,24,.56);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .avatar-wrap{
+      display:grid;
+      place-items:center;
+      min-height:0;
+    }
+
+    .avatar-shell{
+      position:relative;
+      width:min(540px, 52vw);
+      aspect-ratio:.78;
+      display:grid;
+      place-items:center;
+      transition:transform .2s ease;
+    }
+
+    .avatar-shell[data-mode="orb"]{
+      aspect-ratio:1;
+      width:min(430px, 42vw);
+    }
+
+    .avatar-shell[data-mode="minimal"]{
+      aspect-ratio:1.15;
+      width:min(420px, 42vw);
+    }
+
+    .ring,.ring2,.ring3{
+      position:absolute;
+      border-radius:50%;
+      border:1px solid rgba(115,242,255,.18);
+      box-shadow:0 0 30px rgba(115,242,255,.12), inset 0 0 40px rgba(139,107,255,.06);
+      animation:pulse 3.8s ease-in-out infinite;
+    }
+
+    .ring{ inset:8% }
+    .ring2{ inset:18%; animation-delay:.6s }
+    .ring3{ inset:28%; animation-delay:1.2s }
+
+    @keyframes pulse{
+      0%,100%{ transform:scale(1); opacity:.82 }
+      50%{ transform:scale(1.04); opacity:1 }
+    }
+
+    .portrait-card{
+      position:relative;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      border-radius:32px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      box-shadow:inset 0 0 30px rgba(255,255,255,.04), 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .avatar-media,.avatar-image,.portrait-overlay,.portrait-ui,.face-pulse{
+      position:absolute;
+      inset:0;
+    }
+
+    .avatar-media video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform:scaleX(-1);
+      filter:brightness(1.10) contrast(1.14) saturate(1.15);
+    }
+
+    .avatar-image{
+      background-size:cover;
+      background-position:center top;
+      transform:scale(1.03);
+    }
+
+    .portrait-overlay{
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.12), transparent 18%),
+        linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.58) 100%);
+      z-index:2;
+    }
+
+    .face-pulse{
+      inset:auto;
+      left:50%;
+      top:42%;
+      transform:translate(-50%,-50%);
+      width:45%;
+      aspect-ratio:.86;
+      border-radius:28px;
+      background:rgba(255,255,255,.06);
+      box-shadow:0 0 0 1px rgba(255,255,255,.06), inset 0 0 30px rgba(255,255,255,.06);
+      opacity:0;
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .portrait-ui{
+      inset:auto 16px 16px 16px;
+      z-index:4;
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:12px;
+    }
+
+    .name{
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .meta{
+      color:#d7e5ff;
+      opacity:.88;
+      margin-top:4px;
+    }
+
+    .voice-wave{
+      display:flex;
+      align-items:end;
+      gap:5px;
+      height:54px;
+    }
+
+    .voice-wave span{
+      width:7px;
+      height:16%;
+      border-radius:999px;
+      background:linear-gradient(180deg, #c4ebff, #7cc8ff 45%, #8d7cff);
+      animation:idleWave 1.7s ease-in-out infinite;
+      opacity:.88;
+    }
+
+    .voice-wave span:nth-child(2){animation-delay:.1s}
+    .voice-wave span:nth-child(3){animation-delay:.2s}
+    .voice-wave span:nth-child(4){animation-delay:.3s}
+    .voice-wave span:nth-child(5){animation-delay:.4s}
+    .voice-wave span:nth-child(6){animation-delay:.5s}
+
+    @keyframes idleWave{
+      0%,100%{ height:16% }
+      50%{ height:70% }
+    }
+
+    .speaking .voice-wave span{ animation-duration:.45s }
+    .speaking .face-pulse{
+      opacity:.22;
+      animation:mouthPulse .28s ease-in-out infinite alternate;
+    }
+
+    @keyframes mouthPulse{
+      from{ transform:translate(-50%,-50%) scaleY(.98) }
+      to{ transform:translate(-50%,-50%) scaleY(1.05) }
+    }
+
+    .orb{
+      width:46%;
+      aspect-ratio:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.1) 20%, rgba(107,167,255,.32) 40%, rgba(18,27,70,.95) 72%),
+        linear-gradient(135deg, rgba(107,167,255,.3), rgba(139,107,255,.28));
+      box-shadow:0 0 40px rgba(98,167,255,.25), 0 0 120px rgba(139,107,255,.18), inset 0 0 40px rgba(255,255,255,.08);
+      overflow:hidden;
+      animation:orbFloat 4.2s ease-in-out infinite;
+      position:relative;
+      z-index:2;
+    }
+
+    .orb::before{
+      content:"";
+      position:absolute;
+      inset:12%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    @keyframes orbFloat{
+      0%,100%{ transform:translateY(0) }
+      50%{ transform:translateY(-10px) }
+    }
+
+    .minimal-shell{
+      width:min(520px, 92%);
+      padding:26px;
+      border-radius:26px;
+      background:rgba(9,14,28,.68);
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:0 18px 60px rgba(0,0,0,.28);
+    }
+
+    .minimal-shell .name{
+      font-size:30px;
+      margin-bottom:8px;
+    }
+
+    .stage-bottom{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 320px;
+      gap:16px;
+      align-items:end;
+    }
+
+    .chat-log{
+      max-height:190px;
+      overflow:auto;
+      background:rgba(5,10,24,.56);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .msg{
+      padding:10px 12px;
+      border-radius:14px;
+      margin-bottom:10px;
+      line-height:1.45;
+    }
+
+    .msg.user{ background:rgba(255,255,255,.06) }
+    .msg.ai{
+      background:rgba(107,167,255,.12);
+      border:1px solid rgba(107,167,255,.18);
+    }
+
+    .msg small{
+      display:block;
+      margin-bottom:4px;
+      color:var(--muted);
+    }
+
+    .console{
+      background:rgba(5,10,24,.56);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .console pre{
+      margin:0;
+      font-size:12px;
+      white-space:pre-wrap;
+      word-break:break-word;
+      color:#d4e2ff;
+    }
+
+    .footer-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    @media (max-width:1180px){
+      body{overflow:auto}
+      .app{
+        grid-template-columns:1fr;
+        overflow:auto;
+      }
+      .stage{
+        min-height:900px;
+      }
+      .stage-bottom{
+        grid-template-columns:1fr;
+      }
+      .avatar-shell{
+        width:min(430px, 88vw);
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <aside class="panel">
+      <div class="brand">
+        <div>
+          <h1>CONSIA AVATAR</h1>
+          <div class="muted">LIVE FULL · humano · hiperreal</div>
+        </div>
+      </div>
 
-<h2>CONSIA AVATAR LIVE</h2>
+      <div class="group">
+        <h3>CONEXIÓN</h3>
+        <label>API Base</label>
+        <input id="apiBase" type="url" placeholder="https://api.consia.world" value="https://api.consia.world" />
+        <label style="margin-top:10px;">Owner Token (opcional)</label>
+        <input id="ownerToken" type="text" placeholder="AUTH_SECRET" />
+        <div class="btns" style="margin-top:10px;">
+          <button id="btnCheck">Check API</button>
+          <button class="secondary" id="btnSaveLocal">Guardar local</button>
+        </div>
+        <div class="status"><span class="dot" id="apiDot"></span><span id="apiStatus">API sin verificar</span></div>
+      </div>
 
-<video id="cam" autoplay playsinline></video>
+      <div class="group">
+        <h3>IDENTIDAD</h3>
+        <label>Nombre mostrado</label>
+        <input id="avatarName" type="text" value="CONSIA Prime" />
+        <div class="row">
+          <div>
+            <label>Persona</label>
+            <select id="persona">
+              <option value="consia_prime">CONSIA Prime</option>
+              <option value="executive">Executive Advisor</option>
+              <option value="sales_closer">Sales Closer</option>
+              <option value="architect">Architect Host</option>
+              <option value="friendly_human">Friendly Human</option>
+            </select>
+          </div>
+          <div>
+            <label>Modo visual</label>
+            <select id="mode">
+              <option value="live_mirror">Live Mirror</option>
+              <option value="avatar_image">Avatar Image</option>
+              <option value="human_card">Human Card</option>
+              <option value="orb">Orb</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div>
+            <label>Idioma</label>
+            <select id="language">
+              <option value="es-AR">Español</option>
+              <option value="en-US">English</option>
+              <option value="pt-BR">Português</option>
+            </select>
+          </div>
+          <div>
+            <label>Hiperrealismo</label>
+            <input id="hyperreal" type="range" min="0" max="100" value="90" />
+          </div>
+        </div>
+      </div>
 
-<button onclick="start()">ACTIVAR AVATAR</button>
+      <div class="group">
+        <h3>AVATAR / CLON</h3>
+        <label class="upload">
+          Subir imagen propia / rostro / avatar
+          <input id="avatarUpload" type="file" accept="image/*" />
+        </label>
+        <div class="tiny">Con una foto frontal limpia ya podés dejar un avatar propio. Con video y voz, después se puede llevar a clon más real.</div>
+      </div>
 
-<script>
-const API = "https://api.consia.world";
+      <div class="group">
+        <h3>FONDO</h3>
+        <label>Preset</label>
+        <select id="backgroundPreset">
+          <option value="studio_dark">Studio Dark</option>
+          <option value="executive_office">Executive Office</option>
+          <option value="city_night">City Night</option>
+          <option value="space_black">Space Black</option>
+          <option value="brand_blue">Brand Blue</option>
+          <option value="clean_light">Clean Light</option>
+          <option value="custom">Custom</option>
+        </select>
+        <label style="margin-top:10px;">Background URL</label>
+        <input id="customBgUrl" type="url" placeholder="https://..." />
+        <label class="upload" style="margin-top:10px;">
+          Subir fondo propio
+          <input id="bgUpload" type="file" accept="image/*" />
+        </label>
+      </div>
 
-async function start(){
-  const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-  document.getElementById("cam").srcObject = stream;
+      <div class="group">
+        <h3>VOZ</h3>
+        <div class="row">
+          <div>
+            <label>Voz</label>
+            <select id="voiceSelect"></select>
+          </div>
+          <div>
+            <label>Velocidad</label>
+            <input id="voiceRate" type="range" min="0.75" max="1.25" step="0.05" value="1" />
+          </div>
+        </div>
+        <div class="btns" style="margin-top:10px;">
+          <button id="btnMic">🎙 Hablar</button>
+          <button class="secondary" id="btnStop">⏹ Stop</button>
+        </div>
+      </div>
 
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = "es-AR";
+      <div class="group">
+        <h3>CHAT</h3>
+        <label>Mensaje</label>
+        <textarea id="messageInput" placeholder="Hablame normal. También podés pedir cambio de fondo, avatar, voz o estilo."></textarea>
+        <div class="btns" style="margin-top:10px;">
+          <button id="btnSend">Enviar</button>
+          <button class="secondary" id="btnRepeat">Repetir respuesta</button>
+        </div>
+      </div>
 
-  recognition.onresult = async (e)=>{
-    const text = e.results[0][0].transcript;
+      <div class="group">
+        <h3>PERFIL</h3>
+        <div class="btns">
+          <button id="btnApplyLook">Aplicar look</button>
+          <button class="secondary" id="btnClearChat">Limpiar chat</button>
+        </div>
+      </div>
+    </aside>
 
-    const res = await fetch(API + "/v1/chat",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({message:text})
+    <main class="stage" id="stage">
+      <div class="stage-bg" id="stageBg"></div>
+
+      <div class="stage-top">
+        <div class="stage-title">
+          <h2 id="stageName">CONSIA Prime</h2>
+          <p id="stageMeta">Live Mirror · Studio Dark · hiperreal 90%</p>
+        </div>
+        <div class="pill"><span class="dot ok" id="voiceDot"></span><span id="voiceStatus">listo</span></div>
+      </div>
+
+      <div class="avatar-wrap">
+        <div class="avatar-shell" id="avatarShell" data-mode="live_mirror">
+          <div class="ring"></div>
+          <div class="ring2"></div>
+          <div class="ring3"></div>
+
+          <div class="portrait-card" id="portraitCard">
+            <div class="avatar-media" id="avatarMediaWrap">
+              <video id="cam" autoplay playsinline muted></video>
+            </div>
+            <div class="avatar-image" id="avatarImageLayer" style="display:none;"></div>
+            <div class="portrait-overlay"></div>
+            <div class="face-pulse" id="facePulse"></div>
+
+            <div class="portrait-ui">
+              <div>
+                <div class="name" id="humanName">CONSIA Prime</div>
+                <div class="meta" id="humanMeta">Executive Advisor · tiempo real</div>
+              </div>
+              <div class="voice-wave">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="orb" id="orbView" style="display:none;"></div>
+
+          <div class="minimal-shell" id="minimalView" style="display:none;">
+            <div class="name" id="minimalName">CONSIA Prime</div>
+            <div class="meta" id="minimalMeta">Modo minimal premium</div>
+            <div class="voice-wave" style="margin-top:18px;">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-bottom">
+        <div>
+          <div class="chat-log" id="chatLog"></div>
+          <div class="footer-actions">
+            <button class="secondary" id="btnCamera">Cámara on/off</button>
+            <button class="secondary" id="btnCheck2">Check API</button>
+            <button class="secondary" id="btnAutoStart">Autostart voz</button>
+          </div>
+        </div>
+
+        <div class="console">
+          <pre id="consoleOut">CONSIA Avatar listo.</pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const state = {
+      apiBase: localStorage.getItem('consia_avatar_api') || 'https://api.consia.world',
+      ownerToken: localStorage.getItem('consia_avatar_token') || '',
+      avatarImage: localStorage.getItem('consia_avatar_image') || '',
+      bgImage: localStorage.getItem('consia_avatar_bg') || '',
+      backgroundPreset: localStorage.getItem('consia_avatar_preset') || 'studio_dark',
+      lastReply: '',
+      chat: [],
+      cameraOn: false,
+      stream: null,
+      recognition: null,
+      autoRestartMic: false
+    };
+
+    const els = {
+      apiBase: document.getElementById('apiBase'),
+      ownerToken: document.getElementById('ownerToken'),
+      apiDot: document.getElementById('apiDot'),
+      apiStatus: document.getElementById('apiStatus'),
+      avatarName: document.getElementById('avatarName'),
+      persona: document.getElementById('persona'),
+      mode: document.getElementById('mode'),
+      language: document.getElementById('language'),
+      hyperreal: document.getElementById('hyperreal'),
+      avatarUpload: document.getElementById('avatarUpload'),
+      backgroundPreset: document.getElementById('backgroundPreset'),
+      customBgUrl: document.getElementById('customBgUrl'),
+      bgUpload: document.getElementById('bgUpload'),
+      voiceSelect: document.getElementById('voiceSelect'),
+      voiceRate: document.getElementById('voiceRate'),
+      messageInput: document.getElementById('messageInput'),
+      stageBg: document.getElementById('stageBg'),
+      stageName: document.getElementById('stageName'),
+      stageMeta: document.getElementById('stageMeta'),
+      voiceDot: document.getElementById('voiceDot'),
+      voiceStatus: document.getElementById('voiceStatus'),
+      chatLog: document.getElementById('chatLog'),
+      consoleOut: document.getElementById('consoleOut'),
+      stage: document.getElementById('stage'),
+      cam: document.getElementById('cam'),
+      avatarShell: document.getElementById('avatarShell'),
+      portraitCard: document.getElementById('portraitCard'),
+      avatarMediaWrap: document.getElementById('avatarMediaWrap'),
+      avatarImageLayer: document.getElementById('avatarImageLayer'),
+      orbView: document.getElementById('orbView'),
+      minimalView: document.getElementById('minimalView'),
+      humanName: document.getElementById('humanName'),
+      humanMeta: document.getElementById('humanMeta'),
+      minimalName: document.getElementById('minimalName'),
+      minimalMeta: document.getElementById('minimalMeta')
+    };
+
+    const PRESETS = {
+      studio_dark: 'linear-gradient(135deg, #061121 0%, #0e1f43 30%, #080d19 100%)',
+      executive_office: 'linear-gradient(135deg, #1a2234 0%, #26334d 40%, #0f1728 100%)',
+      city_night: 'linear-gradient(135deg, #041221 0%, #0d2b4a 35%, #060b14 100%)',
+      space_black: 'radial-gradient(circle at 50% 35%, rgba(120,160,255,0.24), rgba(10,14,26,0.95) 45%, #03060d 80%)',
+      brand_blue: 'linear-gradient(135deg, #071428 0%, #10366d 45%, #091224 100%)',
+      clean_light: 'linear-gradient(135deg, #dfe9ff 0%, #8fb6ff 40%, #4062a8 100%)'
+    };
+
+    function log(msg){
+      els.consoleOut.textContent = `${new Date().toLocaleTimeString()} · ${msg}`;
+    }
+
+    function saveLocal(){
+      localStorage.setItem('consia_avatar_api', els.apiBase.value.trim());
+      localStorage.setItem('consia_avatar_token', els.ownerToken.value.trim());
+      localStorage.setItem('consia_avatar_preset', els.backgroundPreset.value);
+      if(state.avatarImage) localStorage.setItem('consia_avatar_image', state.avatarImage);
+      if(state.bgImage) localStorage.setItem('consia_avatar_bg', state.bgImage);
+      log('Configuración local guardada.');
+    }
+
+    function refreshVoices(){
+      const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+      els.voiceSelect.innerHTML = '';
+      const preferred = voices.filter(v => /^es|^en|^pt/i.test(v.lang));
+      const finalVoices = preferred.length ? preferred : voices;
+
+      finalVoices.forEach(v=>{
+        const opt = document.createElement('option');
+        opt.value = v.name;
+        opt.textContent = `${v.name} · ${v.lang}`;
+        els.voiceSelect.appendChild(opt);
+      });
+    }
+
+    function applyLook(){
+      const name = els.avatarName.value.trim() || 'CONSIA Prime';
+      const personaText = els.persona.options[els.persona.selectedIndex].text;
+      const mode = els.mode.value;
+      const preset = els.backgroundPreset.value;
+      const hyper = Number(els.hyperreal.value || 90);
+      const customBgUrl = els.customBgUrl.value.trim();
+
+      els.stageName.textContent = name;
+      els.humanName.textContent = name;
+      els.minimalName.textContent = name;
+      els.humanMeta.textContent = `${personaText} · tiempo real`;
+      els.minimalMeta.textContent = `${personaText} · premium`;
+      els.stageMeta.textContent = `${mode} · ${preset} · hiperreal ${hyper}%`;
+
+      els.avatarShell.dataset.mode = mode;
+      els.portraitCard.style.display = (mode === 'live_mirror' || mode === 'avatar_image' || mode === 'human_card') ? 'block' : 'none';
+      els.orbView.style.display = mode === 'orb' ? 'block' : 'none';
+      els.minimalView.style.display = mode === 'minimal' ? 'block' : 'none';
+
+      let bg = PRESETS[preset] || PRESETS.studio_dark;
+      if (customBgUrl) bg = `url("${customBgUrl}") center/cover no-repeat`;
+      if (state.bgImage) bg = `url("${state.bgImage}") center/cover no-repeat`;
+      els.stageBg.style.background = bg;
+
+      if (mode === 'avatar_image' || mode === 'human_card') {
+        els.avatarImageLayer.style.display = 'block';
+        els.avatarMediaWrap.style.display = mode === 'human_card' ? 'none' : 'none';
+      } else if (mode === 'live_mirror') {
+        els.avatarImageLayer.style.display = 'none';
+        els.avatarMediaWrap.style.display = 'block';
+      } else {
+        els.avatarImageLayer.style.display = 'none';
+        els.avatarMediaWrap.style.display = 'none';
+      }
+
+      if (state.avatarImage) {
+        els.avatarImageLayer.style.background = `url("${state.avatarImage}") center top/cover no-repeat`;
+      } else {
+        els.avatarImageLayer.style.background = 'linear-gradient(180deg, #24385f, #0a1120)';
+      }
+
+      const sat = 1 + ((hyper - 70) / 100) * 0.35;
+      const con = 1 + ((hyper - 70) / 100) * 0.18;
+      const bri = 0.82 + ((hyper - 70) / 100) * 0.24;
+      els.stageBg.style.filter = `saturate(${sat}) contrast(${con}) brightness(${bri})`;
+
+      saveLocal();
+      log(`Look aplicado: ${name} · ${mode}`);
+    }
+
+    async function checkAPI(){
+      const base = els.apiBase.value.trim().replace(/\/$/, '');
+      if(!base){
+        els.apiDot.classList.remove('ok');
+        els.apiStatus.textContent = 'cargá API Base';
+        return;
+      }
+
+      try{
+        const res = await fetch(base + '/v1/health');
+        const txt = await res.text();
+        els.apiDot.classList.add('ok');
+        els.apiStatus.textContent = 'API online';
+        log('API OK: ' + txt.slice(0, 100));
+      }catch(err){
+        els.apiDot.classList.remove('ok');
+        els.apiStatus.textContent = 'API offline';
+        log('API error: ' + err.message);
+      }
+    }
+
+    async function startCamera(){
+      try{
+        state.stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: 1280,
+            height: 720,
+            facingMode: 'user'
+          },
+          audio: false
+        });
+        els.cam.srcObject = state.stream;
+        state.cameraOn = true;
+        log('Cámara activada.');
+      }catch(err){
+        log('No pude abrir cámara: ' + err.message);
+      }
+    }
+
+    function stopCamera(){
+      if(state.stream){
+        state.stream.getTracks().forEach(t => t.stop());
+        state.stream = null;
+      }
+      els.cam.srcObject = null;
+      state.cameraOn = false;
+      log('Cámara detenida.');
+    }
+
+    async function toggleCamera(){
+      if(state.cameraOn) stopCamera();
+      else await startCamera();
+    }
+
+    function appendMessage(role, text){
+      state.chat.push({ role, content: text });
+      state.chat = state.chat.slice(-20);
+      renderChat();
+    }
+
+    function renderChat(){
+      els.chatLog.innerHTML = '';
+      state.chat.forEach(item=>{
+        const div = document.createElement('div');
+        div.className = `msg ${item.role === 'assistant' ? 'ai' : 'user'}`;
+        div.innerHTML = `<small>${item.role === 'assistant' ? 'CONSIA' : 'TÚ'}</small>${escapeHtml(item.content)}`;
+        els.chatLog.appendChild(div);
+      });
+      els.chatLog.scrollTop = els.chatLog.scrollHeight;
+    }
+
+    async function sendMessage(textOverride = ''){
+      const message = (textOverride || els.messageInput.value).trim();
+      if(!message) return;
+
+      const base = els.apiBase.value.trim().replace(/\/$/, '');
+      if(!base){
+        log('Falta API Base.');
+        return;
+      }
+
+      appendMessage('user', message);
+      els.messageInput.value = '';
+      setSpeaking(true, 'pensando');
+
+      try{
+        const res = await fetch(base + '/v1/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await res.json();
+        const reply = data.reply || 'OK';
+        state.lastReply = reply;
+        appendMessage('assistant', reply);
+        speak(reply);
+        log('Respuesta IA recibida.');
+      }catch(err){
+        appendMessage('assistant', 'No pude conectar con CONSIA ahora.');
+        setSpeaking(false, 'error');
+        log('Error chat: ' + err.message);
+      }
+    }
+
+    function speak(text){
+      speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = els.language.value || 'es-AR';
+      utter.rate = Number(els.voiceRate.value || 1);
+      utter.pitch = 1;
+
+      const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+      const selected = voices.find(v => v.name === els.voiceSelect.value) || voices.find(v => /es/i.test(v.lang));
+      if(selected) utter.voice = selected;
+
+      utter.onstart = () => setSpeaking(true, 'hablando');
+      utter.onend = () => setSpeaking(false, 'listo');
+      utter.onerror = () => setSpeaking(false, 'voz error');
+      speechSynthesis.speak(utter);
+    }
+
+    function setSpeaking(active, label){
+      els.stage.classList.toggle('speaking', active);
+      els.voiceDot.classList.add('ok');
+      els.voiceStatus.textContent = label;
+    }
+
+    function startMic(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){
+        log('SpeechRecognition no disponible.');
+        return;
+      }
+
+      if(state.recognition){
+        try{ state.recognition.stop(); }catch(e){}
+      }
+
+      const rec = new SR();
+      rec.lang = els.language.value || 'es-AR';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => log('Mic activo…');
+      rec.onresult = (e) => {
+        const transcript = e.results?.[0]?.[0]?.transcript || '';
+        sendMessage(transcript);
+      };
+      rec.onerror = (e) => log('Mic error: ' + e.error);
+      rec.onend = () => {
+        log('Mic detenido.');
+        if(state.autoRestartMic){
+          try{ rec.start(); }catch(e){}
+        }
+      };
+
+      state.recognition = rec;
+      rec.start();
+    }
+
+    function stopAllVoice(){
+      state.autoRestartMic = false;
+      if(state.recognition){
+        try{ state.recognition.stop(); }catch(e){}
+      }
+      speechSynthesis.cancel();
+      setSpeaking(false, 'detenido');
+    }
+
+    function toggleAutoStartMic(){
+      state.autoRestartMic = !state.autoRestartMic;
+      if(state.autoRestartMic){
+        startMic();
+        log('Autostart voz activado.');
+      }else{
+        if(state.recognition){
+          try{ state.recognition.stop(); }catch(e){}
+        }
+        log('Autostart voz desactivado.');
+      }
+    }
+
+    function fileToDataUrl(file){
+      return new Promise((resolve, reject)=>{
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    document.getElementById('btnCheck').onclick = checkAPI;
+    document.getElementById('btnCheck2').onclick = checkAPI;
+    document.getElementById('btnSaveLocal').onclick = saveLocal;
+    document.getElementById('btnSend').onclick = () => sendMessage();
+    document.getElementById('btnRepeat').onclick = () => state.lastReply && speak(state.lastReply);
+    document.getElementById('btnMic').onclick = startMic;
+    document.getElementById('btnStop').onclick = stopAllVoice;
+    document.getElementById('btnApplyLook').onclick = applyLook;
+    document.getElementById('btnClearChat').onclick = () => { state.chat = []; renderChat(); log('Chat limpiado.'); };
+    document.getElementById('btnCamera').onclick = toggleCamera;
+    document.getElementById('btnAutoStart').onclick = toggleAutoStartMic;
+
+    els.avatarUpload.addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      state.avatarImage = await fileToDataUrl(file);
+      localStorage.setItem('consia_avatar_image', state.avatarImage);
+      if(els.mode.value !== 'avatar_image' && els.mode.value !== 'human_card'){
+        els.mode.value = 'avatar_image';
+      }
+      applyLook();
+      log('Avatar propio cargado.');
     });
 
-    const data = await res.json();
+    els.bgUpload.addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      state.bgImage = await fileToDataUrl(file);
+      localStorage.setItem('consia_avatar_bg', state.bgImage);
+      els.backgroundPreset.value = 'custom';
+      applyLook();
+      log('Fondo propio cargado.');
+    });
 
-    speak(data.reply || "OK");
-  };
+    ['input','change'].forEach(evt=>{
+      [els.avatarName, els.persona, els.mode, els.language, els.hyperreal, els.backgroundPreset, els.customBgUrl].forEach(el=>{
+        el.addEventListener(evt, applyLook);
+      });
+    });
 
-  recognition.start();
-}
+    if(window.speechSynthesis){
+      speechSynthesis.onvoiceschanged = refreshVoices;
+    }
 
-function speak(text){
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "es-AR";
-  speechSynthesis.speak(utter);
-}
-</script>
+    els.apiBase.value = state.apiBase;
+    els.ownerToken.value = state.ownerToken;
+    els.backgroundPreset.value = state.backgroundPreset;
 
+    refreshVoices();
+    applyLook();
+    checkAPI();
+    startCamera();
+
+    document.addEventListener('click', () => {
+      speechSynthesis.cancel();
+    });
+  </script>
 </body>
 </html>
